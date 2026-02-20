@@ -1,5 +1,4 @@
 <?php
-// Chargement de la configuration
 require_once 'config/config.php';
 require_once 'config/database.php';
 
@@ -8,6 +7,11 @@ $url = $_GET['url'] ?? 'accueil';
 $url = rtrim($url, '/');
 $url = filter_var($url, FILTER_SANITIZE_URL);
 $url = explode('/', $url);
+
+// Si URL vide → accueil
+if (empty($url[0])) {
+    $url[0] = 'accueil';
+}
 
 // Définition du contrôleur et de la méthode
 $controllerName = ucfirst($url[0]) . 'Controller';
@@ -22,5 +26,5 @@ if (file_exists($controllerFile)) {
     $controller->$method();
 } else {
     http_response_code(404);
-    require_once 'views/404.php';
+    echo "Page introuvable";
 }

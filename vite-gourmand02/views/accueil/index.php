@@ -1,83 +1,53 @@
 <?php require_once 'views/layouts/header.php'; ?>
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- Filtres -->
-        <div class="col-md-3">
-            <form method="GET" action="/menus" aria-label="Filtres des menus">
-                <h5>Filtres</h5>
-
-                <div class="mb-3">
-                    <label for="theme" class="form-label">Thème</label>
-                    <select class="form-select" id="theme" name="theme">
-                        <option value="">Tous les thèmes</option>
-                        <option value="Noel">Noël</option>
-                        <option value="Paques">Pâques</option>
-                        <option value="classique">Classique</option>
-                        <option value="evenement">Événement</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="regime" class="form-label">Régime</label>
-                    <select class="form-select" id="regime" name="regime">
-                        <option value="">Tous les régimes</option>
-                        <option value="classique">Classique</option>
-                        <option value="vegetarien">Végétarien</option>
-                        <option value="vegan">Vegan</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="prix_max" class="form-label">Prix maximum</label>
-                    <input type="number" 
-                            class="form-control" 
-                            id="prix_max" 
-                            name="prix_max"
-                            placeholder="Ex: 300">
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">
-                    Appliquer les filtres
-                </button>
-                <a href="/menus" class="btn btn-outline-secondary w-100 mt-2">
-                    Réinitialiser
-                </a>
-            </form>
+<main>
+    <!-- Hero -->
+    <section class="hero py-5" style="background-color: #f5f5f5;">
+        <div class="container text-center">
+            <h1>Vite & Gourmand</h1>
+            <p class="lead">Traiteur d'exception depuis 25 ans à Bordeaux</p>
+            <a href="/menus" class="btn btn-primary btn-lg">
+                Découvrir nos menus
+            </a>
         </div>
+    </section>
 
-        <!-- Liste des menus -->
-        <div class="col-md-9">
-            <h1>Nos Menus</h1>
-            <div class="row">
-                <?php if (empty($menus)) : ?>
-                    <p>Aucun menu trouvé.</p>
-                <?php else : ?>
-                    <?php foreach ($menus as $menu) : ?>
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <?= htmlspecialchars($menu['titre']) ?>
-                                </h5>
-                                <p class="card-text">
-                                    <?= htmlspecialchars($menu['description']) ?>
-                                </p>
-                                <p><strong><?= $menu['prix_base'] ?> €</strong></p>
-                                <p>Min. <?= $menu['nb_personnes_min'] ?> personnes</p>
-                                <a href="/menus/detail?id=<?= $menu['id'] ?>" 
-                                    class="btn btn-primary"
-                                    aria-label="Voir le menu <?= htmlspecialchars($menu['titre']) ?>">
-                                    Voir le menu
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+    <!-- Pourquoi nous choisir -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Pourquoi nous choisir</h2>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <h5>25 ans d'expérience</h5>
+                <p>Une expertise reconnue dans l'art culinaire</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Produits locaux</h5>
+                <p>Ingrédients frais issus de producteurs locaux</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Livraison Bordeaux</h5>
+                <p>Service de livraison dans Bordeaux et environs</p>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+
+    <!-- Avis clients -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Avis clients</h2>
+        <div class="row">
+            <?php foreach ($avis as $unAvis) : ?>
+            <div class="col-md-6 mb-4">
+                <div class="card p-3">
+                    <p><?= htmlspecialchars($unAvis['commentaire']) ?></p>
+                    <p class="fw-bold">
+                        <?= htmlspecialchars($unAvis['prenom']) ?> 
+                        <?= htmlspecialchars($unAvis['nom']) ?>
+                    </p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+</main>
 
 <?php require_once 'views/layouts/footer.php'; ?>
