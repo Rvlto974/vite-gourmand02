@@ -1,10 +1,11 @@
-// Filtres AJAX pour la page menus
 document.addEventListener('DOMContentLoaded', function() {
     const filtreForm = document.getElementById('filtres-form');
     
     if (filtreForm) {
-        const inputs = filtreForm.querySelectorAll('select, input');
+        // Charger les menus au démarrage
+        appliquerFiltres();
         
+        const inputs = filtreForm.querySelectorAll('select, input');
         inputs.forEach(input => {
             input.addEventListener('change', function() {
                 appliquerFiltres();
@@ -14,11 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function appliquerFiltres() {
-    const theme = document.getElementById('theme').value;
-    const regime = document.getElementById('regime').value;
-    const prixMax = document.getElementById('prix_max').value;
+    const theme = document.getElementById('theme') ? document.getElementById('theme').value : '';
+    const regime = document.getElementById('regime') ? document.getElementById('regime').value : '';
+    const prixMax = document.getElementById('prix_max') ? document.getElementById('prix_max').value : '';
 
-    // Construction de l'URL AJAX
     const url = `/menus/filtrer?theme=${theme}&regime=${regime}&prix_max=${prixMax}`;
 
     fetch(url)
@@ -34,6 +34,8 @@ function appliquerFiltres() {
 function afficherMenus(menus) {
     const container = document.getElementById('liste-menus');
     
+    if (!container) return;
+
     if (menus.length === 0) {
         container.innerHTML = '<p>Aucun menu trouvé.</p>';
         return;
@@ -48,18 +50,11 @@ function afficherMenus(menus) {
                     <p><strong>${menu.prix_base} €</strong></p>
                     <p>Min. ${menu.nb_personnes_min} personnes</p>
                     <a href="/menus/detail?id=${menu.id}" 
-                    class="btn btn-primary">
-                        Voir le menu
+                        class="btn btn-primary"
+                        aria-label="Voir les détails du menu ${escapeHtml(menu.titre)}">
+                        Voir les détails
                     </a>
                 </div>
             </div>
         </div>
-    `).join('');
-}
-
-// Protection XSS côté JavaScript
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(text));
-    return div.innerHTML;
-}
+    `).join('');}
