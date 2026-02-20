@@ -10,7 +10,13 @@ class MenusController {
 
     // Page liste des menus
     public function index() {
-        $menus = $this->menuModel->getAll();
+        $filtres = [
+            'theme' => $_GET['theme'] ?? '',
+            'regime' => $_GET['regime'] ?? '',
+            'prix_max' => $_GET['prix_max'] ?? ''
+        ];
+
+        $menus = $this->menuModel->getAll($filtres);
         require_once 'views/menus/index.php';
     }
 
@@ -22,6 +28,25 @@ class MenusController {
             exit;
         }
         $menu = $this->menuModel->getById($id);
+        if (!$menu) {
+            header('Location: /menus');
+            exit;
+        }
         require_once 'views/menus/detail.php';
+    }
+
+    // Méthode AJAX — retourne les menus en JSON
+    public function filtrer() {
+        $filtres = [
+            'theme' => $_GET['theme'] ?? '',
+            'regime' => $_GET['regime'] ?? '',
+            'prix_max' => $_GET['prix_max'] ?? ''
+        ];
+
+        $menus = $this->menuModel->getAll($filtres);
+        
+        header('Content-Type: application/json');
+        echo json_encode($menus);
+        exit;
     }
 }
