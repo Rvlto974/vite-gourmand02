@@ -1,28 +1,31 @@
-<?php 
-
+<?php
 class Database {
-    private $host = $_ENV['DB_HOST'];
-    private $dbname = $_ENV['DB_NAME'];
-    private $username = $_ENV['DB_USER'];
-    private $password = $_ENV['DB_PASS'];
+    private $host;
+    private $dbname;
+    private $username;
+    private $password;
+    private $pdo;
+
+    public function __construct() {
+        $this->host = $_ENV['DB_HOST'] ?? 'mysql';
+        $this->dbname = $_ENV['DB_NAME'] ?? 'vite_gourmand';
+        $this->username = $_ENV['DB_USER'] ?? 'root';
+        $this->password = $_ENV['DB_PASS'] ?? 'root';
+    }
+
+    public function connect() {
+        if ($this->pdo === null) {
+            try {
+                $this->pdo = new PDO(
+                    "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4",
+                    $this->username,
+                    $this->password,
+                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                );
+            } catch (PDOException $e) {
+                die("Erreur de connexion : " . $e->getMessage());
+            }
+        }
+        return $this->pdo;
+    }
 }
-
-# Base de données MySQL
-DB_HOST=localhost
-DB_NAME=vite_gourmand
-DB_USER=root
-DB_PASS=
-
-# MongoDB
-MONGO_URI=mongodb://localhost:27017
-MONGO_DB=vite_gourmand_stats
-
-# Email
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USER=
-MAIL_PASS=
-
-# Application
-APP_URL=http://localhost:8080
-APP_ENV=development
