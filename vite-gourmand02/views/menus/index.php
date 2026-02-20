@@ -31,11 +31,11 @@
                 <div class="mb-3">
                     <label for="prix_max" class="form-label">Prix maximum</label>
                     <input type="number" 
-                           class="form-control" 
-                           id="prix_max" 
-                           name="prix_max"
-                           placeholder="Ex: 300"
-                           aria-label="Prix maximum en euros">
+                            class="form-control" 
+                            id="prix_max" 
+                            name="prix_max"
+                            placeholder="Ex: 300"
+                            aria-label="Prix maximum en euros">
                 </div>
 
                 <a href="/menus" class="btn btn-outline-secondary w-100 mt-2">
@@ -58,3 +58,24 @@
                                 <h5 class="card-title">
                                     <?= htmlspecialchars($menu['titre']) ?>
                                 </h5>
+                                <p class="card-text">
+                                    <?= htmlspecialchars($menu['description']) ?>
+                                </p>
+                                <p><strong><?= $menu['prix_base'] ?> €</strong></p>
+                                <p>Min. <?= $menu['nb_personnes_min'] ?> personnes</p>
+                                <a href="/menus/detail?id=<?= $menu['id'] ?>" 
+                                    class="btn btn-primary"
+                                    aria-label="Voir le menu <?= htmlspecialchars($menu['titre']) ?>">
+                                    Voir le menu
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once 'views/layouts/footer.php'; ?>
