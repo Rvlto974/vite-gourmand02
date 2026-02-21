@@ -45,4 +45,11 @@ public function toggleActif($id) {
     $stmt = $this->db->prepare($sql);
     return $stmt->execute([':id' => $id]);
 }
+// Récupérer un utilisateur par ID
+public function getById($id) {
+    $sql = "SELECT * FROM utilisateurs WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }
