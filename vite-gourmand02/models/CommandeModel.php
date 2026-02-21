@@ -55,4 +55,22 @@ class CommandeModel {
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+    // Récupérer toutes les commandes (pour employé)
+public function getAllCommandes() {
+    $sql = "SELECT c.*, m.titre as menu_titre, u.nom, u.prenom 
+            FROM commandes c 
+            JOIN menus m ON c.menu_id = m.id 
+            JOIN utilisateurs u ON c.utilisateur_id = u.id 
+            ORDER BY c.created_at DESC";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Mettre à jour le statut d'une commande
+public function updateStatut($id, $statut) {
+    $sql = "UPDATE commandes SET statut = :statut WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':statut' => $statut, ':id' => $id]);
+}
 }
