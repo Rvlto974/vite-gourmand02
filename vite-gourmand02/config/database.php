@@ -4,6 +4,7 @@ class Database {
     private $dbname;
     private $username;
     private $password;
+    private $port;
     private $pdo;
 
     public function __construct() {
@@ -11,13 +12,14 @@ class Database {
         $this->dbname = $_ENV['DB_NAME'] ?? 'vite_gourmand';
         $this->username = $_ENV['DB_USER'] ?? 'root';
         $this->password = $_ENV['DB_PASS'] ?? 'root';
+        $this->port = $_ENV['DB_PORT'] ?? '3306';
     }
 
     public function connect() {
         if ($this->pdo === null) {
             try {
                 $this->pdo = new PDO(
-                    "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4",
+                    "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4",
                     $this->username,
                     $this->password,
                     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
