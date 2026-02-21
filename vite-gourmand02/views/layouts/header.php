@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,16 +14,13 @@
 </head>
 <body>
 
-    <!-- Lien d'évitement pour lecteurs d'écran -->
-    <a href="#contenu-principal" 
-        class="visually-hidden-focusable">
+    <a href="#contenu-principal" class="visually-hidden-focusable">
         Aller au contenu principal
     </a>
 
-    <!-- Navigation accessible -->
     <nav class="navbar navbar-expand-lg" 
-        role="navigation" 
-        aria-label="Menu principal">
+            role="navigation" 
+            aria-label="Menu principal">
         <div class="container">
             <a class="navbar-brand" 
                 href="/" 
@@ -26,7 +28,6 @@
                 Vite & Gourmand
             </a>
             
-            <!-- Bouton hamburger accessible -->
             <button class="navbar-toggler" 
                     type="button" 
                     data-bs-toggle="collapse" 
@@ -49,9 +50,27 @@
                         <a class="nav-link" href="/contact">Contact</a>
                     </li>
                 </ul>
+
+                <?php if (isset($_SESSION['user_id'])) : ?>
+                    <a href="/auth/deconnexion" 
+                        class="btn btn-outline-primary ms-2"
+                        aria-label="Se déconnecter">
+                        Déconnexion
+                    </a>
+                <?php else : ?>
+                    <a href="/auth/connexion" 
+                        class="btn btn-outline-primary ms-2"
+                        aria-label="Se connecter">
+                        Connexion
+                    </a>
+                    <a href="/auth/inscription" 
+                        class="btn btn-primary ms-2"
+                        aria-label="Créer un compte">
+                        S'inscrire
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
 
-    <!-- Contenu principal -->
     <main id="contenu-principal" role="main">
