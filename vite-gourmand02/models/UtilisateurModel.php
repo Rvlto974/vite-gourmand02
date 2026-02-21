@@ -31,4 +31,18 @@ class UtilisateurModel {
         $stmt->execute([':email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    // Récupérer tous les utilisateurs
+public function getAll() {
+    $sql = "SELECT * FROM utilisateurs ORDER BY created_at DESC";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Activer/désactiver un utilisateur
+public function toggleActif($id) {
+    $sql = "UPDATE utilisateurs SET actif = NOT actif WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':id' => $id]);
+}
 }
