@@ -1,14 +1,20 @@
 <?php
 require_once 'models/CommandeModel.php';
 require_once 'models/MenuModel.php';
+require_once 'models/UtilisateurModel.php';
+require_once 'config/EmailService.php';
 
 class CommandesController {
     private $commandeModel;
     private $menuModel;
+    private $utilisateurModel;
+    private $emailService;
 
     public function __construct() {
         $this->commandeModel = new CommandeModel();
         $this->menuModel = new MenuModel();
+        $this->utilisateurModel = new UtilisateurModel();
+        $this->emailService = new EmailService();
     }
 
     private function verifierConnexion() {
@@ -54,6 +60,15 @@ class CommandesController {
                 'adresse_livraison' => $adresse,
                 'date_prestation' => $date
             ]);
+
+            // Envoi email confirmation
+            $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
+            $commande = $this->commandeModel->getById($commande_id);
+            $this->emailService->envoyerConfirmationCommande(
+                $utilisateur['email'],
+                $utilisateur['prenom'],
+                $commande
+            );
 
             header('Location: /commandes/confirmation?id=' . $commande_id);
             exit;
