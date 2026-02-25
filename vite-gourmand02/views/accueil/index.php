@@ -2,15 +2,23 @@
 
 <main>
     <!-- Hero -->
-    <section class="hero py-5" style="background-color: #f5f5f5;">
-        <div class="container text-center">
-            <h1>Vite & Gourmand</h1>
-            <p class="lead">Traiteur d'exception depuis 25 ans à Bordeaux</p>
-            <a href="/menus" class="btn btn-primary btn-lg">
-                Découvrir nos menus
-            </a>
-        </div>
-    </section>
+<section class="hero" style="
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/assets/images/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+">
+    <div class="container text-center text-white">
+        <h1 class="display-4 fw-bold">Vite & Gourmand</h1>
+        <p class="lead fs-4">Traiteur d'exception depuis 25 ans à Bordeaux</p>
+        <a href="/menus" class="btn btn-lg mt-3" 
+            style="background-color: #5DA99A; color: white; border: none;">
+            Découvrir nos menus
+        </a>
+    </div>
+</section>
 
     <!-- Pourquoi nous choisir -->
     <section class="container my-5">
