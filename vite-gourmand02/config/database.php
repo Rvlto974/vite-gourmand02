@@ -5,7 +5,7 @@ class Database {
     private $username;
     private $password;
     private $port;
-    private $pdo;
+    private static $pdo = null;
 
     public function __construct() {
         $this->host = $_ENV['DB_HOST'] ?? 'mysql';
@@ -16,18 +16,21 @@ class Database {
     }
 
     public function connect() {
-        if ($this->pdo === null) {
+        if (self::$pdo === null) {
             try {
-                $this->pdo = new PDO(
+                self::$pdo = new PDO(
                     "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4",
                     $this->username,
                     $this->password,
-                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_PERSISTENT => false
+                    ]
                 );
             } catch (PDOException $e) {
                 die("Erreur de connexion : " . $e->getMessage());
             }
         }
-        return $this->pdo;
+        return self::$pdo;
     }
 }
