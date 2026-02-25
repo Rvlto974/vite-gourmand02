@@ -3,7 +3,7 @@
 <main>
     <!-- Hero -->
     <section class="hero" style="
-        background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/assets/images/hero.jpg');
+        background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('/assets/images/hero.jpg');
         background-size: cover;
         background-position: center;
         min-height: 500px;
@@ -116,18 +116,31 @@
                 </button>
 
                 <!-- Indicateurs -->
-                <div class="d-flex justify-content-center gap-2 mt-4 pb-4">
-                    <?php foreach ($avis as $index => $unAvis) : ?>
-                    <button type="button" 
-                            data-bs-target="#carouselAvis" 
-                            data-bs-slide-to="<?= $index ?>"
-                            style="width:10px;height:10px;border-radius:50%;border:none;
-                                    background-color:<?= $index === 0 ? '#5DA99A' : '#ccc' ?>;">
-                    </button>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
+<div class="d-flex justify-content-center gap-2 mt-4 pb-4" id="avisIndicateurs">
+    <?php foreach ($avis as $index => $unAvis) : ?>
+    <button type="button" 
+            onclick="goToSlide(<?= $index ?>)"
+            id="dot-<?= $index ?>"
+            style="width:10px;height:10px;border-radius:50%;border:none;cursor:pointer;
+                    background-color:<?= $index === 0 ? '#5DA99A' : '#ccc' ?>;">
+    </button>
+    <?php endforeach; ?>
+</div>
+
+<script>
+const carousel = document.getElementById('carouselAvis');
+
+carousel.addEventListener('slid.bs.carousel', function(e) {
+    document.querySelectorAll('#avisIndicateurs button').forEach((btn, i) => {
+        btn.style.backgroundColor = i === e.to ? '#5DA99A' : '#ccc';
+    });
+});
+
+function goToSlide(index) {
+    const bsCarousel = bootstrap.Carousel.getInstance(carousel);
+    bsCarousel.to(index);
+}
+</script>
     </section>
 
 </main>
