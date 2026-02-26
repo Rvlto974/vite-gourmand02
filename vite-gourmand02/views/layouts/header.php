@@ -18,9 +18,9 @@ if (session_status() === PHP_SESSION_NONE) {
         Aller au contenu principal
     </a>
 
-    <nav class="navbar navbar-expand-lg" 
-            role="navigation" 
-            aria-label="Menu principal">
+    <nav class="navbar navbar-expand-lg py-3" 
+        role="navigation" 
+        aria-label="Menu principal">
         <div class="container">
             <a class="navbar-brand" 
                 href="/" 
@@ -54,6 +54,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php if (isset($_SESSION['user_id'])) : ?>
                     <a href="/auth/deconnexion" 
                         class="btn btn-outline-primary ms-2"
+                        style="border: 2px solid #5DA99A; color: #5DA99A; border-radius: 50px;"
                         aria-label="Se déconnecter">
                         Déconnexion
                     </a>
