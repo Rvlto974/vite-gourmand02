@@ -11,6 +11,27 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Vite & Gourmand</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .btn-connexion {
+            border: 2px solid #5DA99A !important;
+            color: #5DA99A !important;
+            border-radius: 50px !important;
+            background: white !important;
+        }
+        .btn-connexion:hover {
+            background: #5DA99A !important;
+            color: white !important;
+        }
+        .btn-inscription {
+            background-color: #5DA99A !important;
+            color: white !important;
+            border-radius: 50px !important;
+            border: none !important;
+        }
+        .btn-inscription:hover {
+            background-color: #3D7A6E !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -53,19 +74,18 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 <?php if (isset($_SESSION['user_id'])) : ?>
                     <a href="/auth/deconnexion" 
-                        class="btn btn-outline-primary ms-2"
-                        style="border: 2px solid #5DA99A; color: #5DA99A; border-radius: 50px;"
+                        class="btn btn-connexion ms-2"
                         aria-label="Se déconnecter">
                         Déconnexion
                     </a>
                 <?php else : ?>
                     <a href="/auth/connexion" 
-                        class="btn btn-outline-primary ms-2"
+                        class="btn btn-connexion ms-2"
                         aria-label="Se connecter">
                         Connexion
                     </a>
                     <a href="/auth/inscription" 
-                        class="btn btn-primary ms-2"
+                        class="btn btn-inscription ms-2"
                         aria-label="Créer un compte">
                         S'inscrire
                     </a>
