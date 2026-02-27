@@ -172,7 +172,7 @@
                             'saisonnier'=> 'badge-saisonnier',
                             default     => 'badge-classique',
                         };
-                        $badgeLabel = ucfirst($menu['theme'] ?? 'Classique');
+                        $badgeLabel = ucfirst($menu['regime'] ?? 'Classique');
                         $note = $menu['note_moyenne'] ?? 0;
                         $nbAvis = $menu['nb_avis'] ?? 0;
                     ?>
