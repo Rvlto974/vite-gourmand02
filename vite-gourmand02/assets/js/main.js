@@ -2,9 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const filtreForm = document.getElementById('filtres-form');
     
     if (filtreForm) {
-        // Charger les menus au démarrage
-        appliquerFiltres();
-        
+        filtreForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            appliquerFiltres();
+        });
+
         const inputs = filtreForm.querySelectorAll('select, input');
         inputs.forEach(input => {
             input.addEventListener('change', function() {
@@ -15,46 +17,36 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function appliquerFiltres() {
-    const theme = document.getElementById('theme') ? document.getElementById('theme').value : '';
-    const regime = document.getElementById('regime') ? document.getElementById('regime').value : '';
-    const prixMax = document.getElementById('prix_max') ? document.getElementById('prix_max').value : '';
+    const theme       = document.getElementById('theme')?.value ?? '';
+    const regime      = document.getElementById('regime')?.value ?? '';
+    const prixMin     = document.getElementById('prix_min')?.value ?? '';
+    const prixMax     = document.getElementById('prix_max')?.value ?? '';
+    const nbPersonnes = document.getElementById('nb_personnes')?.value ?? '';
+    const tri         = document.getElementById('tri')?.value ?? 'recent';
 
-    const url = `/menus/filtrer?theme=${theme}&regime=${regime}&prix_max=${prixMax}`;
+    const url = `/menus/filtrer?theme=${theme}&regime=${regime}&prix_min=${prixMin}&prix_max=${prixMax}&nb_personnes=${nbPersonnes}&tri=${tri}`;
 
     fetch(url)
         .then(response => response.json())
         .then(menus => {
             afficherMenus(menus);
+            const badge = document.querySelector('.count-badge');
+            if (badge) badge.textContent = menus.length + ' menu(s)';
         })
-        .catch(error => {
-            console.error('Erreur AJAX:', error);
-        });
+        .catch(error => console.error('Erreur AJAX:', error));
 }
 
 function afficherMenus(menus) {
     const container = document.getElementById('liste-menus');
-    
     if (!container) return;
 
     if (menus.length === 0) {
-        container.innerHTML = '<p>Aucun menu trouvé.</p>';
+        container.innerHTML = '<p class="text-muted">Aucun menu trouvé.</p>';
         return;
     }
 
-    container.innerHTML = menus.map(menu => `
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">${escapeHtml(menu.titre)}</h5>
-                    <p class="card-text">${escapeHtml(menu.description)}</p>
-                    <p><strong>${menu.prix_base} €</strong></p>
-                    <p>Min. ${menu.nb_personnes_min} personnes</p>
-                    <a href="/menus/detail?id=${menu.id}" 
-                        class="btn btn-primary"
-                        aria-label="Voir les détails du menu ${escapeHtml(menu.titre)}">
-                        Voir les détails
-                    </a>
-                </div>
-            </div>
-        </div>
-    `).join('');}
+    const badgeClasses = {
+        'noel'       : 'badge-noel',
+        'paques'     : 'badge-paques',
+        'evenement'  : 'badge-evenement',
+        'saisonnie

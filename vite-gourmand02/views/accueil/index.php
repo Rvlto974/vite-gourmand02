@@ -1,6 +1,5 @@
 <?php require_once 'views/layouts/header.php'; ?>
 
-<main>
     <!-- Hero -->
     <section class="hero" style="
         background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('/assets/images/hero.jpg');
@@ -52,7 +51,7 @@
                 <div class="card border-0 shadow-sm p-4 h-100">
                     <div class="d-flex justify-content-center mb-3">
                         <div class="rounded-circle d-flex align-items-center justify-content-center" 
-                                style="width:80px;height:80px;background-color:#5DA99A;">
+                            style="width:80px;height:80px;background-color:#5DA99A;">
                             <span style="font-size:2rem;">🚚</span>
                         </div>
                     </div>
@@ -70,7 +69,6 @@
             
             <div id="carouselAvis" class="carousel slide position-relative" data-bs-ride="carousel">
                 
-                <!-- Bouton précédent -->
                 <button class="carousel-control-prev d-flex align-items-center justify-content-center" 
                         type="button" data-bs-target="#carouselAvis" data-bs-slide="prev"
                         style="width:50px;height:50px;background:white;border-radius:50%;
@@ -106,7 +104,6 @@
                     <?php endforeach; ?>
                 </div>
 
-                <!-- Bouton suivant -->
                 <button class="carousel-control-next d-flex align-items-center justify-content-center" 
                         type="button" data-bs-target="#carouselAvis" data-bs-slide="next"
                         style="width:50px;height:50px;background:white;border-radius:50%;
@@ -115,34 +112,31 @@
                     <span style="color:#5DA99A;font-size:1.5rem;font-weight:bold;line-height:1;">›</span>
                 </button>
 
-                <!-- Indicateurs -->
-<div class="d-flex justify-content-center gap-2 mt-4 pb-4" id="avisIndicateurs">
-    <?php foreach ($avis as $index => $unAvis) : ?>
-    <button type="button" 
-            onclick="goToSlide(<?= $index ?>)"
-            id="dot-<?= $index ?>"
-            style="width:10px;height:10px;border-radius:50%;border:none;cursor:pointer;
-                    background-color:<?= $index === 0 ? '#5DA99A' : '#ccc' ?>;">
-    </button>
-    <?php endforeach; ?>
-</div>
+                <div class="d-flex justify-content-center gap-2 mt-4 pb-4" id="avisIndicateurs">
+                    <?php foreach ($avis as $index => $unAvis) : ?>
+                    <button type="button" 
+                            onclick="goToSlide(<?= $index ?>)"
+                            id="dot-<?= $index ?>"
+                            style="width:10px;height:10px;border-radius:50%;border:none;cursor:pointer;
+                                    background-color:<?= $index === 0 ? '#5DA99A' : '#ccc' ?>;">
+                    </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </section>
 
 <script>
 const carousel = document.getElementById('carouselAvis');
-
 carousel.addEventListener('slid.bs.carousel', function(e) {
     document.querySelectorAll('#avisIndicateurs button').forEach((btn, i) => {
         btn.style.backgroundColor = i === e.to ? '#5DA99A' : '#ccc';
     });
 });
-
 function goToSlide(index) {
     const bsCarousel = bootstrap.Carousel.getInstance(carousel);
     bsCarousel.to(index);
 }
 </script>
-    </section>
-
-</main>
 
 <?php require_once 'views/layouts/footer.php'; ?>

@@ -9,10 +9,9 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite & Gourmand</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
-<style>
     .btn-connexion {
         border: 2px solid #5DA99A !important;
         color: #5DA99A !important;
@@ -35,7 +34,7 @@ if (session_status() === PHP_SESSION_NONE) {
         background-color: #3D7A6E !important;
         color: white !important;
     }
-</style>
+    </style>
 </head>
 <body>
 
@@ -63,8 +62,8 @@ if (session_status() === PHP_SESSION_NONE) {
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ms-auto" role="list">
+            <div class="collapse navbar-collapse align-items-center" id="menu">
+                <ul class="navbar-nav ms-auto align-items-center" role="list">
                     <li role="listitem">
                         <a class="nav-link" href="/">Accueil</a>
                     </li>

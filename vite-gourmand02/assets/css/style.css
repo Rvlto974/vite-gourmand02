@@ -85,3 +85,9 @@ footer a {
 a.btn {
     color: inherit !important;
 }
+/* Badges thème */
+.badge-noel       { background-color: #e74c3c; color: white; }
+.badge-paques     { background-color: #9b59b6; color: white; }
+.badge-classique  { background-color: #e67e22; color: white; }
+.badge-evenement  { background-color: #2980b9; color: white; }
+.badge-saisonnier { background-color: #27ae60; color: white; }
