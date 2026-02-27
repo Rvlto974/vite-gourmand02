@@ -12,26 +12,30 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
-        .btn-connexion {
-            border: 2px solid #5DA99A !important;
-            color: #5DA99A !important;
-            border-radius: 50px !important;
-            background: white !important;
-        }
-        .btn-connexion:hover {
-            background: #5DA99A !important;
-            color: white !important;
-        }
-        .btn-inscription {
-            background-color: #5DA99A !important;
-            color: white !important;
-            border-radius: 50px !important;
-            border: none !important;
-        }
-        .btn-inscription:hover {
-            background-color: #3D7A6E !important;
-        }
-    </style>
+<style>
+    .btn-connexion {
+        border: 2px solid #5DA99A !important;
+        color: #5DA99A !important;
+        border-radius: 50px !important;
+        background: white !important;
+    }
+    .btn-connexion:hover {
+        background: #5DA99A !important;
+        color: white !important;
+    }
+    .btn-inscription,
+    .btn-inscription:link,
+    .btn-inscription:visited {
+        background-color: #5DA99A !important;
+        color: white !important;
+        border-radius: 50px !important;
+        border: none !important;
+    }
+    .btn-inscription:hover {
+        background-color: #3D7A6E !important;
+        color: white !important;
+    }
+</style>
 </head>
 <body>
 
