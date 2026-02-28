@@ -63,4 +63,23 @@ class UtilisateurModel {
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function mettreAJour($data) {
+        $sql = "UPDATE utilisateurs SET nom=:nom, prenom=:prenom, email=:email, gsm=:gsm, adresse=:adresse";
+        $params = [
+            ':nom' => $data['nom'],
+            ':prenom' => $data['prenom'],
+            ':email' => $data['email'],
+            ':gsm' => $data['gsm'],
+            ':adresse' => $data['adresse'],
+            ':id' => $data['id']
+        ];
+        if (!empty($data['mot_de_passe'])) {
+            $sql .= ", mot_de_passe=:mot_de_passe";
+            $params[':mot_de_passe'] = $data['mot_de_passe'];
+        }
+        $sql .= " WHERE id=:id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($params);
+    }
 }
