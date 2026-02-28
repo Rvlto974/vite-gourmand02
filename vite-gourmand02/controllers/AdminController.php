@@ -49,8 +49,18 @@ class AdminController {
     }
 
     public function menus() {
+    $this->verifierAdmin();
+    $menus = $this->menuModel->getAllAdmin();
+    require_once 'views/admin/menus.php';
+}
+
+    public function toggleActifMenu() {
         $this->verifierAdmin();
-        $menus = $this->menuModel->getAll();
-        require_once 'views/admin/menus.php';
+        $id = $_POST['id'] ?? null;
+        if ($id) {
+            $this->menuModel->toggleActif($id);
+        }
+        header('Location: /admin/menus');
+        exit;
     }
 }
