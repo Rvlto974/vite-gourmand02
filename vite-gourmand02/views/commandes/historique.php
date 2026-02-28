@@ -55,7 +55,12 @@
                         <td><strong><?= number_format($commande['prix_total'], 2) ?> €</strong></td>
                         <td><span class="badge <?= $badge ?>"><?= $label ?></span></td>
                         <td>
-                            <?php if (in_array($statut, ['nouvelle', 'acceptee'])) : ?>
+                            <?php if (in_array($statut, ['livree', 'terminee'])) : ?>
+                                <a href="/avis/creer?commande_id=<?= $commande['id'] ?>" 
+                                   class="btn btn-sm btn-warning">
+                                    ⭐ Avis
+                                </a>
+                            <?php elseif (in_array($statut, ['nouvelle', 'acceptee'])) : ?>
                                 <a href="/commandes/annuler?id=<?= $commande['id'] ?>" 
                                    class="btn btn-sm btn-danger"
                                    onclick="return confirm('Annuler cette commande ?')">
