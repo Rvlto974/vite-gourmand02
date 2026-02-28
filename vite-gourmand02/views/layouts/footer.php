@@ -21,9 +21,9 @@
             </div>
             <hr>
             <p class="text-center">
-                <a href="/mentions-legales">Mentions légales</a> | 
-                <a href="/cgv">CGV</a> | 
-                <a href="/confidentialite">Politique de confidentialité</a>
+                <a href="/pages/mentions">Mentions légales</a> | 
+                <a href="/pages/cgv">CGV</a> | 
+                <a href="/pages/confidentialite">Politique de confidentialité</a>
             </p>
         </div>
     </footer>
