@@ -65,6 +65,17 @@ class CommandesController {
                 'date_prestation' => $date
             ]);
 
+            // Enregistrement stats MongoDB
+            require_once 'config/MongoService.php';
+            $mongo = new MongoService();
+            $mongo->enregistrerCommande([
+                'menu_id' => $menu_id,
+                'menu_titre' => $menu['titre'],
+                'prix_total' => $prix_total,
+                'nb_personnes' => $nb_personnes,
+                'date' => $date
+            ]);
+
             // Envoi email confirmation
             $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
             $commande = $this->commandeModel->getById($commande_id);
@@ -105,13 +116,11 @@ class CommandesController {
 
         $commande = $this->commandeModel->getById($id);
 
-        // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $_SESSION['user_id']) {
             header('Location: /commandes/historique');
             exit;
         }
 
-        // On ne peut annuler que les commandes nouvelles ou acceptées
         if (in_array($commande['statut'], ['nouvelle', 'acceptee'])) {
             $this->commandeModel->annuler($id);
         }
