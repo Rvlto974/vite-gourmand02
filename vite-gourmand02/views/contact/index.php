@@ -1,6 +1,6 @@
 <?php require_once 'views/layouts/header.php'; ?>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <div class="row">
         <!-- Formulaire -->
         <div class="col-md-7">
@@ -23,13 +23,13 @@
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom <span aria-hidden="true">*</span></label>
                     <input type="text" class="form-control" id="nom" name="nom" 
-                           aria-required="true" required>
+                            aria-required="true" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email <span aria-hidden="true">*</span></label>
                     <input type="email" class="form-control" id="email" name="email"
-                           aria-required="true" required>
+                            aria-required="true" required>
                 </div>
 
                 <div class="mb-3">
@@ -46,8 +46,8 @@
                 <div class="mb-3">
                     <label for="message" class="form-label">Message <span aria-hidden="true">*</span></label>
                     <textarea class="form-control" id="message" name="message" 
-                              rows="5" aria-required="true" required
-                              placeholder="Décrivez votre demande..."></textarea>
+                                rows="5" aria-required="true" required
+                                placeholder="Décrivez votre demande..."></textarea>
                 </div>
 
                 <div class="mb-3 form-check">
