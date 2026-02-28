@@ -105,3 +105,12 @@ if (session_status() === PHP_SESSION_NONE) {
     </nav>
 
     <main id="contenu-principal" role="main">
+
+    <?php if (isset($_SESSION['user_id'])) : ?>
+<li role="listitem">
+    <a class="nav-link" href="/commandes/historique">Mes commandes</a>
+</li>
+<li role="listitem">
+    <a class="nav-link" href="/client/profil">Mon profil</a>
+</li>
+<?php endif; ?>
