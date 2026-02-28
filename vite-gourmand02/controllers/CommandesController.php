@@ -50,7 +50,11 @@ class CommandesController {
             $adresse = $_POST['adresse_livraison'] ?? '';
             $date = $_POST['date_prestation'] ?? '';
 
-            $prix_total = ($menu['prix_base'] / $menu['nb_personnes_min']) * $nb_personnes;
+            // Réduction 10% si +5 personnes
+            $prix_total = $menu['prix_base'];
+            if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
+                $prix_total = $prix_total * 0.90;
+            }
 
             $commande_id = $this->commandeModel->creer([
                 'utilisateur_id' => $_SESSION['user_id'],
@@ -82,5 +86,37 @@ class CommandesController {
         $id = $_GET['id'] ?? null;
         $commande = $this->commandeModel->getById($id);
         require_once 'views/commandes/confirmation.php';
+    }
+
+    public function historique() {
+        $this->verifierConnexion();
+        $commandes = $this->commandeModel->getByUtilisateur($_SESSION['user_id']);
+        require_once 'views/commandes/historique.php';
+    }
+
+    public function annuler() {
+        $this->verifierConnexion();
+
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header('Location: /commandes/historique');
+            exit;
+        }
+
+        $commande = $this->commandeModel->getById($id);
+
+        // Vérifier que la commande appartient à l'utilisateur
+        if (!$commande || $commande['utilisateur_id'] != $_SESSION['user_id']) {
+            header('Location: /commandes/historique');
+            exit;
+        }
+
+        // On ne peut annuler que les commandes nouvelles ou acceptées
+        if (in_array($commande['statut'], ['nouvelle', 'acceptee'])) {
+            $this->commandeModel->annuler($id);
+        }
+
+        header('Location: /commandes/historique');
+        exit;
     }
 }
