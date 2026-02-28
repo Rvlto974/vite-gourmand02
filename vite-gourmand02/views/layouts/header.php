@@ -73,13 +73,22 @@ if (session_status() === PHP_SESSION_NONE) {
                     <li role="listitem">
                         <a class="nav-link" href="/contact">Contact</a>
                     </li>
-                    <?php if (isset($_SESSION['user_id'])) : ?>
-                    <li role="listitem">
-                        <a class="nav-link" href="/commandes/historique">Mes commandes</a>
-                    </li>
-                    <li role="listitem">
-                        <a class="nav-link" href="/client/profil">Mon profil</a>
-                    </li>
+
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'client') : ?>
+                        <li role="listitem">
+                            <a class="nav-link" href="/commandes/historique">Mes commandes</a>
+                        </li>
+                        <li role="listitem">
+                            <a class="nav-link" href="/client/profil">Mon profil</a>
+                        </li>
+                    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'employe') : ?>
+                        <li role="listitem">
+                            <a class="nav-link" href="/employe/dashboard">Espace employé</a>
+                        </li>
+                    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') : ?>
+                        <li role="listitem">
+                            <a class="nav-link" href="/admin/dashboard">Espace admin</a>
+                        </li>
                     <?php endif; ?>
                 </ul>
 
