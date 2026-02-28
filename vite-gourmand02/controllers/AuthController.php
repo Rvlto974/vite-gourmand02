@@ -9,6 +9,10 @@ class AuthController {
     }
 
     public function inscription() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nom = $_POST['nom'] ?? '';
             $prenom = $_POST['prenom'] ?? '';
@@ -40,6 +44,10 @@ class AuthController {
     }
 
     public function connexion() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $motDePasse = $_POST['mot_de_passe'] ?? '';
@@ -47,9 +55,10 @@ class AuthController {
             $utilisateur = $this->utilisateurModel->getByEmail($email);
 
             if ($utilisateur && password_verify($motDePasse, $utilisateur['mot_de_passe'])) {
-                session_start();
                 $_SESSION['user_id'] = $utilisateur['id'];
                 $_SESSION['user_role'] = $utilisateur['role'];
+                $_SESSION['user_nom'] = $utilisateur['nom'];
+                $_SESSION['user_prenom'] = $utilisateur['prenom'];
                 header('Location: /');
                 exit;
             }
@@ -62,7 +71,9 @@ class AuthController {
     }
 
     public function deconnexion() {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_destroy();
         header('Location: /');
         exit;
