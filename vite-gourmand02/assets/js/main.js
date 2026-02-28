@@ -49,4 +49,27 @@ function afficherMenus(menus) {
         'noel'       : 'badge-noel',
         'paques'     : 'badge-paques',
         'evenement'  : 'badge-evenement',
-        'saisonnie
+        'saisonnier' : 'badge-saisonnier',
+    };
+
+    container.innerHTML = menus.map(menu => {
+        const theme      = (menu.theme ?? 'classique').toLowerCase();
+        const badgeClass = badgeClasses[theme] ?? 'badge-classique';
+        const badgeLabel = menu.theme ?? 'Classique';
+        const image      = menu.image ?? '/assets/images/menu-default.jpg';
+        const note       = parseFloat(menu.note_moyenne ?? 0);
+        const nbAvis     = menu.nb_avis ?? 0;
+        const description= (menu.description ?? '').substring(0, 100);
+        const prix       = parseFloat(menu.prix_base).toFixed(2);
+
+        let etoiles = '';
+        for (let i = 1; i <= 5; i++) {
+            etoiles += i <= Math.round(note) ? '★' : '☆';
+        }
+
+        return `
+        <div class="col-md-4 mb-4">
+            <div class="card menu-card h-100">
+                <div class="card-img-wrapper">
+                    <img src="${image}" alt="Photo du ${escapeHtml(menu.titre)}">
+                    <span class="badge-theme ${badgeClass}">${escapeHtml(badgeLabel)
