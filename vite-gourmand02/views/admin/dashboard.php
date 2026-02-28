@@ -1,6 +1,6 @@
 <?php require_once 'views/layouts/header.php'; ?>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3">
@@ -20,6 +20,9 @@
                         <a class="nav-link" href="/employe/commandes">Commandes</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/admin/stats">Statistiques</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/auth/deconnexion">Déconnexion</a>
                     </li>
                 </ul>
@@ -31,23 +34,29 @@
             <h1>Tableau de bord admin</h1>
 
             <div class="row mt-3">
-                <div class="col-md-4">
-                    <div class="card p-3 text-center">
+                <div class="col-md-3">
+                    <a href="/admin/utilisateurs" class="card p-3 text-center text-decoration-none d-block">
                         <h3><?= count($utilisateurs) ?></h3>
-                        <p>Utilisateurs</p>
-                    </div>
+                        <p class="text-muted mb-0">Utilisateurs</p>
+                    </a>
                 </div>
-                <div class="col-md-4">
-                    <div class="card p-3 text-center">
+                <div class="col-md-3">
+                    <a href="/employe/commandes" class="card p-3 text-center text-decoration-none d-block">
                         <h3><?= count($commandes) ?></h3>
-                        <p>Commandes</p>
-                    </div>
+                        <p class="text-muted mb-0">Commandes</p>
+                    </a>
                 </div>
-                <div class="col-md-4">
-                    <div class="card p-3 text-center">
+                <div class="col-md-3">
+                    <a href="/admin/menus" class="card p-3 text-center text-decoration-none d-block">
                         <h3><?= count($menus) ?></h3>
-                        <p>Menus actifs</p>
-                    </div>
+                        <p class="text-muted mb-0">Menus actifs</p>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/admin/stats" class="card p-3 text-center text-decoration-none d-block">
+                        <h3>📊</h3>
+                        <p class="text-muted mb-0">Statistiques</p>
+                    </a>
                 </div>
             </div>
 

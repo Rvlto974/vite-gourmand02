@@ -88,4 +88,14 @@ class AdminController {
 
         require_once 'views/admin/creer_employe.php';
     }
+    public function stats() {
+        $this->verifierAdmin();
+        require_once 'config/MongoService.php';
+        $mongo = new MongoService();
+        $caTotal = $mongo->getCaTotal();
+        $statsByMenu = $mongo->getStatsByMenu();
+        $statsByMois = $mongo->getStatsByMois();
+        require_once 'views/admin/stats.php';
+    }
+
 }
