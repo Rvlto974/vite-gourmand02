@@ -13,7 +13,7 @@
                     <p><strong>Personnes :</strong> <?= $commande['nb_personnes'] ?></p>
                     <p><strong>Prix total :</strong> <?= $commande['prix_total'] ?> €</p>
                     <p><strong>Adresse :</strong> <?= htmlspecialchars($commande['adresse_livraison']) ?></p>
-                    <p><strong>Date :</strong> <?= $commande['date_prestation'] ?></p>
+                    <p><strong>Date :</strong> <?= date('d/m/Y', strtotime($commande['date_prestation'])) ?></p>
                     <p><strong>Statut :</strong> <span class="badge bg-warning">Nouvelle</span></p>
                 </div>
                 <?php endif; ?>
