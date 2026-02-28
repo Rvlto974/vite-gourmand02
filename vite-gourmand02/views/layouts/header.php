@@ -75,24 +75,26 @@ if (session_status() === PHP_SESSION_NONE) {
                     </li>
                 </ul>
 
-                <?php if (isset($_SESSION['user_id'])) : ?>
-                    <a href="/auth/deconnexion" 
-                        class="btn btn-connexion ms-2"
-                        aria-label="Se déconnecter">
-                        Déconnexion
-                    </a>
-                <?php else : ?>
-                    <a href="/auth/connexion" 
-                        class="btn btn-connexion ms-2"
-                        aria-label="Se connecter">
-                        Connexion
-                    </a>
-                    <a href="/auth/inscription" 
-                        class="btn btn-inscription ms-2"
-                        aria-label="Créer un compte">
-                        S'inscrire
-                    </a>
-                <?php endif; ?>
+                <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
+                    <?php if (isset($_SESSION['user_id'])) : ?>
+                        <a href="/auth/deconnexion" 
+                            class="btn btn-connexion"
+                            aria-label="Se déconnecter">
+                            Déconnexion
+                        </a>
+                    <?php else : ?>
+                        <a href="/auth/connexion" 
+                            class="btn btn-connexion"
+                            aria-label="Se connecter">
+                            Connexion
+                        </a>
+                        <a href="/auth/inscription" 
+                            class="btn btn-inscription"
+                            aria-label="Créer un compte">
+                            S'inscrire
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </nav>
