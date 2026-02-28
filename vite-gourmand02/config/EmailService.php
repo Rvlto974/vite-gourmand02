@@ -8,17 +8,17 @@ class EmailService {
     private $mail;
 
     public function __construct() {
-        $this->mail = new PHPMailer(true);
-        $this->mail->isSMTP();
-        $this->mail->Host = $_ENV['MAIL_HOST'] ?? 'smtp.gmail.com';
-        $this->mail->SMTPAuth = true;
-        $this->mail->Username = $_ENV['MAIL_USER'] ?? '';
-        $this->mail->Password = $_ENV['MAIL_PASS'] ?? '';
-        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $this->mail->Port = $_ENV['MAIL_PORT'] ?? 587;
-        $this->mail->CharSet = 'UTF-8';
-        $this->mail->setFrom('contact@viteetgourmand.fr', 'Vite & Gourmand');
-    }
+    $this->mail = new PHPMailer(true);
+    $this->mail->isSMTP();
+    $this->mail->Host = 'sandbox.smtp.mailtrap.io';
+    $this->mail->SMTPAuth = true;
+    $this->mail->Username = 'f72a40f6d23659';
+    $this->mail->Password = $_ENV['MAIL_PASS'] ?? '';
+    $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $this->mail->Port = 587;
+    $this->mail->CharSet = 'UTF-8';
+    $this->mail->setFrom('contact@viteetgourmand.fr', 'Vite & Gourmand');
+}
 
     // Email confirmation de commande
     public function envoyerConfirmationCommande($email, $prenom, $commande) {
