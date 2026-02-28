@@ -49,10 +49,10 @@ class AdminController {
     }
 
     public function menus() {
-    $this->verifierAdmin();
-    $menus = $this->menuModel->getAllAdmin();
-    require_once 'views/admin/menus.php';
-}
+        $this->verifierAdmin();
+        $menus = $this->menuModel->getAllAdmin();
+        require_once 'views/admin/menus.php';
+    }
 
     public function toggleActifMenu() {
         $this->verifierAdmin();
@@ -62,5 +62,30 @@ class AdminController {
         }
         header('Location: /admin/menus');
         exit;
+    }
+
+    public function creerEmploye() {
+        $this->verifierAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = $_POST['nom'] ?? '';
+            $prenom = $_POST['prenom'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $motDePasse = $_POST['mot_de_passe'] ?? '';
+
+            $hash = password_hash($motDePasse, PASSWORD_BCRYPT);
+            $this->utilisateurModel->creerAvecRole([
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'email' => $email,
+                'mot_de_passe' => $hash,
+                'role' => 'employe'
+            ]);
+
+            header('Location: /admin/utilisateurs');
+            exit;
+        }
+
+        require_once 'views/admin/creer_employe.php';
     }
 }

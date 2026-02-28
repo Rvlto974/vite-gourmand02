@@ -30,6 +30,8 @@
         <div class="col-md-9">
             <h1>Gestion des utilisateurs</h1>
 
+            <a href="/admin/creerEmploye" class="btn btn-primary mt-2 mb-3">+ Créer un employé</a>
+
             <div class="table-responsive mt-3">
                 <table class="table" aria-label="Liste des utilisateurs">
                     <thead>
