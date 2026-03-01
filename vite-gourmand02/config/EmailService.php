@@ -80,4 +80,24 @@ class EmailService {
             return false;
         }
     }
+    public function envoyerReinitialisationMdp($email, $prenom, $token) {
+    try {
+        $this->mail->addAddress($email, $prenom);
+        $this->mail->isHTML(true);
+        $this->mail->Subject = 'Réinitialisation de votre mot de passe — Vite & Gourmand';
+        $lien = 'http://localhost:8080/motDePasse/reinitialiser?token=' . $token;
+        $this->mail->Body = "
+            <h2>Bonjour {$prenom},</h2>
+            <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+            <p><a href='{$lien}'>Cliquer ici pour réinitialiser votre mot de passe</a></p>
+            <p>Ce lien expire dans 1 heure.</p>
+            <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+            <p>L'équipe Vite & Gourmand</p>
+        ";
+        $this->mail->send();
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
+}
 }

@@ -31,6 +31,9 @@
                 <p class="mt-3 text-center">
                     Pas encore de compte ? 
                     <a href="/auth/inscription">S'inscrire</a>
+                    <p class="mt-2 text-center">
+                        <a href="/motDePasse/oublie">Mot de passe oublié ?</a>
+                    </p>
                 </p>
             </form>
         </div>
