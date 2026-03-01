@@ -82,4 +82,28 @@ class UtilisateurModel {
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($params);
     }
+    public function sauvegarderToken($id, $token, $expiration) {
+    $sql = "UPDATE utilisateurs SET reset_token = :token, token_expiration = :expiration WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':token' => $token, ':expiration' => $expiration, ':id' => $id]);
+}
+
+public function getByToken($token) {
+    $sql = "SELECT * FROM utilisateurs WHERE reset_token = :token";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([':token' => $token]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function mettreAJourMdp($id, $hash) {
+    $sql = "UPDATE utilisateurs SET mot_de_passe = :hash WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':hash' => $hash, ':id' => $id]);
+}
+
+public function supprimerToken($id) {
+    $sql = "UPDATE utilisateurs SET reset_token = NULL, token_expiration = NULL WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':id' => $id]);
+}
 }
