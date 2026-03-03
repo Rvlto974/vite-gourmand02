@@ -4,17 +4,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>Vite & Gourmand</h5>
+                    <h3>Vite & Gourmand</h3>
                     <p>Traiteur d'exception à Bordeaux depuis 25 ans.</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Horaires</h5>
+                    <h3>Horaires</h3>
                     <p>Lundi - Vendredi : 9h - 18h</p>
                     <p>Samedi : 9h - 12h</p>
                     <p>Dimanche : Fermé</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Contact</h5>
+                    <h3>Contact</h3>
                     <p>contact@viteetgourmand.fr</p>
                     <p>05 XX XX XX XX</p>
                 </div>

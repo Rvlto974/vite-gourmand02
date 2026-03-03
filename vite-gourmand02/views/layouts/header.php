@@ -13,25 +13,25 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
     .btn-connexion {
-        border: 2px solid #5DA99A !important;
-        color: #5DA99A !important;
+        border: 2px solid #2E6B5E !important;
+        color: #2E6B5E !important;
         border-radius: 50px !important;
         background: white !important;
     }
     .btn-connexion:hover {
-        background: #5DA99A !important;
+        background: #2E6B5E !important;
         color: white !important;
     }
     .btn-inscription,
     .btn-inscription:link,
     .btn-inscription:visited {
-        background-color: #5DA99A !important;
+        background-color: #2E6B5E !important;
         color: white !important;
         border-radius: 50px !important;
         border: none !important;
     }
     .btn-inscription:hover {
-        background-color: #3D7A6E !important;
+        background-color: #1D4A3E !important;
         color: white !important;
     }
     </style>
@@ -64,9 +64,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <div class="collapse navbar-collapse align-items-center" id="menu">
                 <ul class="navbar-nav ms-auto align-items-center" role="list">
-                    <li role="listitem">
-                        <a class="nav-link" href="/">Accueil</a>
-                    </li>
                     <li role="listitem">
                         <a class="nav-link" href="/menus">Nos Menus</a>
                     </li>
