@@ -5,29 +5,29 @@
 .menu-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
 .menu-card img { height: 200px; object-fit: cover; width: 100%; }
 .badge-theme { position: absolute; top: 12px; right: 12px; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; }
-.badge-noel      { background-color: #e74c3c; color: white; }
-.badge-paques    { background-color: #9b59b6; color: white; }
-.badge-classique { background-color: #e67e22; color: white; }
-.badge-evenement { background-color: #2980b9; color: white; }
-.badge-saisonnier{ background-color: #27ae60; color: white; }
-.prix-color { color: #e67e22; font-weight: bold; font-size: 1.1rem; }
+.badge-noel      { background-color: #c0392b; color: white; }
+.badge-paques    { background-color: #7d3c98; color: white; }
+.badge-classique { background-color: #d35400; color: white; }
+.badge-evenement { background-color: #1a5276; color: white; }
+.badge-saisonnier{ background-color: #1e8449; color: white; }
+.prix-color { color: #d35400; font-weight: bold; font-size: 1.1rem; }
 .card-img-wrapper { position: relative; }
-.stars { color: #f39c12; font-size: 0.9rem; }
-.meta-info { font-size: 0.85rem; color: #666; }
-.btn-voir { background-color: #5DA99A; color: white; border: none; border-radius: 8px; width: 100%; padding: 8px; }
-.btn-voir:hover { background-color: #3D7A6E; color: white; }
+.stars { color: #d4800a; font-size: 0.9rem; }
+.meta-info { font-size: 0.85rem; color: #555; }
+.btn-voir { background-color: #2E6B5E; color: white; border: none; border-radius: 8px; width: 100%; padding: 8px; }
+.btn-voir:hover { background-color: #1D4A3E; color: white; }
 .filtre-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.btn-appliquer { background-color: #5DA99A; color: white; border: none; border-radius: 8px; width: 100%; }
-.btn-appliquer:hover { background-color: #3D7A6E; color: white; }
-.btn-reinit { background: white; border: 1px solid #ccc; border-radius: 8px; width: 100%; margin-top: 8px; }
+.btn-appliquer { background-color: #2E6B5E; color: white; border: none; border-radius: 8px; width: 100%; }
+.btn-appliquer:hover { background-color: #1D4A3E; color: white; }
+.btn-reinit { background: white; border: 1px solid #ccc; border-radius: 8px; width: 100%; margin-top: 8px; color: #333; }
 .page-title { font-size: 1.8rem; font-weight: 700; }
-.count-badge { background: #5DA99A; color: white; border-radius: 20px; padding: 4px 12px; font-size: 0.9rem; }
+.count-badge { background: #2E6B5E; color: white; border-radius: 20px; padding: 4px 12px; font-size: 0.9rem; }
 </style>
 
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="/" style="color:#2E6B5E">Accueil</a></li>
             <li class="breadcrumb-item active">Nos Menus</li>
         </ol>
     </nav>
@@ -117,10 +117,10 @@
                                 <span class="badge-theme <?= $badgeClass ?>"><?= $badgeLabel ?></span>
                             </div>
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-bold" style="color:#5DA99A">
+                                <h5 class="card-title fw-bold" style="color:#2E6B5E">
                                     <?= htmlspecialchars($menu['titre']) ?>
                                 </h5>
-                                <div class="stars mb-1">
+                                <div class="stars mb-1" aria-label="Note : <?= round($note) ?> étoiles sur 5">
                                     <?php for ($i = 1; $i <= 5; $i++) : ?>
                                         <?= $i <= round($note) ? '★' : '☆' ?>
                                     <?php endfor; ?>
@@ -137,8 +137,8 @@
                                     A partir de <?= number_format($menu['prix_base'], 2) ?> EUR
                                 </p>
                                 <a href="/menus/detail?id=<?= $menu['id'] ?>" 
-                                   class="btn btn-voir"
-                                   aria-label="Voir le menu <?= htmlspecialchars($menu['titre']) ?>">
+                                    class="btn btn-voir"
+                                    aria-label="Voir le menu <?= htmlspecialchars($menu['titre']) ?>">
                                     👁 Voir le menu
                                 </a>
                             </div>
