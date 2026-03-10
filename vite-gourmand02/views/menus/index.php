@@ -113,7 +113,7 @@
                         <div class="card menu-card h-100">
                             <div class="card-img-wrapper">
                                 <img src="<?= !empty($menu['image']) ? htmlspecialchars($menu['image']) : '/assets/images/menu-default.jpg' ?>" 
-                                     alt="Photo du <?= htmlspecialchars($menu['titre']) ?>">
+                                    alt="Photo du <?= htmlspecialchars($menu['titre']) ?>">
                                 <span class="badge-theme <?= $badgeClass ?>"><?= $badgeLabel ?></span>
                             </div>
                             <div class="card-body d-flex flex-column">
