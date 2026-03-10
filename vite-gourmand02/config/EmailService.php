@@ -8,21 +8,21 @@ class EmailService {
     private $mail;
 
     public function __construct() {
-    $this->mail = new PHPMailer(true);
-    $this->mail->isSMTP();
-    $this->mail->Host = 'sandbox.smtp.mailtrap.io';
-    $this->mail->SMTPAuth = true;
-    $this->mail->Username = 'f72a40f6d23659';
-    $this->mail->Password = $_ENV['MAIL_PASS'] ?? '';
-    $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $this->mail->Port = 587;
-    $this->mail->CharSet = 'UTF-8';
-    $this->mail->setFrom('contact@viteetgourmand.fr', 'Vite & Gourmand');
-}
+        $this->mail = new PHPMailer(true);
+        $this->mail->isSMTP();
+        $this->mail->Host = 'smtp.gmail.com';
+        $this->mail->SMTPAuth = true;
+        $this->mail->Username = 'mathieujacquet97460@gmail.com';
+        $this->mail->Password = getenv('MAIL_PASS') ?: '';
+        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $this->mail->Port = 587;
+        $this->mail->CharSet = 'UTF-8';
+        $this->mail->setFrom('mathieujacquet97460@gmail.com', 'Vite & Gourmand');
+    }
 
-    // Email confirmation de commande
     public function envoyerConfirmationCommande($email, $prenom, $commande) {
         try {
+            // Email au client
             $this->mail->addAddress($email, $prenom);
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Confirmation de votre commande — Vite & Gourmand';
@@ -37,13 +37,27 @@ class EmailService {
                 <p>L'équipe Vite & Gourmand</p>
             ";
             $this->mail->send();
+
+            // Email à l'admin
+            $this->mail->clearAddresses();
+            $this->mail->addAddress('mathieujacquet97460@gmail.com', 'Admin');
+            $this->mail->Subject = '🛒 Nouvelle commande — Vite & Gourmand';
+            $this->mail->Body = "
+                <h2>Nouvelle commande reçue !</h2>
+                <p><strong>Client :</strong> {$prenom} ({$email})</p>
+                <p><strong>Menu :</strong> {$commande['menu_titre']}</p>
+                <p><strong>Nombre de personnes :</strong> {$commande['nb_personnes']}</p>
+                <p><strong>Prix total :</strong> {$commande['prix_total']} €</p>
+                <p><strong>Date :</strong> {$commande['date_prestation']}</p>
+            ";
+            $this->mail->send();
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
 
-    // Email confirmation d'inscription
     public function envoyerConfirmationInscription($email, $prenom) {
         try {
             $this->mail->addAddress($email, $prenom);
@@ -62,7 +76,6 @@ class EmailService {
         }
     }
 
-    // Email changement de statut
     public function envoyerChangementStatut($email, $prenom, $statut) {
         try {
             $this->mail->addAddress($email, $prenom);
@@ -80,24 +93,25 @@ class EmailService {
             return false;
         }
     }
+
     public function envoyerReinitialisationMdp($email, $prenom, $token) {
-    try {
-        $this->mail->addAddress($email, $prenom);
-        $this->mail->isHTML(true);
-        $this->mail->Subject = 'Réinitialisation de votre mot de passe — Vite & Gourmand';
-        $lien = 'http://localhost:8080/motDePasse/reinitialiser?token=' . $token;
-        $this->mail->Body = "
-            <h2>Bonjour {$prenom},</h2>
-            <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
-            <p><a href='{$lien}'>Cliquer ici pour réinitialiser votre mot de passe</a></p>
-            <p>Ce lien expire dans 1 heure.</p>
-            <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
-            <p>L'équipe Vite & Gourmand</p>
-        ";
-        $this->mail->send();
-        return true;
-    } catch (Exception $e) {
-        return false;
+        try {
+            $this->mail->addAddress($email, $prenom);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = 'Réinitialisation de votre mot de passe — Vite & Gourmand';
+            $lien = 'https://vite-gourmand02.fly.dev/motDePasse/reinitialiser?token=' . $token;
+            $this->mail->Body = "
+                <h2>Bonjour {$prenom},</h2>
+                <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                <p><a href='{$lien}'>Cliquer ici pour réinitialiser votre mot de passe</a></p>
+                <p>Ce lien expire dans 1 heure.</p>
+                <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                <p>L'équipe Vite & Gourmand</p>
+            ";
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
-}
 }
