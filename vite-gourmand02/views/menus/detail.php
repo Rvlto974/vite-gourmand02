@@ -196,11 +196,11 @@
                         <h3 id="prix-estime" class="prix-color"><?= number_format($menu['prix_base'], 2) ?> €</h3>
                     </div>
                 </div>
-                <?php if (isset($_SESSION['user'])): ?>
+                <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="/commandes/nouveau?menu_id=<?= $menu['id'] ?>&nb_personnes=<?= $menu['nb_personnes_min'] ?>"
-                       class="btn btn-commander mt-3"
-                       id="btn-commander"
-                       aria-label="Commander le menu <?= htmlspecialchars($menu['titre']) ?>">
+                        class="btn btn-commander mt-3"
+                        id="btn-commander"
+                        aria-label="Commander le menu <?= htmlspecialchars($menu['titre']) ?>">
                         🛒 Commander ce menu
                     </a>
                 <?php else: ?>
