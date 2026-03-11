@@ -141,4 +141,51 @@ class CommandesController {
         header('Location: /commandes/historique');
         exit;
     }
+    public function modifier() {
+    $this->verifierConnexion();
+
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        header('Location: /commandes/historique');
+        exit;
+    }
+
+    $commande = $this->commandeModel->getById($id);
+
+    if (!$commande || $commande['utilisateur_id'] != $_SESSION['user_id']) {
+        header('Location: /commandes/historique');
+        exit;
+    }
+
+    if ($commande['statut'] !== 'nouvelle') {
+        header('Location: /commandes/historique');
+        exit;
+    }
+
+    $menu = $this->menuModel->getById($commande['menu_id']);
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $nb_personnes = $_POST['nb_personnes'] ?? $commande['nb_personnes'];
+        $adresse = $_POST['adresse_livraison'] ?? $commande['adresse_livraison'];
+        $date = $_POST['date_prestation'] ?? $commande['date_prestation'];
+
+        $prix_total = $menu['prix_base'];
+        if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
+            $prix_total = $prix_total * 0.90;
+        }
+
+        $this->commandeModel->modifier($id, [
+            'nb_personnes' => $nb_personnes,
+            'adresse_livraison' => $adresse,
+            'date_prestation' => $date,
+            'prix_total' => $prix_total
+        ]);
+
+        $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Commande modifiée avec succès !'];
+        header('Location: /commandes/historique');
+        exit;
+    }
+
+    require_once 'views/commandes/modifier.php';
+}
 }
