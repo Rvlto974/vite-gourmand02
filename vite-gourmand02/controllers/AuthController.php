@@ -34,6 +34,7 @@ class AuthController {
                 'email' => $email,
                 'mot_de_passe' => $hash
             ]);
+            $_SESSION['flash'] = ['type' => 'success', 'message' => '🎉 Compte créé ! Vous pouvez vous connecter.'];
             header('Location: /auth/connexion');
             exit;
         }
@@ -55,6 +56,7 @@ class AuthController {
                 $_SESSION['user_role'] = $utilisateur['role'];
                 $_SESSION['user_nom'] = $utilisateur['nom'];
                 $_SESSION['user_prenom'] = $utilisateur['prenom'];
+                $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Bienvenue ' . $utilisateur['prenom'] . ' !'];
                 header('Location: /');
                 exit;
             }
@@ -68,7 +70,9 @@ class AuthController {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        $_SESSION['flash'] = ['type' => 'secondary', 'message' => '👋 À bientôt !'];
         session_destroy();
+        session_start();
         header('Location: /');
         exit;
     }

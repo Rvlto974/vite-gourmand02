@@ -22,7 +22,7 @@ class EmailService {
 
     public function envoyerConfirmationCommande($email, $prenom, $commande) {
         try {
-            // Email au client
+            $this->mail->clearAddresses();
             $this->mail->addAddress($email, $prenom);
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Confirmation de votre commande — Vite & Gourmand';
@@ -38,7 +38,6 @@ class EmailService {
             ";
             $this->mail->send();
 
-            // Email à l'admin
             $this->mail->clearAddresses();
             $this->mail->addAddress('mathieujacquet97460@gmail.com', 'Admin');
             $this->mail->Subject = '🛒 Nouvelle commande — Vite & Gourmand';
@@ -60,6 +59,7 @@ class EmailService {
 
     public function envoyerConfirmationInscription($email, $prenom) {
         try {
+            $this->mail->clearAddresses();
             $this->mail->addAddress($email, $prenom);
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Bienvenue chez Vite & Gourmand !';
@@ -78,6 +78,7 @@ class EmailService {
 
     public function envoyerChangementStatut($email, $prenom, $statut) {
         try {
+            $this->mail->clearAddresses();
             $this->mail->addAddress($email, $prenom);
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Mise à jour de votre commande — Vite & Gourmand';
@@ -96,6 +97,7 @@ class EmailService {
 
     public function envoyerReinitialisationMdp($email, $prenom, $token) {
         try {
+            $this->mail->clearAddresses();
             $this->mail->addAddress($email, $prenom);
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Réinitialisation de votre mot de passe — Vite & Gourmand';
@@ -107,6 +109,94 @@ class EmailService {
                 <p>Ce lien expire dans 1 heure.</p>
                 <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
                 <p>L'équipe Vite & Gourmand</p>
+            ";
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function envoyerCommandeTerminee($email, $prenom, $commande, $commande_id) {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress($email, $prenom);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = '🎉 Votre commande est terminée — Vite & Gourmand';
+            $lien = 'https://vite-gourmand02.fly.dev/avis/creer?commande_id=' . $commande_id;
+            $this->mail->Body = "
+                <h2>Bonjour {$prenom},</h2>
+                <p>Votre commande <strong>{$commande['menu_titre']}</strong> est maintenant terminée !</p>
+                <p>Nous espérons que vous avez passé un excellent moment.</p>
+                <p>Vous pouvez laisser un avis sur votre expérience :</p>
+                <p><a href='{$lien}' style='background:#5DA99A; color:white; padding:10px 20px; border-radius:5px; text-decoration:none;'>⭐ Laisser un avis</a></p>
+                <p>Merci de votre confiance !</p>
+                <p>L'équipe Vite & Gourmand</p>
+            ";
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function envoyerAttentesMateriel($email, $prenom, $commande) {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress($email, $prenom);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = '📦 Retour matériel requis — Vite & Gourmand';
+            $this->mail->Body = "
+                <h2>Bonjour {$prenom},</h2>
+                <p>Concernant votre commande <strong>{$commande['menu_titre']}</strong>,</p>
+                <p>Nous vous rappelons que le matériel mis à disposition doit être retourné.</p>
+                <p>Merci de nous contacter pour organiser le retour :</p>
+                <p>📧 contact@viteetgourmand.fr</p>
+                <p>📞 05 XX XX XX XX</p>
+                <p>L'équipe Vite & Gourmand</p>
+            ";
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function envoyerAnnulationClient($email, $prenom, $commande) {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress($email, $prenom);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = '❌ Annulation de votre commande — Vite & Gourmand';
+            $this->mail->Body = "
+                <h2>Bonjour {$prenom},</h2>
+                <p>Votre commande a bien été annulée.</p>
+                <p><strong>Menu :</strong> {$commande['menu_titre']}</p>
+                <p><strong>Date prestation :</strong> {$commande['date_prestation']}</p>
+                <p><strong>Prix :</strong> {$commande['prix_total']} €</p>
+                <p>Si vous souhaitez passer une nouvelle commande : <a href='https://vite-gourmand02.fly.dev/menus'>Voir nos menus</a></p>
+                <p>L'équipe Vite & Gourmand</p>
+            ";
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function envoyerAnnulationAdmin($prenom, $email, $commande) {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress('mathieujacquet97460@gmail.com', 'Admin');
+            $this->mail->isHTML(true);
+            $this->mail->Subject = '❌ Annulation commande — Vite & Gourmand';
+            $this->mail->Body = "
+                <h2>Commande annulée !</h2>
+                <p><strong>Client :</strong> {$prenom} ({$email})</p>
+                <p><strong>Menu :</strong> {$commande['menu_titre']}</p>
+                <p><strong>Nombre de personnes :</strong> {$commande['nb_personnes']}</p>
+                <p><strong>Prix :</strong> {$commande['prix_total']} €</p>
+                <p><strong>Date prestation :</strong> {$commande['date_prestation']}</p>
             ";
             $this->mail->send();
             return true;

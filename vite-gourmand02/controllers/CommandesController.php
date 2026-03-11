@@ -50,7 +50,6 @@ class CommandesController {
             $adresse = $_POST['adresse_livraison'] ?? '';
             $date = $_POST['date_prestation'] ?? '';
 
-            // Réduction 10% si +5 personnes
             $prix_total = $menu['prix_base'];
             if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
                 $prix_total = $prix_total * 0.90;
@@ -65,7 +64,6 @@ class CommandesController {
                 'date_prestation' => $date
             ]);
 
-            // Enregistrement stats MongoDB
             require_once 'config/MongoService.php';
             $mongo = new MongoService();
             $mongo->enregistrerCommande([
@@ -76,7 +74,6 @@ class CommandesController {
                 'date' => $date
             ]);
 
-            // Envoi email confirmation
             $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
             $commande = $this->commandeModel->getById($commande_id);
             $this->emailService->envoyerConfirmationCommande(
@@ -123,6 +120,22 @@ class CommandesController {
 
         if (in_array($commande['statut'], ['nouvelle', 'acceptee'])) {
             $this->commandeModel->annuler($id);
+
+            $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
+
+            // Mail au client
+            $this->emailService->envoyerAnnulationClient(
+                $utilisateur['email'],
+                $utilisateur['prenom'],
+                $commande
+            );
+
+            // Mail à l'admin
+            $this->emailService->envoyerAnnulationAdmin(
+                $utilisateur['prenom'],
+                $utilisateur['email'],
+                $commande
+            );
         }
 
         header('Location: /commandes/historique');
