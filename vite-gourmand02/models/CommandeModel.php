@@ -73,4 +73,20 @@ public function updateStatut($id, $statut) {
     $stmt = $this->db->prepare($sql);
     return $stmt->execute([':statut' => $statut, ':id' => $id]);
 }
+public function modifier($id, $data) {
+    $sql = "UPDATE commandes SET 
+                nb_personnes = :nb_personnes,
+                adresse_livraison = :adresse_livraison,
+                date_prestation = :date_prestation,
+                prix_total = :prix_total
+            WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([
+        ':nb_personnes' => $data['nb_personnes'],
+        ':adresse_livraison' => $data['adresse_livraison'],
+        ':date_prestation' => $data['date_prestation'],
+        ':prix_total' => $data['prix_total'],
+        ':id' => $id
+    ]);
+}
 }

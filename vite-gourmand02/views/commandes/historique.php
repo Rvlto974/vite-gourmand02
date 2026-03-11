@@ -104,7 +104,17 @@
                            class="btn btn-sm btn-warning">
                             ⭐ Laisser un avis
                         </a>
-                    <?php elseif (in_array($statut, ['nouvelle', 'acceptee'])) : ?>
+                    <?php elseif ($statut === 'nouvelle') : ?>
+                        <a href="/commandes/modifier?id=<?= $commande['id'] ?>"
+                           class="btn btn-sm btn-secondary">
+                            ✏️ Modifier
+                        </a>
+                        <a href="/commandes/annuler?id=<?= $commande['id'] ?>"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Annuler cette commande ?')">
+                            ❌ Annuler
+                        </a>
+                    <?php elseif ($statut === 'acceptee') : ?>
                         <a href="/commandes/annuler?id=<?= $commande['id'] ?>"
                            class="btn btn-sm btn-danger"
                            onclick="return confirm('Annuler cette commande ?')">
