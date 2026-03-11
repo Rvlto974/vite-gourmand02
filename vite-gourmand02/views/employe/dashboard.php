@@ -70,19 +70,20 @@
                             <tr>
                                 <td><?= htmlspecialchars($commande['prenom'] . ' ' . $commande['nom']) ?></td>
                                 <td><?= htmlspecialchars($commande['menu_titre']) ?></td>
-                                <td><?= $commande['date_prestation'] ?></td>
+                                <td><?= date('d/m/Y', strtotime($commande['date_prestation'])) ?></td>
                                 <td><?= $commande['prix_total'] ?> €</td>
                                 <td>
                                     <form method="POST" action="/employe/updateStatut">
                                         <input type="hidden" name="id" value="<?= $commande['id'] ?>">
                                         <select name="statut" class="form-select form-select-sm d-inline w-auto">
-                                            <option value="nouvelle">Nouvelle</option>
-                                            <option value="confirmee">Confirmée</option>
-                                            <option value="en_preparation">En préparation</option>
-                                            <option value="livree">Livrée</option>
-                                            <option value="terminee">Terminée</option>
-                                            <option value="annulee">Annulée</option>
-                                        </select>
+    <option value="nouvelle">Nouvelle</option>
+    <option value="acceptee">Acceptée</option>
+    <option value="en_preparation">En préparation</option>
+    <option value="en_livraison">En livraison</option>
+    <option value="livree">Livrée</option>
+    <option value="terminee">Terminée</option>
+    <option value="attente_materiel">Attente matériel</option>
+</select>
                                         <button type="submit" class="btn btn-primary btn-sm">
                                             Mettre à jour
                                         </button>

@@ -2,6 +2,7 @@
 require_once 'models/CommandeModel.php';
 require_once 'models/MenuModel.php';
 require_once 'models/UtilisateurModel.php';
+require_once 'models/CommandeStatutModel.php';
 require_once 'config/EmailService.php';
 
 class CommandesController {
@@ -9,12 +10,14 @@ class CommandesController {
     private $menuModel;
     private $utilisateurModel;
     private $emailService;
+    private $commandeStatutModel;
 
     public function __construct() {
         $this->commandeModel = new CommandeModel();
         $this->menuModel = new MenuModel();
         $this->utilisateurModel = new UtilisateurModel();
         $this->emailService = new EmailService();
+        $this->commandeStatutModel = new CommandeStatutModel();
     }
 
     private function verifierConnexion() {
@@ -64,6 +67,9 @@ class CommandesController {
                 'date_prestation' => $date
             ]);
 
+            // Enregistrer statut initial
+            $this->commandeStatutModel->enregistrer($commande_id, 'nouvelle');
+
             require_once 'config/MongoService.php';
             $mongo = new MongoService();
             $mongo->enregistrerCommande([
@@ -99,6 +105,13 @@ class CommandesController {
     public function historique() {
         $this->verifierConnexion();
         $commandes = $this->commandeModel->getByUtilisateur($_SESSION['user_id']);
+
+        // Récupérer l'historique des statuts pour chaque commande
+        $historiquesStatuts = [];
+        foreach ($commandes as $commande) {
+            $historiquesStatuts[$commande['id']] = $this->commandeStatutModel->getByCommande($commande['id']);
+        }
+
         require_once 'views/commandes/historique.php';
     }
 
@@ -120,17 +133,16 @@ class CommandesController {
 
         if (in_array($commande['statut'], ['nouvelle', 'acceptee'])) {
             $this->commandeModel->annuler($id);
+            $this->commandeStatutModel->enregistrer($id, 'annulee');
 
             $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
 
-            // Mail au client
             $this->emailService->envoyerAnnulationClient(
                 $utilisateur['email'],
                 $utilisateur['prenom'],
                 $commande
             );
 
-            // Mail à l'admin
             $this->emailService->envoyerAnnulationAdmin(
                 $utilisateur['prenom'],
                 $utilisateur['email'],
@@ -141,51 +153,52 @@ class CommandesController {
         header('Location: /commandes/historique');
         exit;
     }
+
     public function modifier() {
-    $this->verifierConnexion();
+        $this->verifierConnexion();
 
-    $id = $_GET['id'] ?? null;
-    if (!$id) {
-        header('Location: /commandes/historique');
-        exit;
-    }
-
-    $commande = $this->commandeModel->getById($id);
-
-    if (!$commande || $commande['utilisateur_id'] != $_SESSION['user_id']) {
-        header('Location: /commandes/historique');
-        exit;
-    }
-
-    if ($commande['statut'] !== 'nouvelle') {
-        header('Location: /commandes/historique');
-        exit;
-    }
-
-    $menu = $this->menuModel->getById($commande['menu_id']);
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nb_personnes = $_POST['nb_personnes'] ?? $commande['nb_personnes'];
-        $adresse = $_POST['adresse_livraison'] ?? $commande['adresse_livraison'];
-        $date = $_POST['date_prestation'] ?? $commande['date_prestation'];
-
-        $prix_total = $menu['prix_base'];
-        if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
-            $prix_total = $prix_total * 0.90;
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header('Location: /commandes/historique');
+            exit;
         }
 
-        $this->commandeModel->modifier($id, [
-            'nb_personnes' => $nb_personnes,
-            'adresse_livraison' => $adresse,
-            'date_prestation' => $date,
-            'prix_total' => $prix_total
-        ]);
+        $commande = $this->commandeModel->getById($id);
 
-        $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Commande modifiée avec succès !'];
-        header('Location: /commandes/historique');
-        exit;
+        if (!$commande || $commande['utilisateur_id'] != $_SESSION['user_id']) {
+            header('Location: /commandes/historique');
+            exit;
+        }
+
+        if ($commande['statut'] !== 'nouvelle') {
+            header('Location: /commandes/historique');
+            exit;
+        }
+
+        $menu = $this->menuModel->getById($commande['menu_id']);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nb_personnes = $_POST['nb_personnes'] ?? $commande['nb_personnes'];
+            $adresse = $_POST['adresse_livraison'] ?? $commande['adresse_livraison'];
+            $date = $_POST['date_prestation'] ?? $commande['date_prestation'];
+
+            $prix_total = $menu['prix_base'];
+            if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
+                $prix_total = $prix_total * 0.90;
+            }
+
+            $this->commandeModel->modifier($id, [
+                'nb_personnes' => $nb_personnes,
+                'adresse_livraison' => $adresse,
+                'date_prestation' => $date,
+                'prix_total' => $prix_total
+            ]);
+
+            $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Commande modifiée avec succès !'];
+            header('Location: /commandes/historique');
+            exit;
+        }
+
+        require_once 'views/commandes/modifier.php';
     }
-
-    require_once 'views/commandes/modifier.php';
-}
 }
