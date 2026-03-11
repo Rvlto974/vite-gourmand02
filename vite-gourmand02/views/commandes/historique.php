@@ -44,6 +44,14 @@
                 'terminee'        => 5,
             ];
             $etapeActuelle = $etapes[$statut] ?? 0;
+
+            // Historique des statuts de cette commande
+            $historique = $historiquesStatuts[$commande['id']] ?? [];
+            // Indexer par statut pour retrouver la date facilement
+            $dateParStatut = [];
+            foreach ($historique as $h) {
+                $dateParStatut[$h['statut']] = $h['created_at'];
+            }
         ?>
         <div class="card mb-4 shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -63,21 +71,31 @@
 
                 <?php if ($statut === 'annulee') : ?>
                     <div class="alert alert-secondary mt-2 mb-2">❌ Cette commande a été annulée.</div>
+                    <?php if (!empty($historique)) : ?>
+                    <div class="mt-2">
+                        <?php foreach ($historique as $h) : ?>
+                        <small class="text-muted d-block">
+                            🕐 <?= date('d/m/Y H:i', strtotime($h['created_at'])) ?> — <?= $label ?>
+                        </small>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                 <?php else : ?>
                 <!-- Timeline -->
                 <div class="d-flex align-items-center justify-content-between mt-3 mb-2 flex-wrap gap-2">
                 <?php
                 $etapesLabels = [
-                    ['icone' => '📋', 'label' => 'Nouvelle'],
-                    ['icone' => '✅', 'label' => 'Acceptée'],
-                    ['icone' => '👨‍🍳', 'label' => 'Préparation'],
-                    ['icone' => '🚚', 'label' => 'Livraison'],
-                    ['icone' => '📦', 'label' => 'Livrée'],
-                    ['icone' => '🎉', 'label' => 'Terminée'],
+                    ['icone' => '📋', 'label' => 'Nouvelle',    'statut' => 'nouvelle'],
+                    ['icone' => '✅', 'label' => 'Acceptée',    'statut' => 'acceptee'],
+                    ['icone' => '👨‍🍳', 'label' => 'Préparation', 'statut' => 'en_preparation'],
+                    ['icone' => '🚚', 'label' => 'Livraison',   'statut' => 'en_livraison'],
+                    ['icone' => '📦', 'label' => 'Livrée',      'statut' => 'livree'],
+                    ['icone' => '🎉', 'label' => 'Terminée',    'statut' => 'terminee'],
                 ];
                 foreach ($etapesLabels as $i => $e) :
                     $fait = $i <= $etapeActuelle;
                     $actif = $i === $etapeActuelle;
+                    $dateEtape = $dateParStatut[$e['statut']] ?? null;
                 ?>
                     <div class="text-center" style="flex:1; min-width:60px;">
                         <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-1"
@@ -89,6 +107,11 @@
                         <small style="color: <?= $fait ? '#2E6B5E' : '#adb5bd' ?>; font-weight: <?= $actif ? 'bold' : 'normal' ?>;">
                             <?= $e['label'] ?>
                         </small>
+                        <?php if ($dateEtape) : ?>
+                        <small class="d-block text-muted" style="font-size:0.65rem;">
+                            <?= date('d/m H:i', strtotime($dateEtape)) ?>
+                        </small>
+                        <?php endif; ?>
                     </div>
                     <?php if ($i < count($etapesLabels) - 1) : ?>
                     <div style="flex:0.5; height:2px; background: <?= $i < $etapeActuelle ? '#5DA99A' : '#e9ecef' ?>; margin-bottom:20px;"></div>

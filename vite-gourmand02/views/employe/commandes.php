@@ -17,8 +17,40 @@
         <div class="col-md-9">
             <h1>Gestion des commandes</h1>
 
-            <div class="table-responsive mt-3">
-                <table class="table align-middle" aria-label="Toutes les commandes">
+            <!-- Filtres -->
+            <div class="card p-3 mt-3 mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">🔍 Rechercher un client</label>
+                        <input type="text" id="filtreClient" class="form-control form-control-sm" placeholder="Nom ou prénom...">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">📋 Filtrer par statut</label>
+                        <select id="filtreStatut" class="form-select form-select-sm">
+                            <option value="">Tous les statuts</option>
+                            <option value="nouvelle">Nouvelle</option>
+                            <option value="acceptee">Acceptée</option>
+                            <option value="en_preparation">En préparation</option>
+                            <option value="en_livraison">En livraison</option>
+                            <option value="livree">Livrée</option>
+                            <option value="terminee">Terminée</option>
+                            <option value="attente_materiel">Attente matériel</option>
+                            <option value="annulee">Annulée</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button onclick="reinitialiserFiltres()" class="btn btn-sm btn-outline-secondary w-100">
+                            ↺ Réinitialiser
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="badge bg-secondary" id="compteurResultats"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle" id="tableCommandes" aria-label="Toutes les commandes">
                     <thead>
                         <tr>
                             <th>Client</th>
@@ -30,7 +62,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tbodyCommandes">
                         <?php foreach ($commandes as $commande) : ?>
                         <?php
                             $statut = $commande['statut'];
@@ -57,7 +89,9 @@
                                 default           => $statut
                             };
                         ?>
-                        <tr <?= $statut === 'annulee' ? 'class="table-secondary"' : '' ?>>
+                        <tr <?= $statut === 'annulee' ? 'class="table-secondary"' : '' ?>
+                            data-client="<?= strtolower($commande['prenom'] . ' ' . $commande['nom']) ?>"
+                            data-statut="<?= $statut ?>">
                             <td><?= htmlspecialchars($commande['prenom'] . ' ' . $commande['nom']) ?></td>
                             <td><?= htmlspecialchars($commande['menu_titre']) ?></td>
                             <td><?= $commande['nb_personnes'] ?></td>
@@ -87,9 +121,48 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <p id="aucunResultat" class="text-muted text-center" style="display:none;">Aucune commande trouvée.</p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function filtrer() {
+    const client = document.getElementById('filtreClient').value.toLowerCase();
+    const statut = document.getElementById('filtreStatut').value;
+    const rows = document.querySelectorAll('#tbodyCommandes tr');
+    let count = 0;
+
+    rows.forEach(row => {
+        const clientData = row.dataset.client || '';
+        const statutData = row.dataset.statut || '';
+        const matchClient = clientData.includes(client);
+        const matchStatut = statut === '' || statutData === statut;
+
+        if (matchClient && matchStatut) {
+            row.style.display = '';
+            count++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    document.getElementById('compteurResultats').textContent = count + ' résultat(s)';
+    document.getElementById('aucunResultat').style.display = count === 0 ? 'block' : 'none';
+}
+
+function reinitialiserFiltres() {
+    document.getElementById('filtreClient').value = '';
+    document.getElementById('filtreStatut').value = '';
+    filtrer();
+}
+
+document.getElementById('filtreClient').addEventListener('input', filtrer);
+document.getElementById('filtreStatut').addEventListener('change', filtrer);
+
+// Initialiser le compteur
+filtrer();
+</script>
 
 <?php require_once 'views/layouts/footer.php'; ?>
