@@ -11,132 +11,77 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Vite & Gourmand</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
-    <style>
-    .btn-connexion {
-        border: 2px solid #2E6B5E !important;
-        color: #2E6B5E !important;
-        border-radius: 50px !important;
-        background: white !important;
-    }
-    .btn-connexion:hover {
-        background: #2E6B5E !important;
-        color: white !important;
-    }
-    .btn-inscription,
-    .btn-inscription:link,
-    .btn-inscription:visited {
-        background-color: #2E6B5E !important;
-        color: white !important;
-        border-radius: 50px !important;
-        border: none !important;
-    }
-    .btn-inscription:hover {
-        background-color: #1D4A3E !important;
-        color: white !important;
-    }
-    .toast-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-    }
-    </style>
 </head>
 <body>
 
-<?php if (isset($_SESSION['flash'])):
-    $flashType = $_SESSION['flash']['type'];
-    $flashMessage = $_SESSION['flash']['message'];
+<?php
+// Flash message
+if (isset($_SESSION['flash'])) {
+    $flash = $_SESSION['flash'];
+    unset($_SESSION['flash']);
+}
 ?>
-<div class="toast-container">
-    <div class="toast show align-items-center text-white bg-<?= $flashType ?> border-0" role="alert">
+
+<?php if (isset($flash)) : ?>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div class="toast show align-items-center text-white border-0
+        <?= $flash['type'] === 'success' ? 'bg-success' : 'bg-danger' ?>"
+        role="alert" id="flashToast">
         <div class="d-flex">
-            <div class="toast-body fw-bold"><?= $flashMessage ?></div>
+            <div class="toast-body"><?= htmlspecialchars($flash['message']) ?></div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
 </div>
 <script>
-setTimeout(() => {
-    const t = document.querySelector('.toast');
-    if(t) t.classList.remove('show');
-}, 3000);
+    setTimeout(() => {
+        const toast = document.getElementById('flashToast');
+        if (toast) toast.style.display = 'none';
+    }, 3000);
 </script>
-<?php unset($_SESSION['flash']); endif; ?>
+<?php endif; ?>
 
-    <a href="#contenu-principal" class="visually-hidden-focusable">
-        Aller au contenu principal
-    </a>
-
-    <nav class="navbar navbar-expand-lg py-3"
-        role="navigation"
-        aria-label="Menu principal">
-        <div class="container">
-            <a class="navbar-brand"
-                href="/"
-                aria-label="Vite et Gourmand - Retour à l'accueil">
-                Vite & Gourmand
-            </a>
-
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#menu"
-                    aria-controls="menu"
-                    aria-expanded="false"
-                    aria-label="Ouvrir le menu de navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse align-items-center" id="menu">
-                <ul class="navbar-nav ms-auto align-items-center" role="list">
-                    <li role="listitem">
-                        <a class="nav-link" href="/menus">Nos Menus</a>
-                    </li>
-                    <li role="listitem">
-                        <a class="nav-link" href="/contact">Contact</a>
-                    </li>
-
-                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'client') : ?>
-                        <li role="listitem">
-                            <a class="nav-link" href="/commandes/historique">Mes commandes</a>
-                        </li>
-                        <li role="listitem">
-                            <a class="nav-link" href="/client/profil">Mon profil</a>
-                        </li>
-                    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'employe') : ?>
-                        <li role="listitem">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/" style="color:#2E6B5E;">Vite & Gourmand</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/menus">Nos Menus</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">Contact</a>
+                </li>
+                <?php if (isset($_SESSION['user_id'])) : ?>
+                    <?php if ($_SESSION['user_role'] === 'employe') : ?>
+                        <li class="nav-item">
                             <a class="nav-link" href="/employe/dashboard">Espace employé</a>
                         </li>
-                    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') : ?>
-                        <li role="listitem">
+                    <?php elseif ($_SESSION['user_role'] === 'admin') : ?>
+                        <li class="nav-item">
                             <a class="nav-link" href="/admin/dashboard">Espace admin</a>
                         </li>
-                    <?php endif; ?>
-                </ul>
-
-                <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
-                    <?php if (isset($_SESSION['user_id'])) : ?>
-                        <a href="/auth/deconnexion"
-                            class="btn btn-connexion"
-                            aria-label="Se déconnecter">
-                            Déconnexion
-                        </a>
                     <?php else : ?>
-                        <a href="/auth/connexion"
-                            class="btn btn-connexion"
-                            aria-label="Se connecter">
-                            Connexion
-                        </a>
-                        <a href="/auth/inscription"
-                            class="btn btn-inscription"
-                            aria-label="Créer un compte">
-                            S'inscrire
-                        </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/commandes/historique">Mes commandes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/utilisateurs/profil">Mon profil</a>
+                        </li>
                     <?php endif; ?>
-                </div>
-            </div>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-secondary btn-sm ms-2" href="/auth/deconnexion">Déconnexion</a>
+                    </li>
+                <?php else : ?>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-secondary btn-sm ms-2" href="/auth/connexion">Connexion</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <main id="contenu-principal" role="main">
