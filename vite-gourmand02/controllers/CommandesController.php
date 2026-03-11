@@ -49,39 +49,54 @@ class CommandesController {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nb_personnes = $_POST['nb_personnes'] ?? $menu['nb_personnes_min'];
-            $adresse = $_POST['adresse_livraison'] ?? '';
-            $date = $_POST['date_prestation'] ?? '';
+            $nb_personnes    = $_POST['nb_personnes'] ?? $menu['nb_personnes_min'];
+            $adresse         = $_POST['adresse_livraison'] ?? '';
+            $date            = $_POST['date_prestation'] ?? '';
+            $heure           = $_POST['heure_livraison'] ?? '12:00';
+            $frais_livraison = floatval($_POST['frais_livraison'] ?? 0);
+
+            if (empty($date)) {
+                $_SESSION['flash'] = ['type' => 'danger', 'message' => '❌ Veuillez saisir une date de prestation.'];
+                header('Location: /commandes/nouveau?menu_id=' . $menu_id);
+                exit;
+            }
+
+            if (empty($heure)) {
+                $heure = '12:00';
+            }
+
+            // Combiner date et heure
+            $date = $date . ' ' . $heure . ':00';
 
             $prix_total = $menu['prix_base'];
             if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
                 $prix_total = $prix_total * 0.90;
             }
+            $prix_total += $frais_livraison;
 
             $commande_id = $this->commandeModel->creer([
-                'utilisateur_id' => $_SESSION['user_id'],
-                'menu_id' => $menu_id,
-                'nb_personnes' => $nb_personnes,
-                'prix_total' => $prix_total,
-                'adresse_livraison' => $adresse,
-                'date_prestation' => $date
+                'utilisateur_id'   => $_SESSION['user_id'],
+                'menu_id'          => $menu_id,
+                'nb_personnes'     => $nb_personnes,
+                'prix_total'       => $prix_total,
+                'adresse_livraison'=> $adresse,
+                'date_prestation'  => $date
             ]);
 
-            // Enregistrer statut initial
             $this->commandeStatutModel->enregistrer($commande_id, 'nouvelle');
 
             require_once 'config/MongoService.php';
             $mongo = new MongoService();
             $mongo->enregistrerCommande([
-                'menu_id' => $menu_id,
-                'menu_titre' => $menu['titre'],
-                'prix_total' => $prix_total,
-                'nb_personnes' => $nb_personnes,
-                'date' => $date
+                'menu_id'     => $menu_id,
+                'menu_titre'  => $menu['titre'],
+                'prix_total'  => $prix_total,
+                'nb_personnes'=> $nb_personnes,
+                'date'        => $date
             ]);
 
             $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
-            $commande = $this->commandeModel->getById($commande_id);
+            $commande    = $this->commandeModel->getById($commande_id);
             $this->emailService->envoyerConfirmationCommande(
                 $utilisateur['email'],
                 $utilisateur['prenom'],
@@ -106,7 +121,6 @@ class CommandesController {
         $this->verifierConnexion();
         $commandes = $this->commandeModel->getByUtilisateur($_SESSION['user_id']);
 
-        // Récupérer l'historique des statuts pour chaque commande
         $historiquesStatuts = [];
         foreach ($commandes as $commande) {
             $historiquesStatuts[$commande['id']] = $this->commandeStatutModel->getByCommande($commande['id']);
@@ -179,8 +193,8 @@ class CommandesController {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nb_personnes = $_POST['nb_personnes'] ?? $commande['nb_personnes'];
-            $adresse = $_POST['adresse_livraison'] ?? $commande['adresse_livraison'];
-            $date = $_POST['date_prestation'] ?? $commande['date_prestation'];
+            $adresse      = $_POST['adresse_livraison'] ?? $commande['adresse_livraison'];
+            $date         = $_POST['date_prestation'] ?? $commande['date_prestation'];
 
             $prix_total = $menu['prix_base'];
             if ($nb_personnes >= $menu['nb_personnes_min'] + 5) {
@@ -188,10 +202,10 @@ class CommandesController {
             }
 
             $this->commandeModel->modifier($id, [
-                'nb_personnes' => $nb_personnes,
-                'adresse_livraison' => $adresse,
-                'date_prestation' => $date,
-                'prix_total' => $prix_total
+                'nb_personnes'     => $nb_personnes,
+                'adresse_livraison'=> $adresse,
+                'date_prestation'  => $date,
+                'prix_total'       => $prix_total
             ]);
 
             $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Commande modifiée avec succès !'];
