@@ -1,14 +1,20 @@
 <?php
 require_once 'models/CommandeModel.php';
 require_once 'models/AvisModel.php';
+require_once 'models/UtilisateurModel.php';
+require_once 'config/EmailService.php';
 
 class EmployeController {
     private $commandeModel;
     private $avisModel;
+    private $utilisateurModel;
+    private $emailService;
 
     public function __construct() {
         $this->commandeModel = new CommandeModel();
         $this->avisModel = new AvisModel();
+        $this->utilisateurModel = new UtilisateurModel();
+        $this->emailService = new EmailService();
     }
 
     private function verifierEmploye() {
@@ -38,9 +44,36 @@ class EmployeController {
         $this->verifierEmploye();
         $id = $_POST['id'] ?? null;
         $statut = $_POST['statut'] ?? null;
+
         if ($id && $statut) {
             $this->commandeModel->updateStatut($id, $statut);
+
+            // Récupérer la commande et l'utilisateur
+            $commande = $this->commandeModel->getById($id);
+            if ($commande) {
+                $utilisateur = $this->utilisateurModel->getById($commande['utilisateur_id']);
+                if ($utilisateur) {
+                    // Mail quand terminée → inviter à laisser un avis
+                    if ($statut === 'terminee') {
+                        $this->emailService->envoyerCommandeTerminee(
+                            $utilisateur['email'],
+                            $utilisateur['prenom'],
+                            $commande,
+                            $id
+                        );
+                    }
+                    // Mail quand attente matériel
+                    if ($statut === 'attente_materiel') {
+                        $this->emailService->envoyerAttentesMateriel(
+                            $utilisateur['email'],
+                            $utilisateur['prenom'],
+                            $commande
+                        );
+                    }
+                }
+            }
         }
+
         header('Location: /employe/commandes');
         exit;
     }

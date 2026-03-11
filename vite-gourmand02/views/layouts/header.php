@@ -34,30 +34,56 @@ if (session_status() === PHP_SESSION_NONE) {
         background-color: #1D4A3E !important;
         color: white !important;
     }
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
     </style>
 </head>
 <body>
+
+<?php if (isset($_SESSION['flash'])):
+    $flashType = $_SESSION['flash']['type'];
+    $flashMessage = $_SESSION['flash']['message'];
+?>
+<div class="toast-container">
+    <div class="toast show align-items-center text-white bg-<?= $flashType ?> border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body fw-bold"><?= $flashMessage ?></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+<script>
+setTimeout(() => {
+    const t = document.querySelector('.toast');
+    if(t) t.classList.remove('show');
+}, 3000);
+</script>
+<?php unset($_SESSION['flash']); endif; ?>
 
     <a href="#contenu-principal" class="visually-hidden-focusable">
         Aller au contenu principal
     </a>
 
-    <nav class="navbar navbar-expand-lg py-3" 
-        role="navigation" 
+    <nav class="navbar navbar-expand-lg py-3"
+        role="navigation"
         aria-label="Menu principal">
         <div class="container">
-            <a class="navbar-brand" 
-                href="/" 
+            <a class="navbar-brand"
+                href="/"
                 aria-label="Vite et Gourmand - Retour à l'accueil">
                 Vite & Gourmand
             </a>
-            
-            <button class="navbar-toggler" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
                     data-bs-target="#menu"
                     aria-controls="menu"
-                    aria-expanded="false" 
+                    aria-expanded="false"
                     aria-label="Ouvrir le menu de navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -91,18 +117,18 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
                     <?php if (isset($_SESSION['user_id'])) : ?>
-                        <a href="/auth/deconnexion" 
+                        <a href="/auth/deconnexion"
                             class="btn btn-connexion"
                             aria-label="Se déconnecter">
                             Déconnexion
                         </a>
                     <?php else : ?>
-                        <a href="/auth/connexion" 
+                        <a href="/auth/connexion"
                             class="btn btn-connexion"
                             aria-label="Se connecter">
                             Connexion
                         </a>
-                        <a href="/auth/inscription" 
+                        <a href="/auth/inscription"
                             class="btn btn-inscription"
                             aria-label="Créer un compte">
                             S'inscrire

@@ -30,5 +30,20 @@
 
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/main.js"></script>
+
+    <?php if (isset($_SESSION['flash'])): ?>
+<div class="toast-container">
+    <div class="toast show align-items-center text-white bg-<?= $_SESSION['flash']['type'] ?> border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body"><?= $_SESSION['flash']['message'] ?></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+<script>
+setTimeout(() => { document.querySelector('.toast')?.classList.remove('show'); }, 3000);
+</script>
+<?php unset($_SESSION['flash']); endif; ?>
+
 </body>
 </html>
