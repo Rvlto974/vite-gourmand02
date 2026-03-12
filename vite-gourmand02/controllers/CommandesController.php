@@ -48,6 +48,8 @@ class CommandesController {
             exit;
         }
 
+        $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nb_personnes    = $_POST['nb_personnes'] ?? $menu['nb_personnes_min'];
             $adresse         = $_POST['adresse_livraison'] ?? '';
@@ -65,7 +67,6 @@ class CommandesController {
                 $heure = '12:00';
             }
 
-            // Combiner date et heure
             $date = $date . ' ' . $heure . ':00';
 
             $prix_total = $menu['prix_base'];
@@ -95,8 +96,7 @@ class CommandesController {
                 'date'        => $date
             ]);
 
-            $utilisateur = $this->utilisateurModel->getById($_SESSION['user_id']);
-            $commande    = $this->commandeModel->getById($commande_id);
+            $commande = $this->commandeModel->getById($commande_id);
             $this->emailService->envoyerConfirmationCommande(
                 $utilisateur['email'],
                 $utilisateur['prenom'],
