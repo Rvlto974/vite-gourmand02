@@ -73,4 +73,15 @@ class MenuModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function mettreAJour($id, $data) {
+    $sql = "UPDATE utilisateurs SET nom = :nom, prenom = :prenom, gsm = :gsm, adresse = :adresse WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([
+        ':nom'     => $data['nom'],
+        ':prenom'  => $data['prenom'],
+        ':gsm'     => $data['gsm'],
+        ':adresse' => $data['adresse'],
+        ':id'      => $id
+    ]);
+}
 }
