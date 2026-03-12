@@ -2,16 +2,19 @@
 require_once 'models/UtilisateurModel.php';
 require_once 'models/MenuModel.php';
 require_once 'models/CommandeModel.php';
+require_once 'config/EmailService.php';
 
 class AdminController {
     private $utilisateurModel;
     private $menuModel;
     private $commandeModel;
+    private $emailService;
 
     public function __construct() {
         $this->utilisateurModel = new UtilisateurModel();
         $this->menuModel = new MenuModel();
         $this->commandeModel = new CommandeModel();
+        $this->emailService = new EmailService();
     }
 
     private function verifierAdmin() {
@@ -68,26 +71,30 @@ class AdminController {
         $this->verifierAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['nom'] ?? '';
-            $prenom = $_POST['prenom'] ?? '';
-            $email = $_POST['email'] ?? '';
+            $nom       = $_POST['nom'] ?? '';
+            $prenom    = $_POST['prenom'] ?? '';
+            $email     = $_POST['email'] ?? '';
             $motDePasse = $_POST['mot_de_passe'] ?? '';
-
             $hash = password_hash($motDePasse, PASSWORD_BCRYPT);
+
             $this->utilisateurModel->creerAvecRole([
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'email' => $email,
+                'nom'        => $nom,
+                'prenom'     => $prenom,
+                'email'      => $email,
                 'mot_de_passe' => $hash,
-                'role' => 'employe'
+                'role'       => 'employe'
             ]);
 
+            $this->emailService->envoyerCreationCompteEmploye($email, $prenom);
+
+            $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Compte employé créé et mail envoyé.'];
             header('Location: /admin/utilisateurs');
             exit;
         }
 
         require_once 'views/admin/creer_employe.php';
     }
+
     public function stats() {
         $this->verifierAdmin();
         require_once 'config/MongoService.php';
@@ -97,5 +104,4 @@ class AdminController {
         $statsByMois = $mongo->getStatsByMois();
         require_once 'views/admin/stats.php';
     }
-
 }
