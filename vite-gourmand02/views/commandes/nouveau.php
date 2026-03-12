@@ -92,6 +92,19 @@
                         <small class="text-muted">Estimez la distance en km depuis le centre de Bordeaux</small>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="gsm" class="form-label fw-semibold">
+                            GSM <span aria-hidden="true">*</span>
+                        </label>
+                        <input type="tel"
+                               class="form-control"
+                               id="gsm"
+                               name="gsm"
+                               value="<?= htmlspecialchars($utilisateur['gsm'] ?? '') ?>"
+                               aria-required="true"
+                               required>
+                    </div>
+
                     <div class="prix-box mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="text-muted">Prix menu :</span>
