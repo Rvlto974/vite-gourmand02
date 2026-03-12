@@ -149,8 +149,9 @@ class EmailService {
             $this->mail->Body = "
                 <h2>Bonjour {$prenom},</h2>
                 <p>Concernant votre commande <strong>{$commande['menu_titre']}</strong>,</p>
-                <p>Nous vous rappelons que le matériel mis à disposition doit être retourné.</p>
-                <p>Merci de nous contacter pour organiser le retour :</p>
+                <p>Nous vous rappelons que le matériel mis à disposition doit être retourné sous <strong>10 jours ouvrés</strong>.</p>
+                <p>Passé ce délai, des frais de <strong>600 €</strong> vous seront facturés conformément aux conditions générales de vente.</p>
+                <p>Pour organiser le retour, contactez-nous :</p>
                 <p>📧 contact@viteetgourmand.fr</p>
                 <p>📞 05 XX XX XX XX</p>
                 <p>L'équipe Vite & Gourmand</p>
@@ -162,18 +163,25 @@ class EmailService {
         }
     }
 
-    public function envoyerAnnulationClient($email, $prenom, $commande) {
+    public function envoyerAnnulationClient($email, $prenom, $commande, $motif = null) {
         try {
             $this->mail->clearAddresses();
             $this->mail->addAddress($email, $prenom);
             $this->mail->isHTML(true);
             $this->mail->Subject = '❌ Annulation de votre commande — Vite & Gourmand';
+
+            $motifHtml = $motif
+                ? "<p><strong>Motif :</strong> {$motif}</p>"
+                : '';
+
             $this->mail->Body = "
                 <h2>Bonjour {$prenom},</h2>
-                <p>Votre commande a bien été annulée.</p>
+                <p>Votre commande a été annulée.</p>
                 <p><strong>Menu :</strong> {$commande['menu_titre']}</p>
                 <p><strong>Date prestation :</strong> {$commande['date_prestation']}</p>
                 <p><strong>Prix :</strong> {$commande['prix_total']} €</p>
+                {$motifHtml}
+                <p>Nous nous excusons pour la gêne occasionnée.</p>
                 <p>Si vous souhaitez passer une nouvelle commande : <a href='https://vite-gourmand02.fly.dev/menus'>Voir nos menus</a></p>
                 <p>L'équipe Vite & Gourmand</p>
             ";
@@ -197,6 +205,26 @@ class EmailService {
                 <p><strong>Nombre de personnes :</strong> {$commande['nb_personnes']}</p>
                 <p><strong>Prix :</strong> {$commande['prix_total']} €</p>
                 <p><strong>Date prestation :</strong> {$commande['date_prestation']}</p>
+            ";
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function envoyerCreationCompteEmploye($email, $prenom) {
+        try {
+            $this->mail->clearAddresses();
+            $this->mail->addAddress($email, $prenom);
+            $this->mail->isHTML(true);
+            $this->mail->Subject = '👋 Votre compte employé — Vite & Gourmand';
+            $this->mail->Body = "
+                <h2>Bonjour {$prenom},</h2>
+                <p>Un compte employé a été créé pour vous sur Vite & Gourmand.</p>
+                <p>Pour obtenir votre mot de passe, rapprochez-vous de l'administrateur.</p>
+                <p>Vous pourrez ensuite vous connecter sur : <a href='https://vite-gourmand02.fly.dev/auth/connexion'>vite-gourmand02.fly.dev</a></p>
+                <p>L'équipe Vite & Gourmand</p>
             ";
             $this->mail->send();
             return true;

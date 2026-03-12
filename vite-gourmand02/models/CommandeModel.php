@@ -89,4 +89,15 @@ public function modifier($id, $data) {
         ':id' => $id
     ]);
 }
+public function annulerParEmploye($id, $motif, $mode_contact) {
+    $sql = "UPDATE commandes 
+            SET statut = 'annulee', motif_annulation = :motif, mode_contact = :mode_contact 
+            WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([
+        ':motif'        => $motif,
+        ':mode_contact' => $mode_contact,
+        ':id'           => $id
+    ]);
+}
 }
