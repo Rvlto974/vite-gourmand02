@@ -4,11 +4,14 @@
     <div class="row">
         <div class="col-md-3">
             <div class="card p-3">
-                <h5>Espace employé</h5>
+                <h5>Espace admin</h5>
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="/employe/dashboard">Tableau de bord</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Tableau de bord</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/utilisateurs">Utilisateurs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/menus">Menus</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/commandes">Commandes</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/employe/avis">Avis clients</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/admin/avis">Avis clients</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/stats">Statistiques</a></li>
                     <li class="nav-item"><a class="nav-link" href="/auth/deconnexion">Déconnexion</a></li>
                 </ul>
             </div>
@@ -35,11 +38,11 @@
                             <p class="mb-0"><?= htmlspecialchars($unAvis['commentaire']) ?></p>
                         </div>
                         <div class="d-flex gap-2">
-                            <form method="POST" action="/employe/validerAvis">
+                            <form method="POST" action="/admin/validerAvis">
                                 <input type="hidden" name="id" value="<?= $unAvis['id'] ?>">
                                 <button type="submit" class="btn btn-success btn-sm">✅ Valider</button>
                             </form>
-                            <form method="POST" action="/employe/refuserAvis">
+                            <form method="POST" action="/admin/refuserAvis">
                                 <input type="hidden" name="id" value="<?= $unAvis['id'] ?>">
                                 <button type="submit" class="btn btn-danger btn-sm">❌ Refuser</button>
                             </form>

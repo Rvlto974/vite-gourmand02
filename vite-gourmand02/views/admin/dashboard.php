@@ -20,9 +20,12 @@
                         <a class="nav-link" href="/employe/commandes">Commandes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/stats">Statistiques</a>
+                        <a class="nav-link" href="/admin/avis">Avis clients</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/admin/stats">Statistiques</a>
+                    </li>
+                    <li class="nav-item">   
                         <a class="nav-link" href="/auth/deconnexion">Déconnexion</a>
                     </li>
                 </ul>
