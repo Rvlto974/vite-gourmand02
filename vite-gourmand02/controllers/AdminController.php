@@ -104,4 +104,31 @@ class AdminController {
         $statsByMois = $mongo->getStatsByMois();
         require_once 'views/admin/stats.php';
     }
+    public function avis() {
+    $this->verifierAdmin();
+    require_once 'models/AvisModel.php';
+    $avisModel = new AvisModel();
+    $avis = $avisModel->getAvisEnAttente();
+    require_once 'views/admin/avis.php';
+}
+
+public function validerAvis() {
+    $this->verifierAdmin();
+    require_once 'models/AvisModel.php';
+    $avisModel = new AvisModel();
+    $id = $_POST['id'] ?? null;
+    if ($id) $avisModel->valider($id);
+    header('Location: /admin/avis');
+    exit;
+}
+
+public function refuserAvis() {
+    $this->verifierAdmin();
+    require_once 'models/AvisModel.php';
+    $avisModel = new AvisModel();
+    $id = $_POST['id'] ?? null;
+    if ($id) $avisModel->refuser($id);
+    header('Location: /admin/avis');
+    exit;
+}
 }
