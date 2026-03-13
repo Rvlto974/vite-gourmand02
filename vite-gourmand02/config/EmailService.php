@@ -232,4 +232,25 @@ class EmailService {
             return false;
         }
     }
+    public function envoyerContact($nom, $email, $sujet, $message) {
+    try {
+        $this->mail->clearAddresses();
+        $this->mail->addAddress('mathieujacquet97460@gmail.com', 'Vite & Gourmand');
+        $this->mail->addReplyTo($email, $nom);
+        $this->mail->isHTML(true);
+        $this->mail->Subject = '📩 Nouveau message contact — ' . $sujet;
+        $this->mail->Body = "
+            <h2>Nouveau message de contact</h2>
+            <p><strong>Nom :</strong> {$nom}</p>
+            <p><strong>Email :</strong> {$email}</p>
+            <p><strong>Sujet :</strong> {$sujet}</p>
+            <p><strong>Message :</strong></p>
+            <p>{$message}</p>
+        ";
+        $this->mail->send();
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
+}
 }
