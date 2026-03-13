@@ -115,4 +115,9 @@ class MenuModel {
         ':image'           => $data['image'] ?? null,
     ]);
 }
+public function decrementerStock($id) {
+    $sql = "UPDATE menus SET stock = stock - 1 WHERE id = :id AND stock > 0";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':id' => $id]);
+}
 }
