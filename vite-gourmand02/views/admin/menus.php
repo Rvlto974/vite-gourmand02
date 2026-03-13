@@ -10,13 +10,21 @@
                     <li class="nav-item"><a class="nav-link" href="/admin/utilisateurs">Utilisateurs</a></li>
                     <li class="nav-item"><a class="nav-link active" href="/admin/menus">Menus</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/commandes">Commandes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/avis">Avis clients</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/stats">Statistiques</a></li>
                     <li class="nav-item"><a class="nav-link" href="/auth/deconnexion">Déconnexion</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="col-md-9">
-            <h1>Gestion des menus</h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Gestion des menus</h1>
+                <a href="/admin/creerMenu" class="btn"
+                    style="background-color:#5DA99A; color:white; border-radius:8px;">
+                    ➕ Créer un menu
+                </a>
+            </div>
             <div class="table-responsive mt-3">
                 <table class="table" aria-label="Liste des menus">
                     <thead>
@@ -27,7 +35,7 @@
                             <th>Prix</th>
                             <th>Stock</th>
                             <th>Statut</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,13 +52,22 @@
                                 </span>
                             </td>
                             <td>
-                                <form method="POST" action="/admin/toggleActifMenu">
-                                    <input type="hidden" name="id" value="<?= $menu['id'] ?>">
-                                    <button type="submit" 
-                                            class="btn btn-<?= $menu['actif'] ? 'danger' : 'success' ?> btn-sm">
-                                        <?= $menu['actif'] ? 'Désactiver' : 'Activer' ?>
-                                    </button>
-                                </form>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <a href="/admin/modifierMenu?id=<?= $menu['id'] ?>"
+                                        class="btn btn-warning btn-sm">✏️ Modifier</a>
+                                    <form method="POST" action="/admin/toggleActifMenu" class="d-inline">
+                                        <input type="hidden" name="id" value="<?= $menu['id'] ?>">
+                                        <button type="submit"
+                                                class="btn btn-<?= $menu['actif'] ? 'secondary' : 'success' ?> btn-sm">
+                                            <?= $menu['actif'] ? 'Désactiver' : 'Activer' ?>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="/admin/supprimerMenu" class="d-inline"
+                                            onsubmit="return confirm('Supprimer ce menu ?')">
+                                        <input type="hidden" name="id" value="<?= $menu['id'] ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Supprimer</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>

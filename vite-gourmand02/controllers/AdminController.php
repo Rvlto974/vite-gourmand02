@@ -131,4 +131,64 @@ public function refuserAvis() {
     header('Location: /admin/avis');
     exit;
 }
+public function modifierMenu() {
+    $this->verifierAdmin();
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        header('Location: /admin/menus');
+        exit;
+    }
+    $menu = $this->menuModel->getById($id);
+    if (!$menu) {
+        header('Location: /admin/menus');
+        exit;
+    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->menuModel->modifier($id, [
+            'titre'           => $_POST['titre'] ?? '',
+            'description'     => $_POST['description'] ?? '',
+            'theme'           => $_POST['theme'] ?? '',
+            'regime'          => $_POST['regime'] ?? '',
+            'prix_base'       => $_POST['prix_base'] ?? 0,
+            'nb_personnes_min'=> $_POST['nb_personnes_min'] ?? 1,
+            'stock'           => $_POST['stock'] ?? 0,
+        ]);
+        $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu modifié avec succès.'];
+        header('Location: /admin/menus');
+        exit;
+    }
+    require_once 'views/admin/modifier_menu.php';
+}
+
+public function supprimerMenu() {
+    $this->verifierAdmin();
+    $id = $_POST['id'] ?? null;
+    if ($id) {
+        $this->menuModel->supprimer($id);
+        $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu supprimé.'];
+    }
+    header('Location: /admin/menus');
+    exit;
+}
+public function creerMenu() {
+    $this->verifierAdmin();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->menuModel->creer([
+            'titre'           => $_POST['titre'] ?? '',
+            'description'     => $_POST['description'] ?? '',
+            'theme'           => $_POST['theme'] ?? 'classique',
+            'regime'          => $_POST['regime'] ?? 'classique',
+            'prix_base'       => $_POST['prix_base'] ?? 0,
+            'nb_personnes_min'=> $_POST['nb_personnes_min'] ?? 1,
+            'stock'           => $_POST['stock'] ?? 0,
+            'image'           => $_POST['image'] ?? null,
+        ]);
+        $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu créé avec succès.'];
+        header('Location: /admin/menus');
+        exit;
+    }
+
+    require_once 'views/admin/creer_menu.php';
+}
 }

@@ -52,7 +52,7 @@ class MenuModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getAvisById($menu_id) {
-        $sql = "SELECT a.*, u.nom, u.prenom 
+        $sql = "SELECT a.*, u.nom, u.prenom
                 FROM avis a
                 JOIN commandes c ON a.commande_id = c.id
                 JOIN utilisateurs u ON a.utilisateur_id = u.id
@@ -73,15 +73,46 @@ class MenuModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function mettreAJour($id, $data) {
-    $sql = "UPDATE utilisateurs SET nom = :nom, prenom = :prenom, gsm = :gsm, adresse = :adresse WHERE id = :id";
+    public function modifier($id, $data) {
+        $sql = "UPDATE menus SET 
+                    titre = :titre,
+                    description = :description,
+                    theme = :theme,
+                    regime = :regime,
+                    prix_base = :prix_base,
+                    nb_personnes_min = :nb_personnes_min,
+                    stock = :stock
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':titre'           => $data['titre'],
+            ':description'     => $data['description'],
+            ':theme'           => $data['theme'],
+            ':regime'          => $data['regime'],
+            ':prix_base'       => $data['prix_base'],
+            ':nb_personnes_min'=> $data['nb_personnes_min'],
+            ':stock'           => $data['stock'],
+            ':id'              => $id
+        ]);
+    }
+    public function supprimer($id) {
+        $sql = "DELETE FROM menus WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([':id' => $id]);
+    }
+    public function creer($data) {
+    $sql = "INSERT INTO menus (titre, description, theme, regime, prix_base, nb_personnes_min, stock, image, actif)
+            VALUES (:titre, :description, :theme, :regime, :prix_base, :nb_personnes_min, :stock, :image, 1)";
     $stmt = $this->db->prepare($sql);
     return $stmt->execute([
-        ':nom'     => $data['nom'],
-        ':prenom'  => $data['prenom'],
-        ':gsm'     => $data['gsm'],
-        ':adresse' => $data['adresse'],
-        ':id'      => $id
+        ':titre'           => $data['titre'],
+        ':description'     => $data['description'],
+        ':theme'           => $data['theme'],
+        ':regime'          => $data['regime'],
+        ':prix_base'       => $data['prix_base'],
+        ':nb_personnes_min'=> $data['nb_personnes_min'],
+        ':stock'           => $data['stock'],
+        ':image'           => $data['image'] ?? null,
     ]);
 }
 }
