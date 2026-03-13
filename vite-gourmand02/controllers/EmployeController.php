@@ -3,6 +3,7 @@ require_once 'models/CommandeModel.php';
 require_once 'models/AvisModel.php';
 require_once 'models/UtilisateurModel.php';
 require_once 'models/CommandeStatutModel.php';
+require_once 'models/MenuModel.php';
 require_once 'config/EmailService.php';
 
 class EmployeController {
@@ -11,6 +12,7 @@ class EmployeController {
     private $utilisateurModel;
     private $emailService;
     private $commandeStatutModel;
+    private $menuModel;
 
     public function __construct() {
         $this->commandeModel = new CommandeModel();
@@ -18,6 +20,7 @@ class EmployeController {
         $this->utilisateurModel = new UtilisateurModel();
         $this->emailService = new EmailService();
         $this->commandeStatutModel = new CommandeStatutModel();
+        $this->menuModel = new MenuModel();
     }
 
     private function verifierEmploye() {
@@ -137,6 +140,46 @@ class EmployeController {
             $this->avisModel->refuser($id);
         }
         header('Location: /employe/avis');
+        exit;
+    }
+
+    public function menus() {
+        $this->verifierEmploye();
+        $menus = $this->menuModel->getAllAdmin();
+        require_once 'views/employe/menus.php';
+    }
+
+    public function modifierMenu() {
+        $this->verifierEmploye();
+        $id = $_GET['id'] ?? null;
+        if (!$id) { header('Location: /employe/menus'); exit; }
+        $menu = $this->menuModel->getById($id);
+        if (!$menu) { header('Location: /employe/menus'); exit; }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->menuModel->modifier($id, [
+                'titre'           => $_POST['titre'] ?? '',
+                'description'     => $_POST['description'] ?? '',
+                'theme'           => $_POST['theme'] ?? '',
+                'regime'          => $_POST['regime'] ?? '',
+                'prix_base'       => $_POST['prix_base'] ?? 0,
+                'nb_personnes_min'=> $_POST['nb_personnes_min'] ?? 1,
+                'stock'           => $_POST['stock'] ?? 0,
+            ]);
+            $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu modifié avec succès.'];
+            header('Location: /employe/menus');
+            exit;
+        }
+        require_once 'views/employe/modifier_menu.php';
+    }
+
+    public function supprimerMenu() {
+        $this->verifierEmploye();
+        $id = $_POST['id'] ?? null;
+        if ($id) {
+            $this->menuModel->supprimer($id);
+            $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu supprimé.'];
+        }
+        header('Location: /employe/menus');
         exit;
     }
 }
