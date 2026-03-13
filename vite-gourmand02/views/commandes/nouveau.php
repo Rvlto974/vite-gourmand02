@@ -24,6 +24,29 @@
                 <form method="POST" action="/commandes/nouveau?menu_id=<?= $menu['id'] ?>"
                       aria-label="Formulaire de commande" novalidate>
 
+                    <!-- Infos client auto-remplies -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="prenom" class="form-label fw-semibold">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom"
+                                   value="<?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>"
+                                   readonly aria-readonly="true">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nom" class="form-label fw-semibold">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom"
+                                   value="<?= htmlspecialchars($utilisateur['nom'] ?? '') ?>"
+                                   readonly aria-readonly="true">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email_client" class="form-label fw-semibold">Email</label>
+                        <input type="email" class="form-control" id="email_client" name="email_client"
+                               value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>"
+                               readonly aria-readonly="true">
+                    </div>
+
                     <div class="mb-3">
                         <label for="nb_personnes" class="form-label fw-semibold">
                             Nombre de personnes <span aria-hidden="true">*</span>
