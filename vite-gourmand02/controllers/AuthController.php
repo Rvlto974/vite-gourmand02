@@ -10,28 +10,29 @@ class AuthController {
             session_start();
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['nom'] ?? '';
-            $prenom = $_POST['prenom'] ?? '';
-            $email = $_POST['email'] ?? '';
+            $nom        = $_POST['nom'] ?? '';
+            $prenom     = $_POST['prenom'] ?? '';
+            $email      = $_POST['email'] ?? '';
+            $gsm        = $_POST['gsm'] ?? '';
+            $adresse    = $_POST['adresse'] ?? '';
             $motDePasse = $_POST['mot_de_passe'] ?? '';
-
             if (!$this->validerMotDePasse($motDePasse)) {
                 $erreur = "Le mot de passe doit contenir 10 caractères min, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial";
                 require_once 'views/auth/inscription.php';
                 return;
             }
-
             if ($this->utilisateurModel->getByEmail($email)) {
                 $erreur = "Un compte existe déjà avec cet email.";
                 require_once 'views/auth/inscription.php';
                 return;
             }
-
             $hash = password_hash($motDePasse, PASSWORD_BCRYPT);
             $this->utilisateurModel->creer([
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'email' => $email,
+                'nom'          => $nom,
+                'prenom'       => $prenom,
+                'email'        => $email,
+                'gsm'          => $gsm,
+                'adresse'      => $adresse,
                 'mot_de_passe' => $hash
             ]);
             $_SESSION['flash'] = ['type' => 'success', 'message' => '🎉 Compte créé ! Vous pouvez vous connecter.'];
@@ -48,13 +49,13 @@ class AuthController {
             session_start();
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
+            $email      = $_POST['email'] ?? '';
             $motDePasse = $_POST['mot_de_passe'] ?? '';
             $utilisateur = $this->utilisateurModel->getByEmail($email);
             if ($utilisateur && password_verify($motDePasse, $utilisateur['mot_de_passe'])) {
-                $_SESSION['user_id'] = $utilisateur['id'];
-                $_SESSION['user_role'] = $utilisateur['role'];
-                $_SESSION['user_nom'] = $utilisateur['nom'];
+                $_SESSION['user_id']     = $utilisateur['id'];
+                $_SESSION['user_role']   = $utilisateur['role'];
+                $_SESSION['user_nom']    = $utilisateur['nom'];
                 $_SESSION['user_prenom'] = $utilisateur['prenom'];
                 $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Bienvenue ' . $utilisateur['prenom'] . ' !'];
                 header('Location: /');
