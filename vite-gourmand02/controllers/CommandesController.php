@@ -63,6 +63,12 @@ class CommandesController {
                 exit;
             }
 
+            if ($menu['stock'] <= 0) {
+                $_SESSION['flash'] = ['type' => 'danger', 'message' => '❌ Ce menu n\'est plus disponible (stock épuisé).'];
+                header('Location: /commandes/nouveau?menu_id=' . $menu_id);
+                exit;
+            }
+
             if (empty($heure)) {
                 $heure = '12:00';
             }
@@ -84,6 +90,7 @@ class CommandesController {
                 'date_prestation'  => $date
             ]);
 
+            $this->menuModel->decrementerStock($menu_id);
             $this->commandeStatutModel->enregistrer($commande_id, 'nouvelle');
 
             require_once 'config/MongoService.php';

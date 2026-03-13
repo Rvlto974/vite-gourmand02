@@ -108,11 +108,12 @@
                         $badgeLabel = ucfirst($menu['theme'] ?? 'Classique');
                         $note = $menu['note_moyenne'] ?? 0;
                         $nbAvis = $menu['nb_avis'] ?? 0;
+                        $stock = $menu['stock'] ?? 0;
                     ?>
                     <div class="col-md-4 mb-4">
                         <div class="card menu-card h-100">
                             <div class="card-img-wrapper">
-                                <img src="<?= !empty($menu['image']) ? htmlspecialchars($menu['image']) : '/assets/images/menu-default.jpg' ?>" 
+                                <img src="<?= !empty($menu['image']) ? htmlspecialchars($menu['image']) : '/assets/images/menu-default.jpg' ?>"
                                     alt="Photo du <?= htmlspecialchars($menu['titre']) ?>">
                                 <span class="badge-theme <?= $badgeClass ?>"><?= $badgeLabel ?></span>
                             </div>
@@ -133,11 +134,18 @@
                                     <span>👥 <?= $menu['nb_personnes_min'] ?> pers. min</span>
                                     <span><?= ucfirst($menu['regime'] ?? '') ?></span>
                                 </div>
-                                <p class="prix-color mb-3">
+                                <p class="prix-color mb-2">
                                     A partir de <?= number_format($menu['prix_base'], 2) ?> EUR
                                 </p>
-                                <a href="/menus/detail?id=<?= $menu['id'] ?>" 
-                                    class="btn btn-voir"
+                                <?php if ($stock <= 0) : ?>
+                                    <span class="badge bg-danger mb-2">❌ Stock épuisé</span>
+                                <?php elseif ($stock <= 3) : ?>
+                                    <span class="badge bg-warning text-dark mb-2">⚠️ Plus que <?= $stock ?> disponible(s)</span>
+                                <?php else : ?>
+                                    <span class="badge bg-success mb-2">✅ Disponible</span>
+                                <?php endif; ?>
+                                <a href="/menus/detail?id=<?= $menu['id'] ?>"
+                                    class="btn btn-voir <?= $stock <= 0 ? 'disabled' : '' ?>"
                                     aria-label="Voir le menu <?= htmlspecialchars($menu['titre']) ?>">
                                     👁 Voir le menu
                                 </a>
