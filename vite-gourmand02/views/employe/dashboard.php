@@ -2,28 +2,19 @@
 
 <div class="container mt-5">
     <div class="row">
-        <!-- Sidebar -->
         <div class="col-md-3">
             <div class="card p-3">
                 <h5>Espace employé</h5>
                 <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/employe/dashboard">Tableau de bord</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/employe/commandes">Commandes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/employe/avis">Avis clients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/deconnexion">Déconnexion</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="/employe/dashboard">Tableau de bord</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/employe/commandes">Commandes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/employe/menus">Menus</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/employe/avis">Avis clients</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/auth/deconnexion">Déconnexion</a></li>
                 </ul>
             </div>
         </div>
 
-        <!-- Contenu -->
         <div class="col-md-9">
             <h1>Tableau de bord employé</h1>
 
@@ -48,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- Nouvelles commandes -->
             <h4 class="mt-4">Nouvelles commandes</h4>
             <?php $nouvelles = array_filter($commandes, fn($c) => $c['statut'] === 'nouvelle'); ?>
             <?php if (empty($nouvelles)) : ?>
@@ -76,14 +66,14 @@
                                     <form method="POST" action="/employe/updateStatut">
                                         <input type="hidden" name="id" value="<?= $commande['id'] ?>">
                                         <select name="statut" class="form-select form-select-sm d-inline w-auto">
-    <option value="nouvelle">Nouvelle</option>
-    <option value="acceptee">Acceptée</option>
-    <option value="en_preparation">En préparation</option>
-    <option value="en_livraison">En livraison</option>
-    <option value="livree">Livrée</option>
-    <option value="terminee">Terminée</option>
-    <option value="attente_materiel">Attente matériel</option>
-</select>
+                                            <option value="nouvelle">Nouvelle</option>
+                                            <option value="acceptee">Acceptée</option>
+                                            <option value="en_preparation">En préparation</option>
+                                            <option value="en_livraison">En livraison</option>
+                                            <option value="livree">Livrée</option>
+                                            <option value="terminee">Terminée</option>
+                                            <option value="attente_materiel">Attente matériel</option>
+                                        </select>
                                         <button type="submit" class="btn btn-primary btn-sm">
                                             Mettre à jour
                                         </button>
