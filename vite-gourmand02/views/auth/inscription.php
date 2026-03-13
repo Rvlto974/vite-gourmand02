@@ -48,9 +48,15 @@
 
                 <div class="mb-3">
                     <label for="mot_de_passe" class="form-label">Mot de passe <span aria-hidden="true">*</span></label>
-                    <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe"
-                           autocomplete="new-password" aria-required="true"
-                           aria-describedby="regles-mdp" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe"
+                               autocomplete="new-password" aria-required="true"
+                               aria-describedby="regles-mdp" required>
+                        <button type="button" class="btn btn-outline-secondary" id="toggleMdp"
+                                aria-label="Afficher le mot de passe">
+                            👁️
+                        </button>
+                    </div>
                     <small id="regles-mdp" class="text-muted">
                         10 caractères min, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
                     </small>
@@ -71,6 +77,21 @@
 </div>
 
 <script>
+// Toggle afficher/masquer mot de passe
+document.getElementById('toggleMdp').addEventListener('click', function() {
+    const input = document.getElementById('mot_de_passe');
+    if (input.type === 'password') {
+        input.type = 'text';
+        this.textContent = '🙈';
+        this.setAttribute('aria-label', 'Masquer le mot de passe');
+    } else {
+        input.type = 'password';
+        this.textContent = '👁️';
+        this.setAttribute('aria-label', 'Afficher le mot de passe');
+    }
+});
+
+// Validation temps réel mot de passe
 document.getElementById('mot_de_passe').addEventListener('input', function() {
     const mdp = this.value;
     const regles = [
