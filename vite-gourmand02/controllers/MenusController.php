@@ -22,8 +22,9 @@ class MenusController {
         if (!$id) { header('Location: /menus'); exit; }
         $menu = $this->menuModel->getById($id);
         if (!$menu) { header('Location: /menus'); exit; }
-        $plats = $this->menuModel->getPlatsById($id);
-        $avis  = $this->menuModel->getAvisById($id);
+        $plats  = $this->menuModel->getPlatsById($id);
+        $avis   = $this->menuModel->getAvisById($id);
+        $images = $this->menuModel->getImagesById($id);
         require_once 'views/menus/detail.php';
     }
     public function filtrer() {
