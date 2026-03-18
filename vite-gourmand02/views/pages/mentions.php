@@ -1,36 +1,51 @@
 <?php require_once 'views/layouts/header.php'; ?>
 
 <div class="container mt-5 mb-5">
-    <h1>Mentions légales</h1>
-    <hr>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>Mentions légales</h1>
+            <hr>
 
-    <h4>Éditeur du site</h4>
-    <p>
-        <strong>Vite & Gourmand</strong><br>
-        Traiteur d'exception à Bordeaux depuis 25 ans<br>
-        Adresse : 12 rue des Saveurs, 33000 Bordeaux<br>
-        Téléphone : 05 XX XX XX XX<br>
-        Email : contact@viteetgourmand.fr<br>
-        SIRET : XXX XXX XXX XXXXX
-    </p>
+            <h4 class="mt-4">Éditeur du site</h4>
+            <p>
+                <strong>Vite & Gourmand</strong><br>
+                123 Rue de la Gastronomie<br>
+                33000 Bordeaux<br>
+                Téléphone : 05 56 78 90 12<br>
+                Email : contact@viteetgourmand.fr
+            </p>
 
-    <h4>Hébergeur</h4>
-    <p>
-        <strong>Fly.io</strong><br>
-        2261 Market Street #4990, San Francisco, CA 94114<br>
-        <a href="https://fly.io" target="_blank">https://fly.io</a>
-    </p>
+            <h4 class="mt-4">Directeurs de publication</h4>
+            <p>Julie et José, co-gérants de Vite & Gourmand.</p>
 
-    <h4>Responsable de la publication</h4>
-    <p>Le responsable de la publication est le gérant de Vite & Gourmand.</p>
+            <h4 class="mt-4">Hébergement</h4>
+            <p>
+                Ce site est hébergé par <strong>Fly.io</strong><br>
+                2261 Market Street #4990, San Francisco, CA 94114, USA
+            </p>
 
-    <h4>Propriété intellectuelle</h4>
-    <p>L'ensemble du contenu de ce site (textes, images, logos) est protégé par le droit d'auteur. 
-    Toute reproduction est interdite sans autorisation préalable.</p>
+            <h4 class="mt-4">Propriété intellectuelle</h4>
+            <p>
+                L'ensemble du contenu de ce site (textes, images, logos) est la propriété exclusive de
+                Vite & Gourmand. Toute reproduction, même partielle, est interdite sans autorisation préalable.
+            </p>
 
-    <h4>Limitation de responsabilité</h4>
-    <p>Vite & Gourmand ne pourra être tenu responsable des dommages directs ou indirects 
-    causés au matériel de l'utilisateur lors de l'accès au site.</p>
+            <h4 class="mt-4">Données personnelles</h4>
+            <p>
+                Conformément au RGPD, vous disposez d'un droit d'accès, de modification et de suppression
+                de vos données personnelles. Pour exercer ce droit, contactez-nous à :
+                <a href="mailto:contact@viteetgourmand.fr">contact@viteetgourmand.fr</a>
+            </p>
+
+            <h4 class="mt-4">Cookies</h4>
+            <p>
+                Ce site utilise uniquement des cookies de session nécessaires au fonctionnement de
+                l'application. Aucun cookie publicitaire n'est utilisé.
+            </p>
+
+            <a href="/" class="btn btn-outline-secondary mt-3">← Retour à l'accueil</a>
+        </div>
+    </div>
 </div>
 
 <?php require_once 'views/layouts/footer.php'; ?>

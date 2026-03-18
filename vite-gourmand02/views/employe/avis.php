@@ -1,3 +1,4 @@
+PS C:\env\workspace\vite-gourmand02> type views\employe\avis.php     
 <?php require_once 'views/layouts/header.php'; ?>
 
 <div class="container mt-5">
@@ -53,3 +54,4 @@
 </div>
 
 <?php require_once 'views/layouts/footer.php'; ?>
+PS C:\env\workspace\vite-gourmand02> 
