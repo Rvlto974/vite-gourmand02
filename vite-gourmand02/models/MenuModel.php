@@ -120,4 +120,25 @@ public function decrementerStock($id) {
     $stmt = $this->db->prepare($sql);
     return $stmt->execute([':id' => $id]);
 }
+    public function getLastInsertId() {
+    return $this->db->lastInsertId();
+}
+public function getImagesById($menu_id) {
+    $sql = "SELECT * FROM menu_images WHERE menu_id = :menu_id ORDER BY ordre ASC";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([':menu_id' => $menu_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function ajouterImage($menu_id, $url, $ordre = 0) {
+    $sql = "INSERT INTO menu_images (menu_id, url, ordre) VALUES (:menu_id, :url, :ordre)";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':menu_id' => $menu_id, ':url' => $url, ':ordre' => $ordre]);
+}
+
+public function supprimerImages($menu_id) {
+    $sql = "DELETE FROM menu_images WHERE menu_id = :menu_id";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([':menu_id' => $menu_id]);
+}
 }
