@@ -4,6 +4,7 @@ require_once 'models/AvisModel.php';
 require_once 'models/UtilisateurModel.php';
 require_once 'models/CommandeStatutModel.php';
 require_once 'models/MenuModel.php';
+require_once 'models/HoraireModel.php';
 require_once 'config/EmailService.php';
 
 class EmployeController {
@@ -13,6 +14,7 @@ class EmployeController {
     private $emailService;
     private $commandeStatutModel;
     private $menuModel;
+    private $horaireModel;
 
     public function __construct() {
         $this->commandeModel = new CommandeModel();
@@ -21,6 +23,7 @@ class EmployeController {
         $this->emailService = new EmailService();
         $this->commandeStatutModel = new CommandeStatutModel();
         $this->menuModel = new MenuModel();
+        $this->horaireModel = new HoraireModel();
     }
 
     private function verifierEmploye() {
@@ -157,13 +160,13 @@ class EmployeController {
         if (!$menu) { header('Location: /employe/menus'); exit; }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->menuModel->modifier($id, [
-                'titre'           => $_POST['titre'] ?? '',
-                'description'     => $_POST['description'] ?? '',
-                'theme'           => $_POST['theme'] ?? '',
-                'regime'          => $_POST['regime'] ?? '',
-                'prix_base'       => $_POST['prix_base'] ?? 0,
-                'nb_personnes_min'=> $_POST['nb_personnes_min'] ?? 1,
-                'stock'           => $_POST['stock'] ?? 0,
+                'titre'            => $_POST['titre'] ?? '',
+                'description'      => $_POST['description'] ?? '',
+                'theme'            => $_POST['theme'] ?? '',
+                'regime'           => $_POST['regime'] ?? '',
+                'prix_base'        => $_POST['prix_base'] ?? 0,
+                'nb_personnes_min' => $_POST['nb_personnes_min'] ?? 1,
+                'stock'            => $_POST['stock'] ?? 0,
             ]);
             $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu modifié avec succès.'];
             header('Location: /employe/menus');
@@ -180,6 +183,27 @@ class EmployeController {
             $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Menu supprimé.'];
         }
         header('Location: /employe/menus');
+        exit;
+    }
+
+    public function horaires() {
+        $this->verifierEmploye();
+        $horaires = $this->horaireModel->getAll();
+        require_once 'views/employe/horaires.php';
+    }
+
+    public function modifierHoraires() {
+        $this->verifierEmploye();
+        $horairesPost = $_POST['horaires'] ?? [];
+        foreach ($horairesPost as $id => $data) {
+            $this->horaireModel->modifier($id, [
+                'heure_ouverture' => $data['heure_ouverture'] ?? null,
+                'heure_fermeture' => $data['heure_fermeture'] ?? null,
+                'ferme'           => isset($data['ferme']) ? 1 : 0,
+            ]);
+        }
+        $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Horaires mis à jour.'];
+        header('Location: /employe/horaires');
         exit;
     }
 }

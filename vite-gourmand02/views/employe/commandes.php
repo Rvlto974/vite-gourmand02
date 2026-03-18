@@ -9,6 +9,7 @@
                     <li class="nav-item"><a class="nav-link" href="/employe/dashboard">Tableau de bord</a></li>
                     <li class="nav-item"><a class="nav-link active" href="/employe/commandes">Commandes</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/menus">Menus</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/employe/horaires">Horaires</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/avis">Avis clients</a></li>
                     <li class="nav-item"><a class="nav-link" href="/auth/deconnexion">Déconnexion</a></li>
                 </ul>
@@ -67,14 +68,14 @@
                             <td>
                                 <?php
                                 $badges = [
-                                    'nouvelle'        => 'primary',
-                                    'acceptee'        => 'info',
-                                    'en_preparation'  => 'warning',
-                                    'en_livraison'    => 'warning',
-                                    'livree'          => 'success',
-                                    'terminee'        => 'success',
-                                    'attente_materiel'=> 'danger',
-                                    'annulee'         => 'secondary',
+                                    'nouvelle'         => 'primary',
+                                    'acceptee'         => 'info',
+                                    'en_preparation'   => 'warning',
+                                    'en_livraison'     => 'warning',
+                                    'livree'           => 'success',
+                                    'terminee'         => 'success',
+                                    'attente_materiel' => 'danger',
+                                    'annulee'          => 'secondary',
                                 ];
                                 $badge = $badges[$commande['statut']] ?? 'secondary';
                                 ?>
@@ -156,7 +157,6 @@
 </div>
 
 <script>
-// Filtres
 function filtrerCommandes() {
     const client = document.getElementById('filtre-client').value.toLowerCase();
     const statut = document.getElementById('filtre-statut').value;
@@ -174,13 +174,11 @@ function filtrerCommandes() {
 document.getElementById('filtre-client').addEventListener('input', filtrerCommandes);
 document.getElementById('filtre-statut').addEventListener('change', filtrerCommandes);
 
-// Modal annulation
 document.getElementById('modalAnnuler').addEventListener('show.bs.modal', function(e) {
     const id = e.relatedTarget.getAttribute('data-id');
     document.getElementById('modal-commande-id').value = id;
 });
 
-// Tooltips
 const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 tooltips.forEach(t => new bootstrap.Tooltip(t));
 </script>

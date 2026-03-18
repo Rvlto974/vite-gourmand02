@@ -9,6 +9,7 @@
                     <li class="nav-item"><a class="nav-link active" href="/employe/dashboard">Tableau de bord</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/commandes">Commandes</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/menus">Menus</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/employe/horaires">Horaires</a></li>
                     <li class="nav-item"><a class="nav-link" href="/employe/avis">Avis clients</a></li>
                     <li class="nav-item"><a class="nav-link" href="/auth/deconnexion">Déconnexion</a></li>
                 </ul>
@@ -61,7 +62,7 @@
                                 <td><?= htmlspecialchars($commande['prenom'] . ' ' . $commande['nom']) ?></td>
                                 <td><?= htmlspecialchars($commande['menu_titre']) ?></td>
                                 <td><?= date('d/m/Y', strtotime($commande['date_prestation'])) ?></td>
-                                <td><?= $commande['prix_total'] ?> €</td>
+                                <td><?= number_format($commande['prix_total'], 2) ?> €</td>
                                 <td>
                                     <form method="POST" action="/employe/updateStatut">
                                         <input type="hidden" name="id" value="<?= $commande['id'] ?>">
