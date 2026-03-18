@@ -25,7 +25,6 @@
     font-size: 1rem;
 }
 .btn-commander:hover { background-color: #3D7A6E; color: white; }
-
 .section-card {
     background: #f8f9fa;
     border-radius: 12px;
@@ -54,15 +53,6 @@
     border-left: 4px solid #5DA99A;
 }
 .plat-card h6 { color: #5DA99A; font-weight: 700; margin-bottom: 4px; }
-.condition-item {
-    background: white;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    height: 100%;
-}
-.condition-item .icon { font-size: 2rem; margin-bottom: 8px; }
-.condition-item h6 { color: #5DA99A; font-weight: 700; }
 .avis-card {
     background: white;
     border-radius: 8px;
@@ -79,7 +69,7 @@
 }
 </style>
 
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -101,7 +91,6 @@
         <div class="col-md-6">
             <h1 class="fw-bold"><?= htmlspecialchars($menu['titre']) ?></h1>
 
-            <!-- Badges thème + régime -->
             <?php
                 $theme = strtolower($menu['theme'] ?? 'classique');
                 $badgeTheme = match($theme) {
@@ -120,7 +109,6 @@
             <span class="badge <?= $badgeTheme ?> me-1"><?= htmlspecialchars($menu['theme']) ?></span>
             <span class="badge <?= $badgeRegime ?> me-1"><?= htmlspecialchars($menu['regime']) ?></span>
 
-            <!-- Note avis -->
             <?php if (!empty($avis)): ?>
                 <?php
                     $totalNote = array_sum(array_column($avis, 'note'));
@@ -139,22 +127,19 @@
                 <div class="mt-2 text-muted small">Aucun avis pour ce menu</div>
             <?php endif; ?>
 
-            <!-- Prix -->
             <p class="prix-color mt-3"><?= number_format($menu['prix_base'], 2) ?> EUR</p>
             <p class="text-muted mb-1">
                 👥 Pour <?= $menu['nb_personnes_min'] ?> personnes minimum
                 (+<?= number_format($menu['prix_base'] / $menu['nb_personnes_min'], 2) ?> EUR/personne supplémentaire)
             </p>
-            <span class="badge-reduction">%-10% à partir de +5 personnes</span>
+            <span class="badge-reduction">✓ -10% à partir de +5 personnes</span>
 
-            <!-- Stock -->
             <?php if (isset($menu['stock'])): ?>
                 <p class="mt-2 <?= $menu['stock'] > 0 ? 'text-success' : 'text-danger' ?>">
                     <?= $menu['stock'] > 0 ? '✅ ' . $menu['stock'] . ' disponible(s)' : '❌ Stock épuisé' ?>
                 </p>
             <?php endif; ?>
 
-            <!-- Allergènes -->
             <?php if (!empty($plats)): ?>
                 <?php
                     $tousAllergenes = [];
@@ -258,36 +243,51 @@
         </div>
     <?php endif; ?>
 
-    <!-- Conditions et informations -->
-    <div class="section-card">
-        <h4>📌 Conditions et informations</h4>
-        <div class="row g-3">
+    <!-- Conditions importantes EN ÉVIDENCE -->
+    <div class="alert alert-warning mt-4" role="alert" style="border-left: 5px solid #e67e22; border-radius:10px;">
+        <h5 class="fw-bold">⚠️ Conditions importantes à lire avant de commander</h5>
+        <div class="row g-3 mt-1">
             <div class="col-md-4">
-                <div class="condition-item">
-                    <div class="icon">🕐</div>
-                    <h6>Délai de commande</h6>
-                    <p class="text-muted mb-0">3 jours minimum</p>
+                <div class="d-flex align-items-start gap-2">
+                    <span style="font-size:1.5rem;">🕐</span>
+                    <div>
+                        <strong>Délai de commande</strong>
+                        <p class="mb-0 small">Ce menu doit être commandé au minimum <strong>3 jours</strong> avant la date de prestation.</p>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="condition-item">
-                    <div class="icon">❄️</div>
-                    <h6>Conservation</h6>
-                    <p class="text-muted mb-0">Conserver entre 0 et 4°C. Consommer dans les 48h.</p>
+                <div class="d-flex align-items-start gap-2">
+                    <span style="font-size:1.5rem;">❄️</span>
+                    <div>
+                        <strong>Conservation</strong>
+                        <p class="mb-0 small">Conserver entre <strong>0 et 4°C</strong>. Consommer dans les <strong>48h</strong> suivant la livraison.</p>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="condition-item">
-                    <div class="icon">🚚</div>
-                    <h6>Livraison</h6>
-                    <p class="text-muted mb-0">Gratuite à Bordeaux<br>5 EUR + 0,59 EUR/km ailleurs</p>
+                <div class="d-flex align-items-start gap-2">
+                    <span style="font-size:1.5rem;">🚚</span>
+                    <div>
+                        <strong>Livraison</strong>
+                        <p class="mb-0 small">Gratuite à Bordeaux. Hors Bordeaux : <strong>5€ + 0,59€/km</strong>.</p>
+                    </div>
                 </div>
             </div>
         </div>
+        <hr class="my-2">
+        <p class="mb-0 small text-muted">En passant commande, vous acceptez nos <a href="/pages/cgv">Conditions Générales de Vente</a>.</p>
     </div>
 
     <!-- Avis clients -->
     <?php if (!empty($avis)): ?>
+        <?php
+            if (!isset($moyenneNote)) {
+                $totalNote = array_sum(array_column($avis, 'note'));
+                $nbAvis = count($avis);
+                $moyenneNote = $nbAvis > 0 ? round($totalNote / $nbAvis, 1) : 0;
+            }
+        ?>
         <div class="section-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="mb-0">💬 Avis clients</h4>
