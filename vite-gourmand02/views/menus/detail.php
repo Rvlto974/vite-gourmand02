@@ -80,11 +80,46 @@
     </nav>
 
     <div class="row">
-        <!-- Image -->
+        <!-- Galerie carousel -->
         <div class="col-md-6">
-            <img src="<?= !empty($menu['image']) ? htmlspecialchars($menu['image']) : '/assets/images/menu-default.jpg' ?>"
-                 alt="Photo du <?= htmlspecialchars($menu['titre']) ?>"
-                 class="detail-image">
+            <?php
+                $touteImages = [];
+                if (!empty($images)) {
+                    foreach ($images as $img) $touteImages[] = $img['url'];
+                }
+                if (!empty($menu['image'])) $touteImages[] = $menu['image'];
+                if (empty($touteImages)) $touteImages[] = '/assets/images/menu-default.jpg';
+                $touteImages = array_unique($touteImages);
+            ?>
+            <?php if (count($touteImages) > 1): ?>
+                <div id="carouselMenu" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <?php foreach ($touteImages as $i => $img): ?>
+                            <button type="button" data-bs-target="#carouselMenu" data-bs-slide-to="<?= $i ?>"
+                                    <?= $i === 0 ? 'class="active"' : '' ?>></button>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="carousel-inner" style="border-radius:12px;">
+                        <?php foreach ($touteImages as $i => $img): ?>
+                            <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                                <img src="<?= htmlspecialchars($img) ?>"
+                                     alt="Photo du menu <?= $i + 1 ?>"
+                                     class="detail-image">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselMenu" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselMenu" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            <?php else: ?>
+                <img src="<?= htmlspecialchars($touteImages[0]) ?>"
+                     alt="Photo du <?= htmlspecialchars($menu['titre']) ?>"
+                     class="detail-image">
+            <?php endif; ?>
         </div>
 
         <!-- Infos principales -->
@@ -111,8 +146,8 @@
 
             <?php if (!empty($avis)): ?>
                 <?php
-                    $totalNote = array_sum(array_column($avis, 'note'));
-                    $nbAvis = count($avis);
+                    $totalNote   = array_sum(array_column($avis, 'note'));
+                    $nbAvis      = count($avis);
                     $moyenneNote = $nbAvis > 0 ? round($totalNote / $nbAvis, 1) : 0;
                 ?>
                 <div class="mt-2">
@@ -283,8 +318,8 @@
     <?php if (!empty($avis)): ?>
         <?php
             if (!isset($moyenneNote)) {
-                $totalNote = array_sum(array_column($avis, 'note'));
-                $nbAvis = count($avis);
+                $totalNote   = array_sum(array_column($avis, 'note'));
+                $nbAvis      = count($avis);
                 $moyenneNote = $nbAvis > 0 ? round($totalNote / $nbAvis, 1) : 0;
             }
         ?>
