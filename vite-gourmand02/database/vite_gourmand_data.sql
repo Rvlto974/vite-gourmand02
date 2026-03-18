@@ -1,32 +1,126 @@
-USE vite_gourmand;
+-- Vite & Gourmand — Données
 
--- Données de test : Utilisateurs
--- Mot de passe : password
-INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, gsm, adresse, role) VALUES
-('Admin', 'Super', 'admin@test.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '0600000001', '1 Rue Admin, Bordeaux', 'admin'),
-('Dupont', 'Jean', 'employe@test.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '0600000002', '2 Rue Employe, Bordeaux', 'employe'),
-('Martin', 'Marie', 'client@test.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '0600000003', '3 Rue Client, Bordeaux', 'client');
+SET FOREIGN_KEY_CHECKS=0;
 
--- Données de test : Menus
-INSERT INTO menus (titre, description, theme, regime, nb_personnes_min, prix_base, stock) VALUES
-('Menu Noel Premium', 'Un menu festif et raffine pour celebrer Noel en famille.', 'Noel', 'classique', 8, 320.00, 10),
-('Menu Paques Tradition', 'Celebrez Paques avec un menu traditionnel.', 'Paques', 'classique', 6, 280.00, 8),
-('Menu Vegetal Printemps', 'Un menu 100% vegetarien aux saveurs du printemps.', 'classique', 'vegetarien', 4, 200.00, 5);
+-- Table utilisateurs
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('1', 'Admin', 'Super', 'admin@test.fr', '$2y$10$TJMk2.m6TLc7RqfEQGOaFOoEqyMtdNGmhOt4CoN2NzdhhCbd5grr.', '0600000001', '1 Rue Admin, Bordeaux', 'admin', '1', '2026-02-25 02:57:15');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('2', 'Dupont', 'Jean', 'employe@test.fr', '$2y$10$TJMk2.m6TLc7RqfEQGOaFOoEqyMtdNGmhOt4CoN2NzdhhCbd5grr.', '0600000002', '2 Rue Employe, Bordeaux', 'employe', '1', '2026-02-25 02:57:15');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('3', 'Martin', 'Marie', 'client@test.fr', '$2y$10$TJMk2.m6TLc7RqfEQGOaFOoEqyMtdNGmhOt4CoN2NzdhhCbd5grr.', '0600000003', '3 Rue Client, 33000 Bordeaux', 'client', '1', '2026-02-25 02:57:15');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('4', 'jacquet', 'Mathieu', 'jacquet-m@protonmail.com', '$2y$10$no1uS1F0PHSA81zD2.qrGOS5jLv5hz4C2cwVeL5wgJcWSgiHhMOIC', NULL, NULL, 'client', '1', '2026-03-10 13:15:33');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('6', 'jacquet', 'Mathieu', 'mathieujacquet97460@gmail.com', '$2y$10$8WjDyNV9v7U6WTF1HOPtleIm83ktBvt1BzT335e.Bg1ratOeDFAQu', NULL, NULL, 'client', '1', '2026-03-10 15:18:00');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('7', 'jacquet', 'guy', 'g.jacquet974@gmail.com', '$2y$10$6vtHXlG2uXYmLqy6vOF/puxA8ezvEcXoueWG21JOAnGG2y9N7HHAK', NULL, NULL, 'client', '1', '2026-03-12 04:42:24');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('8', 'Jacquet', 'Maeva', 'maevajacquet87@gmail.com', '$2y$10$iXShQ52ZS26q4cAe/TYB1OTE6/32Mrw8HT6h2QbTlYxeWQNSsafmi', NULL, NULL, 'client', '1', '2026-03-12 05:54:06');
+INSERT INTO `utilisateurs` (`id`, `nom`, `prenom`, `email`, `mot_de_passe`, `gsm`, `adresse`, `role`, `actif`, `created_at`) VALUES ('10', 'jacquet', 'Mathieu', 'employe2@test.fr', '$2y$10$Y9/GOAmTWKrIGXmy5rASOOL.kzlWIAbpiHKO6I0a1J.dutDikyGMO', NULL, NULL, 'employe', '1', '2026-03-12 06:21:15');
 
--- Données de test : Plats
-INSERT INTO plats (menu_id, nom, type, description, allergenes) VALUES
-(1, 'Foie gras maison', 'entree', 'Foie gras de canard mi-cuit', 'Gluten'),
-(1, 'Dinde aux marrons', 'plat', 'Dinde fermiere rotie', 'Oeufs'),
-(1, 'Buche au chocolat', 'dessert', 'Buche au chocolat noir 70%', 'Lait'),
-(2, 'Veloute agneau', 'entree', 'Veloute printanier', 'Lait'),
-(2, 'Gigot agneau', 'plat', 'Gigot roti aux herbes', 'Aucun'),
-(2, 'Tarte aux fraises', 'dessert', 'Tarte aux fraises fraiches', 'Gluten');
+-- Table menus
+INSERT INTO `menus` (`id`, `titre`, `description`, `theme`, `regime`, `nb_personnes_min`, `prix_base`, `stock`, `actif`, `created_at`, `image`) VALUES ('1', 'Menu Noel Premium', 'Un menu festif et raffiné pour célébrer Noël en famille.\r\nAu programme : Foie Gras Maison, Roulés feuilletés à la saucisse, Pigeons rôtis aux morilles.\r\nEt pour finir : une Bûche de Noël maison au chocolat.', 'Noel', 'classique', '8', '320.00', '10', '1', '2026-02-25 02:57:15', '/assets/images/menus/menu-1-noel.jpg');
+INSERT INTO `menus` (`id`, `titre`, `description`, `theme`, `regime`, `nb_personnes_min`, `prix_base`, `stock`, `actif`, `created_at`, `image`) VALUES ('2', 'Menu Paques Tradition', 'Célébrez Pâques avec tradition et saveurs.\nAu programme : une Terrine de saumon maison,\nun Gigot d\'agneau au miel et aux épices fondant à souhait,\nune Tarte aux fraises de saison pour terminer.', 'Paques', 'classique', '6', '280.00', '8', '1', '2026-02-25 02:57:15', '/assets/images/menus/menu-2-paques.jpeg');
+INSERT INTO `menus` (`id`, `titre`, `description`, `theme`, `regime`, `nb_personnes_min`, `prix_base`, `stock`, `actif`, `created_at`, `image`) VALUES ('3', 'Menu Vegetal Printemps', 'Un menu 100% végétarien aux saveurs du printemps.\nUn Velouté de petits pois à la menthe fraîche,\nune Tarte rustique asperges et petits pois dorée à souhait,\net un Fraisier léger à la crème fouettée pour finir en douceur.', 'classique', 'vegetarien', '4', '200.00', '5', '1', '2026-02-25 02:57:15', '/assets/images/menus/menu-3-printemps.jpeg');
+INSERT INTO `menus` (`id`, `titre`, `description`, `theme`, `regime`, `nb_personnes_min`, `prix_base`, `stock`, `actif`, `created_at`, `image`) VALUES ('4', 'Menu Boeuf Bourguignon', 'Un menu classique et généreux pour les amateurs de cuisine française.\nUne Soupe à l\'oignon gratinée pour commencer,\nun Boeuf Bourguignon mijoté au vin rouge fondant et savoureux,\net une Tarte Tatin aux pommes caramélisées pour terminer en gourmandise.', 'classique', 'classique', '6', '280.00', '9', '1', '2026-02-28 02:59:44', '/assets/images/menus/menu-4-boeuf.jpeg');
+INSERT INTO `menus` (`id`, `titre`, `description`, `theme`, `regime`, `nb_personnes_min`, `prix_base`, `stock`, `actif`, `created_at`, `image`) VALUES ('5', 'Menu Poulet Basquaise', 'Un menu ensoleillé aux saveurs du Sud-Ouest.\nUne Salade de tomates et poivrons grillés pour ouvrir l\'appétit,\nun Poulet Basquaise aux poivrons et pommes de terre mijoté avec soin,\net un Gâteau Basque à la crème pâtissière pour finir en douceur.', 'classique', 'classique', '6', '250.00', '8', '1', '2026-02-28 02:59:44', '/assets/images/menus/menu-5-poulet.jpg');
+INSERT INTO `menus` (`id`, `titre`, `description`, `theme`, `regime`, `nb_personnes_min`, `prix_base`, `stock`, `actif`, `created_at`, `image`) VALUES ('6', 'Menu Magret de Canard', 'Un menu raffiné aux saveurs du Périgord.\r\nUn Velouté de butternut au lard croustillant pour commencer,\r\nun Magret de canard aux pommes de terre sarladaises cuit à la perfection,\r\net un Fondant au chocolat noir coulant pour terminer en gourmandise.', 'classique', 'classique', '6', '300.00', '6', '1', '2026-02-28 02:59:44', '/assets/images/menus/menu-6-canard.jpg');
 
--- Données de test : Commandes
-INSERT INTO commandes (utilisateur_id, menu_id, nb_personnes, prix_total, statut, adresse_livraison, date_prestation) VALUES
-(3, 1, 8, 320.00, 'terminee', '3 Rue Client, Bordeaux', '2024-12-25 12:00:00'),
-(3, 2, 6, 280.00, 'nouvelle', '3 Rue Client, Bordeaux', '2025-04-20 12:00:00');
+-- Table plats
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('222', '3', 'Velouté de petits pois', 'entree', 'Velouté de petits pois à la menthe fraîche', 'Lait');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('223', '3', 'Tarte rustique asperges', 'plat', 'Tarte rustique asperges et petits pois dorée', 'Gluten');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('224', '3', 'Fraisier léger', 'dessert', 'Fraisier léger à la crème fouettée', 'Lait, Gluten');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('225', '4', 'Soupe oignon gratinée', 'entree', 'Soupe à l\'oignon gratinée', 'Gluten, Lait');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('226', '4', 'Boeuf Bourguignon', 'plat', 'Boeuf Bourguignon mijoté au vin rouge', 'Aucun');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('227', '4', 'Boeuf Bourguignon', 'plat', 'Boeuf Bourguignon mijoté au vin rouge', 'Aucun');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('228', '4', 'Tarte Tatin', 'dessert', 'Tarte Tatin aux pommes caramélisées', 'Gluten, Lait');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('229', '5', 'Salade tomates poivrons', 'entree', 'Salade de tomates et poivrons grillés', 'Aucun');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('230', '5', 'Poulet Basquaise', 'plat', 'Poulet Basquaise aux poivrons et pommes de terre', 'Aucun');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('231', '5', 'Gâteau Basque', 'dessert', 'Gâteau Basque à la crème pâtissière', 'Gluten, Lait, Oeufs');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('232', '6', 'Velouté de butternut', 'entree', 'Velouté de butternut au lard croustillant', 'Lait');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('233', '6', 'Magret de canard', 'plat', 'Magret de canard aux pommes de terre sarladaises', 'Aucun');
+INSERT INTO `plats` (`id`, `menu_id`, `nom`, `type`, `description`, `allergenes`) VALUES ('234', '6', 'Fondant au chocolat', 'dessert', 'Fondant au chocolat noir coulant', 'Lait, Oeufs, Gluten');
 
--- Données de test : Avis
-INSERT INTO avis (utilisateur_id, commande_id, note, commentaire, valide) VALUES
-(3, 1, 5, 'Excellent menu pour notre repas de Noel en famille !', TRUE);
+-- Table menu_images
+INSERT INTO `menu_images` (`id`, `menu_id`, `url`, `ordre`) VALUES ('3', '1', 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800', '0');
+INSERT INTO `menu_images` (`id`, `menu_id`, `url`, `ordre`) VALUES ('4', '1', 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800', '1');
+
+-- Table commandes
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('1', '3', '1', '8', '320.00', 'terminee', '3 Rue Client, Bordeaux', '2024-12-25 12:00:00', '2026-02-25 02:57:15', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('2', '3', '2', '6', '280.00', 'nouvelle', '3 Rue Client, Bordeaux', '2025-04-20 12:00:00', '2026-02-25 02:57:15', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('3', '3', '1', '8', '320.00', 'nouvelle', '21rue des goyaves 97460 st denis', '2026-02-27 08:01:00', '2026-02-25 04:01:21', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('4', '1', '6', '6', '300.00', 'nouvelle', '21 rue des goyaves 97460 saint denis', '2026-03-09 00:00:00', '2026-02-28 05:20:05', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('5', '1', '5', '6', '250.00', 'nouvelle', '21 rue des goyaves 97460', '2026-03-07 00:00:00', '2026-02-28 05:24:36', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('6', '3', '6', '6', '300.00', 'nouvelle', '21 rue des jamblons', '2026-03-11 00:00:00', '2026-03-09 16:43:48', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('7', '3', '6', '6', '300.00', 'nouvelle', '21 rue des platanes 97460 st denis', '2026-03-16 00:00:00', '2026-03-10 08:16:54', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('8', '3', '1', '8', '320.00', 'nouvelle', '21 rue des goyaves', '2026-03-21 00:00:00', '2026-03-10 08:18:45', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('9', '3', '1', '8', '320.00', 'nouvelle', '21 rue des goyaves', '2026-03-20 00:00:00', '2026-03-10 13:07:25', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('10', '1', '5', '11', '225.00', 'nouvelle', '21 rue des goyaves', '2026-03-12 00:00:00', '2026-03-10 13:10:55', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('11', '1', '3', '7', '200.00', 'nouvelle', '21 rue des goyaves', '2026-03-12 00:00:00', '2026-03-10 13:12:00', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('12', '4', '6', '6', '300.00', 'annulee', '21 rue des goyaves', '2026-03-12 00:00:00', '2026-03-10 13:18:11', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('13', '3', '2', '10', '280.00', 'nouvelle', '21 rue des goyaves', '2026-03-12 00:00:00', '2026-03-10 13:26:03', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('14', '4', '1', '15', '288.00', 'terminee', '21 rue des goyaves ', '2026-03-21 00:00:00', '2026-03-10 14:11:05', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('15', '4', '1', '15', '288.00', 'livree', '21 rue des goyaves ', '2026-03-21 00:00:00', '2026-03-10 14:11:07', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('16', '4', '1', '15', '288.00', 'livree', '21 rue des goyaves ', '2026-03-21 00:00:00', '2026-03-10 14:11:09', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('17', '4', '5', '6', '250.00', 'terminee', '21 rue des goyaves', '2026-03-13 00:00:00', '2026-03-10 15:16:31', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('18', '6', '3', '4', '200.00', 'nouvelle', '21 rue des goyaves', '2026-03-12 00:00:00', '2026-03-10 15:18:39', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('19', '6', '2', '6', '280.00', 'nouvelle', '21 rue des goyavves', '2026-03-12 00:00:00', '2026-03-10 15:25:20', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('20', '6', '6', '6', '300.00', 'nouvelle', '21 rue des goyaves', '2026-03-13 00:00:00', '2026-03-10 15:39:18', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('21', '4', '5', '6', '250.00', 'terminee', '21 rue des goyaves', '2026-03-19 00:00:00', '2026-03-10 15:54:46', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('22', '4', '1', '8', '320.00', 'terminee', '21 rue des goyaves', '2026-03-14 00:00:00', '2026-03-11 06:12:11', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('23', '4', '6', '6', '300.00', 'terminee', '21 rue des goyaves', '2026-03-20 00:00:00', '2026-03-11 07:07:24', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('24', '4', '3', '4', '200.00', 'terminee', '21 rue des goyaves', '2026-03-13 00:00:00', '2026-03-11 07:17:16', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('25', '4', '1', '8', '320.00', 'annulee', '15 rue des goyaves', '2026-03-14 00:00:00', '2026-03-11 07:31:04', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('26', '4', '6', '6', '300.00', 'annulee', '21 rue des goyaves', '2026-03-13 00:00:00', '2026-03-11 07:43:39', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('27', '4', '6', '6', '300.00', 'nouvelle', '16 rue des goyaves', '2026-03-17 00:00:00', '2026-03-11 07:53:51', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('28', '3', '6', '6', '300.00', 'nouvelle', '12 rue adenor', '2026-03-14 00:00:00', '2026-03-11 08:56:45', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('29', '4', '6', '6', '300.00', 'annulee', '14 rue adenor', '2026-03-14 00:00:00', '2026-03-11 09:17:08', NULL, 'Rupture de stock', 'Appel téléphonique');
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('30', '3', '6', '6', '316.80', 'annulee', '45 rue des platanes', '2026-03-14 13:54:00', '2026-03-11 13:55:02', NULL, 'rupture de stock', 'Email');
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('31', '4', '6', '6', '313.85', 'annulee', '12 rue des platanes', '2026-03-14 11:30:00', '2026-03-12 04:30:28', NULL, 'rupture de stock', 'Email');
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('32', '4', '4', '6', '293.85', 'annulee', '26 rue des platates', '2026-03-14 12:34:00', '2026-03-12 04:34:32', NULL, 'rupture de stock', 'Email');
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('33', '7', '4', '11', '265.85', 'annulee', '21 rue des platanes ', '2026-03-13 08:44:00', '2026-03-12 04:46:56', NULL, 'rupture de stock', 'Email');
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('34', '4', '6', '6', '313.85', 'annulee', '21 rue des platanes', '2026-03-14 12:34:00', '2026-03-12 05:35:08', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('35', '8', '6', '6', '300.00', 'annulee', '', '2026-03-12 07:00:00', '2026-03-12 06:00:16', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('36', '4', '6', '6', '313.85', 'annulee', '21 rue des platanes', '2026-03-14 09:06:00', '2026-03-13 02:06:42', NULL, 'rupture de stock', 'Email');
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('37', '4', '5', '6', '255.00', 'livree', '25 rue des platatnes', '2026-03-14 11:33:00', '2026-03-13 02:33:34', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('38', '4', '4', '6', '285.00', 'terminee', '74 rue des platanes', '2026-03-14 10:17:00', '2026-03-13 03:17:18', NULL, NULL, NULL);
+INSERT INTO `commandes` (`id`, `utilisateur_id`, `menu_id`, `nb_personnes`, `prix_total`, `statut`, `adresse_livraison`, `date_prestation`, `created_at`, `heure_livraison`, `motif_annulation`, `mode_contact`) VALUES ('39', '4', '5', '6', '255.00', 'terminee', '27 rue des platanes', '2026-03-14 10:21:00', '2026-03-13 03:21:47', NULL, NULL, NULL);
+
+-- Table commande_statuts
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('1', '29', 'nouvelle', '2026-03-11 09:17:08');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('2', '29', 'en_preparation', '2026-03-11 09:18:25');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('3', '30', 'nouvelle', '2026-03-11 13:55:03');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('4', '30', 'annulee', '2026-03-12 04:28:44');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('5', '31', 'nouvelle', '2026-03-12 04:30:28');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('6', '31', 'annulee', '2026-03-12 04:31:36');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('7', '32', 'nouvelle', '2026-03-12 04:34:32');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('8', '32', 'annulee', '2026-03-12 04:36:24');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('9', '33', 'nouvelle', '2026-03-12 04:46:56');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('10', '33', 'annulee', '2026-03-12 04:49:01');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('11', '34', 'nouvelle', '2026-03-12 05:35:08');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('12', '34', 'annulee', '2026-03-12 05:35:22');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('13', '29', 'annulee', '2026-03-12 05:36:39');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('14', '35', 'nouvelle', '2026-03-12 06:00:16');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('15', '35', 'annulee', '2026-03-12 06:01:14');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('16', '36', 'nouvelle', '2026-03-13 02:06:42');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('17', '37', 'nouvelle', '2026-03-13 02:33:34');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('18', '37', 'livree', '2026-03-13 02:34:43');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('19', '37', 'livree', '2026-03-13 02:34:49');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('20', '38', 'nouvelle', '2026-03-13 03:17:18');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('21', '38', 'terminee', '2026-03-13 03:18:18');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('22', '39', 'nouvelle', '2026-03-13 03:21:47');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('23', '39', 'terminee', '2026-03-13 03:22:39');
+INSERT INTO `commande_statuts` (`id`, `commande_id`, `statut`, `created_at`) VALUES ('24', '36', 'annulee', '2026-03-13 04:23:01');
+
+-- Table avis
+INSERT INTO `avis` (`id`, `utilisateur_id`, `commande_id`, `note`, `commentaire`, `valide`, `created_at`) VALUES ('1', '3', '1', '5', 'Excellent menu pour notre repas de Noel en famille !', '1', '2026-02-25 02:57:15');
+INSERT INTO `avis` (`id`, `utilisateur_id`, `commande_id`, `note`, `commentaire`, `valide`, `created_at`) VALUES ('2', '3', '1', '5', 'Excellent menu pour notre mariage, tous nos invités ont été enchantés !', '1', '2026-02-25 12:35:35');
+INSERT INTO `avis` (`id`, `utilisateur_id`, `commande_id`, `note`, `commentaire`, `valide`, `created_at`) VALUES ('3', '3', '2', '5', 'Livraison impeccable et menus délicieux. Je recommande vivement !', '1', '2026-02-25 12:35:35');
+INSERT INTO `avis` (`id`, `utilisateur_id`, `commande_id`, `note`, `commentaire`, `valide`, `created_at`) VALUES ('4', '3', '1', '4', 'Très bonne qualité, produits frais et présentation soignée.', '1', '2026-02-25 12:35:35');
+INSERT INTO `avis` (`id`, `utilisateur_id`, `commande_id`, `note`, `commentaire`, `valide`, `created_at`) VALUES ('5', '4', '24', '4', 'Super experience avec Vite et Gourmand !!!\r\n', '1', '2026-03-12 08:49:06');
+INSERT INTO `avis` (`id`, `utilisateur_id`, `commande_id`, `note`, `commentaire`, `valide`, `created_at`) VALUES ('6', '4', '24', '4', 'Super !!!', '1', '2026-03-13 02:31:15');
+
+-- Table horaires
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('1', 'Lundi', '10:00', '18:00', '0');
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('2', 'Mardi', '09:00', '18:00', '0');
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('3', 'Mercredi', '09:00', '18:00', '0');
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('4', 'Jeudi', '09:00', '18:00', '0');
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('5', 'Vendredi', '09:00', '18:00', '0');
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('6', 'Samedi', '09:00', '12:00', '0');
+INSERT INTO `horaires` (`id`, `jour`, `heure_ouverture`, `heure_fermeture`, `ferme`) VALUES ('7', 'Dimanche', NULL, NULL, '1');
+
+SET FOREIGN_KEY_CHECKS=1;
