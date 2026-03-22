@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const inputs = filtreForm.querySelectorAll('select, input');
         inputs.forEach(input => {
             input.addEventListener('change', function() {
-                appliquerFiltres();
+                if (input.type !== 'range') appliquerFiltres();
             });
         });
     }
@@ -72,14 +72,14 @@ function afficherMenus(menus) {
         }
 
         const stockBadge = stock <= 0
-            ? `<span class="badge bg-danger ms-1">Épuisé</span>`
+            ? `<span class="badge bg-danger mb-2">❌ Stock épuisé</span>`
             : stock <= 3
-                ? `<span class="badge bg-warning text-dark ms-1">Plus que ${stock}</span>`
-                : `<span class="badge bg-success ms-1">Disponible</span>`;
+                ? `<span class="badge bg-warning text-dark mb-2">⚠️ Plus que ${stock}</span>`
+                : `<span class="badge bg-success mb-2">✅ Disponible</span>`;
 
-        const btnCommander = stock <= 0
-            ? `<a href="/menus/detail?id=${menu.id}" class="btn btn-sm w-100 mt-2 btn-outline-secondary" disabled>Épuisé</a>`
-            : `<a href="/menus/detail?id=${menu.id}" class="btn btn-sm w-100 mt-2" style="background-color:#5DA99A; color:white; border-radius:6px;">Voir le menu</a>`;
+        const btnVoir = stock <= 0
+            ? `<a href="/menus/detail?id=${menu.id}" class="btn btn-voir disabled">👁 Voir le menu</a>`
+            : `<a href="/menus/detail?id=${menu.id}" class="btn btn-voir">👁 Voir le menu</a>`;
 
         return `
         <div class="col-md-4 mb-4">
@@ -89,17 +89,16 @@ function afficherMenus(menus) {
                     <span class="badge-theme ${badgeClass}">${escapeHtml(badgeLabel)}</span>
                 </div>
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">${escapeHtml(menu.titre)}</h5>
-                    <p class="card-text text-muted small">${escapeHtml(description)}...</p>
-                    <div class="mt-auto">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prix-badge">${prix} €</span>
-                            <span class="text-muted small">${menu.nb_personnes_min} pers. min</span>
-                        </div>
-                        ${note > 0 ? `<div class="stars small" style="color:#f39c12">${etoiles} <span class="text-muted">(${nbAvis})</span></div>` : ''}
-                        <div class="d-flex align-items-center mt-1">${stockBadge}</div>
-                        ${btnCommander}
+                    <h5 class="card-title fw-bold" style="color:#2E6B5E">${escapeHtml(menu.titre)}</h5>
+                    <div class="stars mb-1">${etoiles} <small class="text-muted">(${nbAvis})</small></div>
+                    <p class="card-text text-muted small flex-grow-1">${escapeHtml(description)}...</p>
+                    <div class="d-flex justify-content-between meta-info mb-2">
+                        <span>👥 ${menu.nb_personnes_min} pers. min</span>
+                        <span>${escapeHtml(menu.regime ?? '')}</span>
                     </div>
+                    <p class="prix-color mb-2">A partir de ${prix} EUR</p>
+                    ${stockBadge}
+                    ${btnVoir}
                 </div>
             </div>
         </div>`;
@@ -117,7 +116,6 @@ function escapeHtml(str) {
         .replace(/"/g, '&quot;');
 }
 
-// ─── Animation au scroll ───────────────────────────────
 function animerAuScroll() {
     const elements = document.querySelectorAll(
         '.card, .menu-card, .section-card, .alert, .avis-card, .commande-card'
@@ -146,7 +144,6 @@ function animerAuScroll() {
     });
 }
 
-// ─── Bouton retour en haut ──────────────────────────────
 function boutonRetourHaut() {
     const btn = document.createElement('button');
     btn.innerHTML = '↑';
