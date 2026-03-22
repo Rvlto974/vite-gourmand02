@@ -21,5 +21,5 @@ if (file_exists($controllerFile)) {
     $controller->$method();
 } else {
     http_response_code(404);
-    echo "Page introuvable";
+    require_once 'views/errors/404.php';
 }
