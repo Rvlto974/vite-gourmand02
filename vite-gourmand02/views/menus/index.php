@@ -159,4 +159,15 @@
     </div>
 </div>
 
+<script>
+document.getElementById('prix_max').addEventListener('input', function() {
+    document.getElementById('prix-max-label').textContent = this.value + ' €';
+    appliquerFiltres();
+});
+document.getElementById('prix_min').addEventListener('input', function() {
+    document.getElementById('prix-min-label').textContent = this.value + ' €';
+    appliquerFiltres();
+});
+</script>
+
 <?php require_once 'views/layouts/footer.php'; ?>
