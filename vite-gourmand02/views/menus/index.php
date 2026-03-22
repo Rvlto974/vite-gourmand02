@@ -22,6 +22,8 @@
 .btn-reinit { background: white; border: 1px solid #ccc; border-radius: 8px; width: 100%; margin-top: 8px; color: #333; }
 .page-title { font-size: 1.8rem; font-weight: 700; }
 .count-badge { background: #2E6B5E; color: white; border-radius: 20px; padding: 4px 12px; font-size: 0.9rem; }
+.badge-nouveau { position: absolute; top: 12px; left: 12px; background: #e67e22; color: white;
+                 border-radius: 20px; padding: 3px 10px; font-size: 0.75rem; font-weight: bold; }
 </style>
 
 <div class="container mt-4">
@@ -56,11 +58,25 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Fourchette de prix</label>
-                        <div class="d-flex gap-2 align-items-center">
-                            <input type="number" class="form-control" id="prix_min" name="prix_min" placeholder="Min" min="0">
-                            <span>-</span>
-                            <input type="number" class="form-control" id="prix_max" name="prix_max" placeholder="Max" min="0">
+                        <label class="form-label fw-semibold">
+                            Prix maximum : <span id="prix-max-label" style="color:#5DA99A;">500 €</span>
+                        </label>
+                        <input type="range" class="form-range" id="prix_max" name="prix_max"
+                               min="0" max="1000" step="10" value="500"
+                               aria-label="Prix maximum">
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">0 €</small>
+                            <small class="text-muted">1000 €</small>
+                        </div>
+                        <label class="form-label fw-semibold mt-2">
+                            Prix minimum : <span id="prix-min-label" style="color:#5DA99A;">0 €</span>
+                        </label>
+                        <input type="range" class="form-range" id="prix_min" name="prix_min"
+                               min="0" max="1000" step="10" value="0"
+                               aria-label="Prix minimum">
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">0 €</small>
+                            <small class="text-muted">1000 €</small>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -86,6 +102,7 @@
                 </form>
             </div>
         </div>
+
         <div class="col-md-9">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h1 class="page-title">🍽 Nos Menus</h1>
@@ -109,6 +126,9 @@
                         $note = $menu['note_moyenne'] ?? 0;
                         $nbAvis = $menu['nb_avis'] ?? 0;
                         $stock = $menu['stock'] ?? 0;
+                        $joursDepuisCreation = isset($menu['created_at'])
+                            ? (time() - strtotime($menu['created_at'])) / (60 * 60 * 24)
+                            : 999;
                     ?>
                     <div class="col-md-4 mb-4">
                         <div class="card menu-card h-100">
@@ -116,6 +136,9 @@
                                 <img src="<?= !empty($menu['image']) ? htmlspecialchars($menu['image']) : '/assets/images/menu-default.jpg' ?>"
                                     alt="Photo du <?= htmlspecialchars($menu['titre']) ?>">
                                 <span class="badge-theme <?= $badgeClass ?>"><?= $badgeLabel ?></span>
+                                <?php if ($joursDepuisCreation <= 7) : ?>
+                                    <span class="badge-nouveau">🆕 Nouveau</span>
+                                <?php endif; ?>
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title fw-bold" style="color:#2E6B5E">
