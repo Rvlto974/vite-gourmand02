@@ -12,11 +12,48 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <style>
+    .animate-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animate-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .menu-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        overflow: hidden;
+    }
+    .menu-card:hover {
+        transform: translateY(-8px) scale(1.02) !important;
+        box-shadow: 0 12px 30px rgba(93,169,154,0.3) !important;
+    }
+    .menu-card img {
+        transition: transform 0.4s ease !important;
+    }
+    .menu-card:hover img {
+        transform: scale(1.08) !important;
+    }
+    .btn {
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+    .btn:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    }
+    .nav-link {
+        transition: color 0.2s ease !important;
+    }
+    .card {
+        transition: box-shadow 0.3s ease !important;
+    }
+    </style>
 </head>
 <body>
 
 <?php
-// Flash message
 if (isset($_SESSION['flash'])) {
     $flash = $_SESSION['flash'];
     unset($_SESSION['flash']);
@@ -86,3 +123,4 @@ if (isset($_SESSION['flash'])) {
     </div>
 </nav>
 
+<main>
