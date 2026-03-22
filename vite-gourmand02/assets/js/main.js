@@ -66,6 +66,16 @@ function afficherMenus(menus) {
         const prix        = parseFloat(menu.prix_base).toFixed(2);
         const stock       = parseInt(menu.stock ?? 0);
 
+        // Badge Nouveau
+        const created = new Date(menu.created_at);
+        const jours = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24);
+        const badgeNouveau = jours <= 7
+            ? `<span style="position:absolute; top:12px; left:12px; background:#e67e22; color:white;
+                            border-radius:20px; padding:3px 10px; font-size:0.75rem; font-weight:bold;">
+                   🆕 Nouveau
+               </span>`
+            : '';
+
         let etoiles = '';
         for (let i = 1; i <= 5; i++) {
             etoiles += i <= Math.round(note) ? '★' : '☆';
@@ -87,6 +97,7 @@ function afficherMenus(menus) {
                 <div class="card-img-wrapper">
                     <img src="${image}" alt="Photo du ${escapeHtml(menu.titre)}">
                     <span class="badge-theme ${badgeClass}">${escapeHtml(badgeLabel)}</span>
+                    ${badgeNouveau}
                 </div>
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title fw-bold" style="color:#2E6B5E">${escapeHtml(menu.titre)}</h5>
