@@ -10,14 +10,14 @@ class EmailService {
     public function __construct() {
         $this->mail = new PHPMailer(true);
         $this->mail->isSMTP();
-        $this->mail->Host = 'smtp.gmail.com';
+        $this->mail->Host = getenv('MAIL_HOST');
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = 'mathieujacquet97460@gmail.com';
-        $this->mail->Password = getenv('MAIL_PASS') ?: '';
+        $this->mail->Username = getenv('MAIL_USERNAME');
+        $this->mail->Password = getenv('MAIL_PASS');
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $this->mail->Port = 587;
+        $this->mail->Port = (int) getenv('MAIL_PORT');
         $this->mail->CharSet = 'UTF-8';
-        $this->mail->setFrom('mathieujacquet97460@gmail.com', 'Vite & Gourmand');
+        $this->mail->setFrom(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
     }
 
     public function envoyerConfirmationCommande($email, $prenom, $commande) {
