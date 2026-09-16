@@ -76,7 +76,7 @@ class UtilisateurModel {
         return $stmt->execute($params);
     }
     public function sauvegarderToken($id, $token, $expiration) {
-        $sql = "UPDATE utilisateurs SET reset_token = :token, token_expiration = :expiration WHERE id = :id";
+        $sql = "UPDATE utilisateurs SET reset_token = :token, reset_expiration = :expiration WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([':token' => $token, ':expiration' => $expiration, ':id' => $id]);
     }
@@ -92,7 +92,7 @@ class UtilisateurModel {
         return $stmt->execute([':hash' => $hash, ':id' => $id]);
     }
     public function supprimerToken($id) {
-        $sql = "UPDATE utilisateurs SET reset_token = NULL, token_expiration = NULL WHERE id = :id";
+        $sql = "UPDATE utilisateurs SET reset_token = NULL, reset_expiration = NULL WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
