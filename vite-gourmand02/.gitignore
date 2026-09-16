@@ -1,0 +1,17 @@
+# Environnement
+.env
+.env.*
+
+# Dépendances
+/vendor/
+/node_modules/
+
+# Archives et sauvegardes
+*.tar.gz
+*.zip
+*.bak
+
+# Fichiers temporaires
+fix*.php
+test_*.php
+New-Item*
