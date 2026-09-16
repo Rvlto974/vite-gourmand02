@@ -38,7 +38,7 @@ class MotDePasseController {
 
         $utilisateur = $this->utilisateurModel->getByToken($token);
 
-        if (!$utilisateur || $utilisateur['token_expiration'] < date('Y-m-d H:i:s')) {
+        if (!$utilisateur || $utilisateur['reset_expiration'] < date('Y-m-d H:i:s')) {
             $erreur = "Ce lien est invalide ou expiré.";
             require_once 'views/mot-de-passe/reinitialiser.php';
             return;
