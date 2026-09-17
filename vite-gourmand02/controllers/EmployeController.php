@@ -68,9 +68,8 @@ class EmployeController
     {
         $this->verifierEmploye();
 
-        $id = $_POST['id'] ?? null;
-        $statut = $_POST['statut'] ?? null;
-
+        $id = (int)($_POST["id"] ?? null);
+        $statut = $_POST["statut"] ?? null;
         $statutsAutorises = [
             'nouvelle',
             'acceptee',
