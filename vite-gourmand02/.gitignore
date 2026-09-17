@@ -1,17 +1,35 @@
-# Environnement
-.env
-.env.*
+# Dossiers externes
+../App-Resto-V2/
+../App-Resto/
+../PDF STUDI/
+../Photo-M/
+../Portefolio/
+../Safepass/
+../TripKit/
+../V-G/
+../Vite-et-gourmand2/
+../Web Agency/
+../Web-Resto-temp/
+../mini blog/
+../sql/
+../vite-et-gourmand/
 
-# Dépendances
-/vendor/
-/node_modules/
+# Fichiers PDF
+*.pdf
 
-# Archives et sauvegardes
-*.tar.gz
-*.zip
-*.bak
+# Node modules et dépendances
+node_modules/
+vendor/
 
-# Fichiers temporaires
-fix*.php
-test_*.php
-New-Item*
+# Env et config locaux
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
