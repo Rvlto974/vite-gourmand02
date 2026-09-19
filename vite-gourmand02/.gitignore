@@ -1,29 +1,22 @@
-# Dossiers externes
-../App-Resto-V2/
-../App-Resto/
-../PDF STUDI/
-../Photo-M/
-../Portefolio/
-../Safepass/
-../TripKit/
-../V-G/
-../Vite-et-gourmand2/
-../Web Agency/
-../Web-Resto-temp/
-../mini blog/
-../sql/
-../vite-et-gourmand/
-
-# Fichiers PDF
-*.pdf
-
-# Node modules et dépendances
+# Dependencies
 node_modules/
 vendor/
 
-# Env et config locaux
+# Database
+*.sqlite
+*.db
+*.sql
+
+# Config
+.env
 .env.local
-.env.*.local
+config/database.php
+config/database.php.bak
+
+# Logs
+*.log
+storage/
+cache/
 
 # IDE
 .vscode/
@@ -31,7 +24,17 @@ vendor/
 *.swp
 *.swo
 
-# Logs
-*.log
-.env
-.env
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups & temp
+*.bak
+*.tmp
+convert*.php
+convert*.py
+fix*.php
+migrate.php
+data*.sql
+schema*.sql
+plats.csv
