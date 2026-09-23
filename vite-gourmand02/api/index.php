@@ -43,22 +43,49 @@ try {
     switch ($resource) {
         case 'plats':
             if ($method === 'GET') {
-                $stmt = $db->query("SELECT id, nom, type, description, allergenes FROM plats");
-                echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+                if ($id) {
+                    // GET /api/plats/{id}
+                    $stmt = $db->prepare("SELECT id, nom, type, description, allergenes FROM plats WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+                    echo json_encode(['success' => true, 'data' => $data ?: null]);
+                } else {
+                    // GET /api/plats
+                    $stmt = $db->query("SELECT id, nom, type, description, allergenes FROM plats");
+                    echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+                }
             }
             break;
             
         case 'menus':
             if ($method === 'GET') {
-                $stmt = $db->query("SELECT id, titre, description FROM menus");
-                echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+                if ($id) {
+                    // GET /api/menus/{id}
+                    $stmt = $db->prepare("SELECT id, titre, description FROM menus WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+                    echo json_encode(['success' => true, 'data' => $data ?: null]);
+                } else {
+                    // GET /api/menus
+                    $stmt = $db->query("SELECT id, titre, description FROM menus");
+                    echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+                }
             }
             break;
             
         case 'avis':
             if ($method === 'GET') {
-                $stmt = $db->query("SELECT id, commande_id, note, commentaire FROM avis");
-                echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+                if ($id) {
+                    // GET /api/avis/{id}
+                    $stmt = $db->prepare("SELECT id, commande_id, note, commentaire FROM avis WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+                    echo json_encode(['success' => true, 'data' => $data ?: null]);
+                } else {
+                    // GET /api/avis
+                    $stmt = $db->query("SELECT id, commande_id, note, commentaire FROM avis");
+                    echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+                }
             }
             break;
             
