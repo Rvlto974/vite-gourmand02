@@ -4,8 +4,11 @@ class Database {
 
     public function connect() {
         try {
+            // Chemin absolu depuis /var/www/html
+            $dbPath = '/var/www/html/vite_gourmand.db';
+            
             $this->pdo = new PDO(
-                'sqlite:' . __DIR__ . '/../vite_gourmand.db',
+                'sqlite:' . $dbPath,
                 null,
                 null,
                 [
@@ -13,12 +16,9 @@ class Database {
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 ]
             );
-            // Force UTF-8
-            $this->pdo->exec("PRAGMA encoding='UTF-8'");
             return $this->pdo;
         } catch (PDOException $e) {
-            die('Database connection error: ' . $e->getMessage());
+            die('Database connection failed: ' . $e->getMessage());
         }
     }
 }
-?>

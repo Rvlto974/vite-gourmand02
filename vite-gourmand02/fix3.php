@@ -1,6 +1,6 @@
 <?php
 require_once 'config/config.php';
-require_once 'config/database.php';
+require_once __DIR__ . '/../../config/database_sqlite.php'';
 
 $db = new Database();
 $pdo = $db->connect();
