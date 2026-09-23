@@ -1,0 +1,43 @@
+# flyctl launch added from .gitignore
+# Dependencies
+**/node_modules
+**/vendor
+
+# Database
+**/*.sqlite
+**/*.db
+**/*.sql
+
+# Config
+**/.env
+**/.env.local
+**/config/database.php
+**/config/database.php.bak
+
+# Logs
+**/*.log
+**/storage
+**/cache
+
+# IDE
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+
+# Backups & temp
+**/*.bak
+**/*.tmp
+**/convert*.php
+**/convert*.py
+**/fix*.php
+**/migrate.php
+**/data*.sql
+**/schema*.sql
+**/plats.csv
+fly.toml
+!vite_gourmand.db

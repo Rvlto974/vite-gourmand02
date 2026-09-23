@@ -1,5 +1,5 @@
 <?php
-require_once 'models/MenuModel.php';
+require_once __DIR__ . '/../models/MenuModel.php';
 class MenusController {
     private $menuModel;
     public function __construct() {
@@ -15,7 +15,7 @@ class MenusController {
             'tri'          => $_GET['tri'] ?? 'recent'
         ];
         $menus = $this->menuModel->getAll($filtres);
-        require_once 'views/menus/index.php';
+        require_once __DIR__ . '/../views/menus/index.php';
     }
     public function detail() {
         $id = $_GET['id'] ?? null;
@@ -25,7 +25,7 @@ class MenusController {
         $plats  = $this->menuModel->getPlatsById($id);
         $avis   = $this->menuModel->getAvisById($id);
         $images = $this->menuModel->getImagesById($id);
-        require_once 'views/menus/detail.php';
+        require_once __DIR__ . '/../views/menus/detail.php';
     }
     public function filtrer() {
         $filtres = [
