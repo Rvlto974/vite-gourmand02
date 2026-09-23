@@ -25,10 +25,6 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
         array (
             'MongoDB\\' => 8,
         ),
-        'F' =>
-        array (
-            'Firebase\\JWT\\' => 13,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -47,10 +43,6 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
         'MongoDB\\' =>
         array (
             0 => __DIR__ . '/..' . '/mongodb/mongodb/src',
-        ),
-        'Firebase\\JWT\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
     );
 
