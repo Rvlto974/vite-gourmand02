@@ -60,6 +60,7 @@ class AuthController {
                 $_SESSION['flash'] = ['type' => 'success', 'message' => '✅ Bienvenue ' . $utilisateur['prenom'] . ' !'];
                 header('Location: /');
                 exit;
+                exit;
             }
             $erreur = "Email ou mot de passe incorrect";
             require_once 'views/auth/connexion.php';
