@@ -17,21 +17,12 @@ class MenuModel {
             $params[':theme'] = $filtres['theme'];
         }
 
-        if (!empty($filtres['regime'])) {
-            $sql .= " AND regime = :regime";
-            $params[':regime'] = $filtres['regime'];
+        if (!empty($filtres['saison'])) {
+            $sql .= " AND saison = :saison";
+            $params[':saison'] = $filtres['saison'];
         }
 
-        if (!empty($filtres['prix_min'])) {
-            $sql .= " AND prix >= :prix_min";
-            $params[':prix_min'] = $filtres['prix_min'];
-        }
-
-        if (!empty($filtres['prix_max'])) {
-            $sql .= " AND prix <= :prix_max";
-            $params[':prix_max'] = $filtres['prix_max'];
-        }
-
+        $sql .= " ORDER BY id DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -45,16 +36,23 @@ class MenuModel {
     }
 
     public function getPlatsById($menu_id) {
-        $sql = "SELECT * FROM plats WHERE menu_id = :menu_id ORDER BY type";
+        // ✅ SQLite compatible - pas de FIELD()
+        $sql = "SELECT * FROM plats WHERE menu_id = :menu_id ORDER BY 
+                CASE 
+                    WHEN type = 'entree' THEN 1
+                    WHEN type = 'plat' THEN 2
+                    WHEN type = 'dessert' THEN 3
+                    ELSE 4
+                END";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':menu_id' => $menu_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getAvisById($menu_id) {
-        $sql = "SELECT a.*, u.nom, u.prenom FROM avis a
-                LEFT JOIN utilisateurs u ON a.utilisateur_id = u.id
-                WHERE a.commande_id IN (SELECT id FROM commandes WHERE menu_id = :menu_id)
+        $sql = "SELECT a.*, u.nom as auteur FROM avis a 
+                LEFT JOIN utilisateurs u ON a.user_id = u.id 
+                WHERE a.menu_id = :menu_id AND a.valide = 1
                 ORDER BY a.id DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':menu_id' => $menu_id]);
@@ -62,10 +60,9 @@ class MenuModel {
     }
 
     public function getImagesById($menu_id) {
-        $sql = "SELECT * FROM menu_images WHERE menu_id = :menu_id ORDER BY ordre ASC";
+        $sql = "SELECT * FROM menu_images WHERE menu_id = :menu_id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':menu_id' => $menu_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-?>
