@@ -33,10 +33,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --ignore-platform-req=ext-mongod
 
 RUN chown -R www-data:www-data /var/www/html
 
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
