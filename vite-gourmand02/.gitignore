@@ -38,3 +38,6 @@ migrate.php
 data*.sql
 schema*.sql
 plats.csv
+vite_gourmand.db
+vendor/
+composer.lock
