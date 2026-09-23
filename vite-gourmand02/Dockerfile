@@ -11,7 +11,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/html
 
 COPY . .
-RUN composer_ALLOW_SUPERUSER=1  install --ignore-platform-req=ext-mongodb --no-dev --optimize-autoloader
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --ignore-platform-req=ext-mongodb --no-dev --optimize-autoloaderr
 
 RUN a2enmod rewrite
 RUN chown -R www-data:www-data /var/www/html
