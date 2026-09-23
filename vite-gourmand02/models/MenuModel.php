@@ -45,7 +45,14 @@ class MenuModel {
     }
 
     public function getPlatsById($menu_id) {
-        $sql = "SELECT * FROM plats WHERE menu_id = :menu_id ORDER BY FIELD(type, 'entree', 'plat', 'dessert')";
+        $sql = "SELECT * FROM plats 
+                WHERE menu_id = :menu_id 
+                ORDER BY CASE type 
+                    WHEN 'entree' THEN 1
+                    WHEN 'plat' THEN 2
+                    WHEN 'dessert' THEN 3
+                    ELSE 4
+                END";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':menu_id' => $menu_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
