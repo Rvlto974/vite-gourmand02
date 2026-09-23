@@ -45,14 +45,24 @@ class MenuModel {
     }
 
     public function getPlatsById($menu_id) {
-        $sql = "SELECT * FROM plats 
-                WHERE menu_id = :menu_id 
-                ORDER BY CASE type 
-                    WHEN 'entree' THEN 1
-                    WHEN 'plat' THEN 2
-                    WHEN 'dessert' THEN 3
-                    ELSE 4
-                END";
+        $sql = "SELECT * FROM plats WHERE menu_id = :menu_id ORDER BY type";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':menu_id' => $menu_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAvisById($menu_id) {
+        $sql = "SELECT a.*, u.nom, u.prenom FROM avis a
+                LEFT JOIN utilisateurs u ON a.utilisateur_id = u.id
+                WHERE a.commande_id IN (SELECT id FROM commandes WHERE menu_id = :menu_id)
+                ORDER BY a.id DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':menu_id' => $menu_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getImagesById($menu_id) {
+        $sql = "SELECT * FROM menu_images WHERE menu_id = :menu_id ORDER BY ordre ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':menu_id' => $menu_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
