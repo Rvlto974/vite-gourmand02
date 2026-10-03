@@ -1,2 +1,11 @@
 
 vite-gourmand02/.env
+
+.env
+
+vendor/
+
+.env
+/vendor/
+*.bundle
+*.tar.gz
