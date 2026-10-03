@@ -122,7 +122,7 @@
                 <div class="d-flex justify-content-center gap-2 mt-4 pb-4" id="avisIndicateurs">
                     <?php foreach ($avis as $index => $unAvis) : ?>
                     <button type="button" 
-                            onclick="goToSlide(<?= $index ?>)"
+                            data-avis-slide="<?= $index ?>"
                             id="dot-<?= $index ?>"
                             aria-label="Aller à l'avis <?= $index + 1 ?>"
                             style="width:10px;height:10px;border-radius:50%;border:none;cursor:pointer;
@@ -134,18 +134,6 @@
         </div>
     </section>
 
-<script>
-
-const carousel = document.getElementById('carouselAvis');
-carousel.addEventListener('slid.bs.carousel', function(e) {
-    document.querySelectorAll('#avisIndicateurs button').forEach((btn, i) => {
-        btn.style.backgroundColor = i === e.to ? '#5DA99A' : '#ccc';
-    });
-});
-function goToSlide(index) {
-    const bsCarousel = bootstrap.Carousel.getInstance(carousel);
-    bsCarousel.to(index);
-}
-</script>
+<script src="/assets/js/accueil.js" defer></script>
 
 <?php require_once 'views/layouts/footer.php'; ?>
