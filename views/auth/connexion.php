@@ -40,19 +40,6 @@
     </div>
 </div>
 
-<script>
-document.getElementById('toggleMdp').addEventListener('click', function() {
-    const input = document.getElementById('mot_de_passe');
-    if (input.type === 'password') {
-        input.type = 'text';
-        this.textContent = '🙈';
-        this.setAttribute('aria-label', 'Masquer le mot de passe');
-    } else {
-        input.type = 'password';
-        this.textContent = '👁️';
-        this.setAttribute('aria-label', 'Afficher le mot de passe');
-    }
-});
-</script>
+<script src="/assets/js/connexion.js" defer></script>
 
 <?php require_once 'views/layouts/footer.php'; ?>
