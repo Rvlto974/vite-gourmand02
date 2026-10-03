@@ -63,7 +63,7 @@
                                         </button>
                                     </form>
                                     <form method="POST" action="/admin/supprimerMenu" class="d-inline"
-                                            onsubmit="return confirm('Supprimer ce menu ?')">
+                                        data-confirm="Supprimer ce menu ?">
                                         <input type="hidden" name="id" value="<?= $menu['id'] ?>">
                                         <button type="submit" class="btn btn-danger btn-sm">🗑️ Supprimer</button>
                                     </form>
@@ -78,4 +78,6 @@
     </div>
 </div>
 
+
+<script src="/assets/js/confirmations.js" defer></script>
 <?php require_once 'views/layouts/footer.php'; ?>
