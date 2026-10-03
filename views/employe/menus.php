@@ -47,7 +47,7 @@
                                     <a href="/employe/modifierMenu?id=<?= $menu['id'] ?>"
                                        class="btn btn-warning btn-sm">✏️ Modifier</a>
                                     <form method="POST" action="/employe/supprimerMenu" class="d-inline"
-                                          onsubmit="return confirm('Supprimer ce menu ?')">
+                                          data-confirm="return confirm('Supprimer ce menu ?')">
                                         <input type="hidden" name="id" value="<?= $menu['id'] ?>">
                                         <button type="submit" class="btn btn-danger btn-sm">🗑️ Supprimer</button>
                                     </form>
