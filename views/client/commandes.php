@@ -55,7 +55,7 @@
                                     <?php if ($commande['statut'] === 'nouvelle') : ?>
                                         <a href="/client/annuler?id=<?= $commande['id'] ?>" 
                                             class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Confirmer l\'annulation ?')"
+                                            data-confirm="Confirmer l’annulation ?"
                                             aria-label="Annuler la commande">
                                             Annuler
                                         </a>

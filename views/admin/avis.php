@@ -1,58 +1,114 @@
-<?php require_once 'views/layouts/header.php'; ?>
+<?php
+// Charge l’en-tête commun du site.
+require_once 'views/layouts/header.php';
+?>
 
 <div class="container mt-5">
     <div class="row">
+
+        <!-- Navigation de l’espace administrateur. -->
         <div class="col-md-3">
             <div class="card p-3">
                 <h5>Espace admin</h5>
+
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Tableau de bord</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/utilisateurs">Utilisateurs</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/menus">Menus</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/employe/commandes">Commandes</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/admin/avis">Avis clients</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/stats">Statistiques</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/auth/deconnexion">Déconnexion</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/dashboard">Tableau de bord</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/utilisateurs">Utilisateurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/menus">Menus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/employe/commandes">Commandes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/avis">Avis clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/stats">Statistiques</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/deconnexion">Déconnexion</a>
+                    </li>
                 </ul>
             </div>
         </div>
 
+        <!-- Contenu principal : modération des avis clients. -->
         <div class="col-md-9">
             <h1>Gestion des avis</h1>
 
             <?php if (empty($avis)) : ?>
-                <div class="alert alert-info mt-3">Aucun avis en attente de validation.</div>
+                <!-- Message affiché lorsqu’aucun avis n’attend d’approbation. -->
+                <div class="alert alert-info mt-3">
+                    Aucun avis en attente de validation.
+                </div>
             <?php else : ?>
+
+                <!-- Affiche chaque avis en attente de modération. -->
                 <?php foreach ($avis as $unAvis) : ?>
-                <div class="card mb-3 p-3 shadow-sm" style="border-radius:10px;">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <p class="fw-bold mb-1">
-                                <?= htmlspecialchars($unAvis['prenom'] . ' ' . $unAvis['nom']) ?>
-                                <small class="text-muted fw-normal ms-2"><?= date('d/m/Y', strtotime($unAvis['created_at'])) ?></small>
-                            </p>
-                            <p class="mb-1" style="color:#f39c12; font-size:1.2rem;">
-                                <?= str_repeat('★', $unAvis['note']) ?><?= str_repeat('☆', 5 - $unAvis['note']) ?>
-                                <small class="text-muted" style="font-size:0.85rem;"><?= $unAvis['note'] ?>/5</small>
-                            </p>
-                            <p class="mb-0"><?= htmlspecialchars($unAvis['commentaire']) ?></p>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <form method="POST" action="/admin/validerAvis">
-                                <input type="hidden" name="id" value="<?= $unAvis['id'] ?>">
-                                <button type="submit" class="btn btn-success btn-sm">✅ Valider</button>
-                            </form>
-                            <form method="POST" action="/admin/refuserAvis">
-                                <input type="hidden" name="id" value="<?= $unAvis['id'] ?>">
-                                <button type="submit" class="btn btn-danger btn-sm">❌ Refuser</button>
-                            </form>
+                    <div class="card mb-3 p-3 shadow-sm" style="border-radius:10px;">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <!-- Nom du client et date de publication de l’avis. -->
+                                <p class="fw-bold mb-1">
+                                    <?= htmlspecialchars($unAvis['prenom'] . ' ' . $unAvis['nom']) ?>
+                                    <small class="text-muted fw-normal ms-2">
+                                        <?= date('d/m/Y', strtotime($unAvis['created_at'])) ?>
+                                    </small>
+                                </p>
+
+                                <!-- Note du client représentée par des étoiles. -->
+                                <p class="mb-1" style="color:#f39c12; font-size:1.2rem;">
+                                    <?= str_repeat('★', $unAvis['note']) ?>
+                                    <?= str_repeat('☆', 5 - $unAvis['note']) ?>
+                                    <small class="text-muted" style="font-size:0.85rem;">
+                                        <?= $unAvis['note'] ?>/5
+                                    </small>
+                                </p>
+
+                                <!-- Commentaire laissé par le client. -->
+                                <p class="mb-0">
+                                    <?= htmlspecialchars($unAvis['commentaire']) ?>
+                                </p>
+                            </div>
+
+                            <!-- Actions de validation ou de refus de l’avis. -->
+                            <div class="d-flex gap-2">
+                                <form method="POST" action="/admin/validerAvis">
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value="<?= $unAvis['id'] ?>"
+                                    >
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        ✅ Valider
+                                    </button>
+                                </form>
+
+                                <form method="POST" action="/admin/refuserAvis">
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value="<?= $unAvis['id'] ?>"
+                                    >
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        ❌ Refuser
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
-<?php require_once 'views/layouts/footer.php'; ?>
+<?php
+// Charge le pied de page commun du site.
+require_once 'views/layouts/footer.php';
+?>
