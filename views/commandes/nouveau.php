@@ -490,12 +490,7 @@
 </div>
 
 <!-- Script externe : navigation entre les étapes et calcul du prix -->
-<script>
-    window.commandeConfig = {
-        prixBase: <?= json_encode((float) $menu['prix_base']) ?>,
-        nbMin: <?= json_encode((int) $menu['nb_personnes_min']) ?>
-    };
-</script>
+
 
 <script src="/assets/js/commande-nouveau.js" defer></script>
 
