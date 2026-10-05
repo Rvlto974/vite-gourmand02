@@ -1,23 +1,26 @@
+# Utilise PHP 8.2 avec Apache comme image de base
 FROM php:8.2-apache
 
 # Installe les outils et dépendances nécessaires à l’application
-# ainsi qu’à la compilation de l’extension MongoDB
-# Installe les outils nécessaires à l’application
+# ainsi que les outils requis pour compiler l’extension MongoDB
 RUN apt-get update && apt-get install -y \
     git \
     zip \
     unzip \
+    $PHPIZE_DEPS \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
     && rm -rf /var/lib/apt/lists/*
-    
-# Installe les extensions PHP nécessaires à MySQL
+
+# Installe les extensions PHP nécessaires à la connexion à MySQL
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Installe Composer
+# Installe Composer, le gestionnaire de dépendances PHP
 RUN curl -sS https://getcomposer.org/installer \
     | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Configure Apache pour utiliser le dossier du projet
-# et autoriser les règles définies dans le fichier .htaccess
+# Configure Apache pour servir le projet depuis /var/www/html
+# et autorise l’utilisation des règles définies dans .htaccess
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html\n\
     <Directory /var/www/html>\n\
@@ -27,7 +30,7 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
-# Active le module de réécriture d’URL d’Apache
+# Active le module Apache de réécriture d’URL
 RUN a2enmod rewrite
 
 # Copie les fichiers du projet dans le conteneur
