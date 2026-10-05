@@ -1,50 +1,53 @@
 services:
-  # Serveur PHP
+  # Serveur web PHP de l'application
   php:
-    build: .
-    container_name: vite_gourmand_php
+    build: . # Construit l'image à partir du Dockerfile du projet
+    container_name: vite_gourmand_php # Nom du conteneur PHP
     ports:
-      - "8080:80"
+      - "8080:80" # Accès à l'application sur http://localhost:8080
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html # Partage les fichiers du projet avec le conteneur
     depends_on:
-      - mysql
-      - mongodb
+      - mysql # Démarre MySQL avant le conteneur PHP
+      - mongodb # Démarre MongoDB avant le conteneur PHP
 
-  # Base de données MySQL
+  # Serveur de base de données MySQL
   mysql:
-    image: mysql:8.0
-    container_name: vite_gourmand_mysql
+    image: mysql:8.0 # Utilise l'image officielle MySQL 8
+    container_name: vite_gourmand_mysql # Nom du conteneur MySQL
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: vite_gourmand
+      MYSQL_ROOT_PASSWORD: root # Mot de passe du compte administrateur MySQL
+      MYSQL_DATABASE: vite_gourmand # Crée cette base au premier démarrage
     ports:
-      - "3306:3306"
+      - "3306:3306" # Rend MySQL accessible sur le port 3306 de la machine
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql # Conserve les données MySQL dans un volume Docker
+      # Charge la structure SQL lors de la première initialisation de la base
       - ./database/vite_gourmand.sql:/docker-entrypoint-initdb.d/01_structure.sql
+      # Charge les données de départ après la structure SQL
       - ./database/vite_gourmand_data.sql:/docker-entrypoint-initdb.d/02_data.sql
 
-  # PhpMyAdmin
+  # Interface web d'administration de MySQL
   phpmyadmin:
-    image: phpmyadmin
-    container_name: vite_gourmand_phpmyadmin
+    image: phpmyadmin # Utilise l'image officielle phpMyAdmin
+    container_name: vite_gourmand_phpmyadmin # Nom du conteneur phpMyAdmin
     ports:
-      - "8082:80"
+      - "8082:80" # Accès sur http://localhost:8082
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: mysql # Indique à phpMyAdmin de se connecter au service MySQL
     depends_on:
-      - mysql
+      - mysql # Démarre MySQL avant phpMyAdmin
 
-  # MongoDB
+  # Serveur de base de données MongoDB
   mongodb:
-    image: mongo:6.0
-    container_name: vite_gourmand_mongodb
+    image: mongo:6.0 # Utilise l'image MongoDB 6
+    container_name: vite_gourmand_mongodb # Nom du conteneur MongoDB
     ports:
-      - "27017:27017"
+      - "27017:27017" # Rend MongoDB accessible sur le port 27017
     volumes:
-      - mongo_data:/data/db
+      - mongo_data:/data/db # Conserve les données MongoDB dans un volume Docker
 
+# Volumes Docker persistants : les données survivent à l'arrêt des conteneurs
 volumes:
-  mysql_data:
-  mongo_data:
+  mysql_data: # Stockage persistant pour MySQL
+  mongo_data: # Stockage persistant pour MongoDB
