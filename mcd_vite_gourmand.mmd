@@ -1,0 +1,43 @@
+%% MCD — Vite & Gourmand
+%% Cardinalités au format (min,max). MENU_PLAT matérialise menu_plats(menu_id, plat_id).
+erDiagram
+    UTILISATEUR ||--o{ COMMANDE : "passe"
+    UTILISATEUR ||--o{ AVIS : "rédige"
+    COMMANDE o|--|| AVIS : "concerne (hypothèse : 1 avis max)"
+    COMMANDE ||--o{ COMMANDE_STATUT : "possède"
+    MENU ||--o{ COMMANDE : "concerne"
+    MENU ||--|{ MENU_PLAT : "contient"
+    PLAT ||--o{ MENU_PLAT : "figure dans"
+    MENU ||--o{ MENU_IMAGE : "possède"
+
+    UTILISATEUR {
+      int id PK
+    }
+    COMMANDE {
+      int id PK
+      int utilisateur_id FK
+      int menu_id FK
+    }
+    MENU {
+      int id PK
+    }
+    AVIS {
+      int id PK
+      int commande_id FK
+      int utilisateur_id FK
+    }
+    COMMANDE_STATUT {
+      int id PK
+      int commande_id FK
+    }
+    PLAT {
+      int id PK
+    }
+    MENU_PLAT {
+      int menu_id PK, FK
+      int plat_id PK, FK
+    }
+    MENU_IMAGE {
+      int id PK
+      int menu_id FK
+    }

@@ -1,0 +1,43 @@
+flowchart TB
+    UTILISATEUR[UTILISATEUR]
+    COMMANDE[COMMANDE]
+    MENU[MENU]
+    AVIS[AVIS]
+    STATUT[COMMANDE_STATUT]
+    PLAT[PLAT]
+    IMAGE[MENU_IMAGE]
+
+    R1{passe}
+    R2{concerne}
+    R3{rédige}
+    R4{concerne}
+    R5{possède}
+    R6{contient}
+    R7{possède}
+
+    UTILISATEUR ---|"0,N"| R1
+    R1 ---|"1,1"| COMMANDE
+
+    COMMANDE ---|"1,1"| R2
+    R2 ---|"0,N"| MENU
+
+    UTILISATEUR ---|"0,N"| R3
+    R3 ---|"1,1"| AVIS
+
+    AVIS ---|"1,1"| R4
+    R4 ---|"0,N"| COMMANDE
+
+    COMMANDE ---|"0,N"| R5
+    R5 ---|"1,1"| STATUT
+
+    MENU ---|"0,N"| R6
+    R6 ---|"1,1"| PLAT
+
+    MENU ---|"0,N"| R7
+    R7 ---|"1,1"| IMAGE
+
+    classDef entity fill:#fff,stroke:#333,stroke-width:1px,color:#111;
+    classDef relation fill:#f3e5ab,stroke:#8a6d1d,stroke-width:1px,color:#111;
+
+    class UTILISATEUR,COMMANDE,MENU,AVIS,STATUT,PLAT,IMAGE entity;
+    class R1,R2,R3,R4,R5,R6,R7 relation;
