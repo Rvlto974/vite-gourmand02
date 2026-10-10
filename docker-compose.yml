@@ -1,53 +1,67 @@
 services:
   # Serveur web PHP de l'application
   php:
-    build: . # Construit l'image à partir du Dockerfile du projet
-    container_name: vite_gourmand_php # Nom du conteneur PHP
+    # Construit l'image à partir du Dockerfile du projet
+    build: .
+    container_name: vite_gourmand_php
     ports:
-      - "8080:80" # Accès à l'application sur http://localhost:8080
+      # Site accessible sur http://localhost:8080
+      - "8080:80"
     volumes:
-      - .:/var/www/html # Partage les fichiers du projet avec le conteneur
+      # Partage les fichiers du projet avec le conteneur PHP
+      - .:/var/www/html
     depends_on:
-      - mysql # Démarre MySQL avant le conteneur PHP
-      - mongodb # Démarre MongoDB avant le conteneur PHP
+      # Démarre ces services avant PHP, sans attendre qu'ils soient prêts
+      - mysql
+      - mongodb
 
   # Serveur de base de données MySQL
   mysql:
-    image: mysql:8.0 # Utilise l'image officielle MySQL 8
-    container_name: vite_gourmand_mysql # Nom du conteneur MySQL
+    image: mysql:8.0
+    container_name: vite_gourmand_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root # Mot de passe du compte administrateur MySQL
-      MYSQL_DATABASE: vite_gourmand # Crée cette base au premier démarrage
+      # Mot de passe administrateur pour l'environnement local
+      MYSQL_ROOT_PASSWORD: root
+      # Base créée lors de la première initialisation
+      MYSQL_DATABASE: vite_gourmand
     ports:
-      - "3306:3306" # Rend MySQL accessible sur le port 3306 de la machine
+      # Accès à MySQL depuis Windows sur le port 3306
+      - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql # Conserve les données MySQL dans un volume Docker
-      # Charge la structure SQL lors de la première initialisation de la base
+      # Conserve les données MySQL dans un volume Docker
+      - mysql_data:/var/lib/mysql
+      # Exécute ce fichier SQL uniquement lors de la première
+      # initialisation, si le volume MySQL est vide
       - ./database/vite_gourmand.sql:/docker-entrypoint-initdb.d/01_structure.sql
-      # Charge les données de départ après la structure SQL
-      - ./database/vite_gourmand_data.sql:/docker-entrypoint-initdb.d/02_data.sql
+
+      # Le montage de vite_gourmand_data.sql a été retiré :
+      # ce chemin correspond actuellement à un dossier, pas à un fichier SQL
 
   # Interface web d'administration de MySQL
   phpmyadmin:
-    image: phpmyadmin # Utilise l'image officielle phpMyAdmin
-    container_name: vite_gourmand_phpmyadmin # Nom du conteneur phpMyAdmin
+    image: phpmyadmin
+    container_name: vite_gourmand_phpmyadmin
     ports:
-      - "8082:80" # Accès sur http://localhost:8082
+      # Interface accessible sur http://localhost:8082
+      - "8082:80"
     environment:
-      PMA_HOST: mysql # Indique à phpMyAdmin de se connecter au service MySQL
+      # Nom du service MySQL auquel phpMyAdmin se connecte
+      PMA_HOST: mysql
     depends_on:
-      - mysql # Démarre MySQL avant phpMyAdmin
+      - mysql
 
   # Serveur de base de données MongoDB
   mongodb:
-    image: mongo:6.0 # Utilise l'image MongoDB 6
-    container_name: vite_gourmand_mongodb # Nom du conteneur MongoDB
+    image: mongo:6.0
+    container_name: vite_gourmand_mongodb
     ports:
-      - "27017:27017" # Rend MongoDB accessible sur le port 27017
+      # Accès à MongoDB depuis Windows sur le port 27017
+      - "27017:27017"
     volumes:
-      - mongo_data:/data/db # Conserve les données MongoDB dans un volume Docker
+      # Conserve les données MongoDB dans un volume Docker
+      - mongo_data:/data/db
 
-# Volumes Docker persistants : les données survivent à l'arrêt des conteneurs
+# Volumes persistants : les données survivent à l'arrêt des conteneurs
 volumes:
-  mysql_data: # Stockage persistant pour MySQL
-  mongo_data: # Stockage persistant pour MongoDB
+  mysql_data:
+  mongo_data:

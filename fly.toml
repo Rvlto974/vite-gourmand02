@@ -1,23 +1,40 @@
-# fly.toml app configuration file generated for vite-gourmand02 on 2026-02-21T11:53:12+04:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+# Configuration de l’application Fly.io « vite-et-gourmand-app02 »
+# Le nom doit correspondre exactement à une application existante sur ton compte.
+app = "vite-et-gourmand-app02"
 
-app = 'vite-gourmand02'
-primary_region = 'cdg'
+# Région principale : Paris
+primary_region = "cdg"
 
 [build]
+  # Dockerfile utilisé pour construire l’image de l’application
   dockerfile = "Dockerfile"
 
 [http_service]
+  # Port sur lequel le serveur web écoute dans le conteneur
   internal_port = 80
+
+  # Redirige automatiquement le trafic HTTP vers HTTPS
   force_https = true
-  auto_stop_machines = 'stop'
+
+  # Arrête automatiquement les machines lorsqu’elles ne sont pas utilisées
+  auto_stop_machines = "stop"
+
+  # Redémarre une machine lorsqu’une requête arrive
   auto_start_machines = true
+
+  # Nombre minimal de machines à garder en fonctionnement
+  # 0 signifie qu’elles peuvent toutes s’arrêter en l’absence de trafic
   min_machines_running = 0
-  processes = ['app']
+
+  # Processus qui reçoit le trafic HTTP
+  processes = ["app"]
 
 [[vm]]
-  memory = '256mb'
+  # Mémoire allouée à la machine virtuelle
+  memory = "256mb"
+
+  # Nombre de processeurs virtuels
   cpus = 1
+
+  # Mémoire indiquée en mégaoctets
   memory_mb = 256
