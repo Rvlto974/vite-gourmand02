@@ -1,40 +1,54 @@
-# Utilise PHP 8.2 avec Apache comme image de base
+
+# Image de base : PHP 8.2 avec Apache.
 FROM php:8.2-apache
 
-# Installe les outils et dépendances nécessaires à l’application
-# ainsi que les outils requis pour compiler l’extension MongoDB
+# Installe les outils nécessaires à PHP, Composer et MongoDB.
 RUN apt-get update && apt-get install -y \
     git \
     zip \
     unzip \
+    libssl-dev \
+    ca-certificates \
     $PHPIZE_DEPS \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
+    && docker-php-ext-install pdo pdo_mysql \
     && rm -rf /var/lib/apt/lists/*
 
-# Installe les extensions PHP nécessaires à la connexion à MySQL
-RUN docker-php-ext-install pdo pdo_mysql
+# Récupère Composer depuis son image officielle.
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# Installe Composer, le gestionnaire de dépendances PHP
-RUN curl -sS https://getcomposer.org/installer \
-    | php -- --install-dir=/usr/local/bin --filename=composer
+# Définit le dossier principal de l'application.
+WORKDIR /var/www/html
 
-# Configure Apache pour servir le projet depuis /var/www/html
-# et autorise l’utilisation des règles définies dans .htaccess
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html\n\
-    <Directory /var/www/html>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-        DirectoryIndex index.php\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+# Copie les fichiers de configuration Composer.
+COPY composer.json composer.lock ./
 
-# Active le module Apache de réécriture d’URL
-RUN a2enmod rewrite
+# Installe les dépendances PHP nécessaires en production.
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts
 
-# Copie les fichiers du projet dans le conteneur
+# Copie le code de l'application.
 COPY . /var/www/html/
 
-# Donne à Apache les droits nécessaires sur les fichiers du projet
+# Configure Apache pour servir le projet.
+RUN printf '%s\n' \
+    '<VirtualHost *:80>' \
+    '    DocumentRoot /var/www/html' \
+    '    <Directory /var/www/html>' \
+    '        AllowOverride All' \
+    '        Require all granted' \
+    '        DirectoryIndex index.php' \
+    '    </Directory>' \
+    '</VirtualHost>' \
+    > /etc/apache2/sites-available/000-default.conf
+
+# Active la réécriture des URL.
+RUN a2enmod rewrite
+
+# Donne les droits nécessaires au serveur Apache.
 RUN chown -R www-data:www-data /var/www/html
