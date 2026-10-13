@@ -1,12 +1,18 @@
+
 <?php
 
-// Charge les classes MongoDB installées avec Composer.
+// Chargement des dépendances MongoDB installées avec Composer.
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Service chargé de l'enregistrement et de la lecture
- * des statistiques de commandes dans MongoDB.
+ * Service MongoDB de Vite & Gourmand.
  *
+ * Rôle :
+ * - Enregistrer les données statistiques des commandes.
+ * - Calculer les montants et les commandes par menu.
+ * - Regrouper les commandes par jour, semaine et mois.
+ *
+ * IMPORTANT :
  * MySQL reste la source officielle des commandes.
  * MongoDB est utilisé uniquement pour les statistiques.
  */
@@ -16,37 +22,46 @@ class MongoService
     private $connected = false;
 
     /**
-     * Initialise et vérifie la connexion MongoDB.
+     * Initialise la connexion à MongoDB.
+     *
+     * Une panne MongoDB ne doit pas empêcher
+     * l'application de fonctionner avec MySQL.
      */
     public function __construct()
     {
         try {
-            // Valeurs par défaut pour l'environnement Docker local.
+            // Paramètres de connexion configurables par environnement.
             $mongoUri = getenv('MONGO_URI') ?: 'mongodb://mongodb:27017';
             $dbName = getenv('MONGO_DB') ?: 'vite_gourmand_mongo_generally';
 
-            // Limite le temps d'attente si MongoDB ne répond pas.
+            // Création du client MongoDB avec délai de connexion limité.
             $client = new \MongoDB\Client(
                 $mongoUri,
                 [],
                 ['serverSelectionTimeoutMS' => 5000]
             );
 
+            // Sélection de la base de données.
             $this->db = $client->selectDatabase($dbName);
 
-            // Vérifie réellement la disponibilité du serveur.
+            // Vérification réelle de la disponibilité du serveur.
             $this->db->command(['ping' => 1]);
+
             $this->connected = true;
 
         } catch (\Throwable $e) {
-            // Une panne MongoDB ne doit pas empêcher les commandes MySQL.
             $this->connected = false;
-            error_log('[MongoService] Connexion impossible : ' . $e->getMessage());
+
+            // Journalisation sans interrompre l'application.
+            error_log(
+                '[MongoService] Connexion impossible : ' .
+                $e->getMessage()
+            );
         }
     }
 
     /**
-     * Indique si MongoDB est disponible.
+     * Indique si la connexion MongoDB est disponible.
      */
     public function isConnected()
     {
@@ -54,13 +69,13 @@ class MongoService
     }
 
     /**
-     * Crée ou met à jour les statistiques d'une commande.
+     * Enregistre ou met à jour les statistiques d'une commande.
      *
-     * commande_id correspond à l'identifiant MySQL et sert de clé
-     * de synchronisation pour éviter de compter deux fois la commande.
+     * L'identifiant commande_id correspond à MySQL.
+     * Il évite de créer plusieurs documents pour une même commande.
      *
-     * Le statut est obligatoire : il permet de conserver les commandes
-     * annulées dans MongoDB sans les inclure dans les totaux actifs.
+     * Les commandes annulées restent enregistrées
+     * mais sont exclues des statistiques actives.
      */
     public function enregistrerCommande($data)
     {
@@ -69,8 +84,7 @@ class MongoService
         }
 
         try {
-            // Refuse une synchronisation incomplète plutôt que d'enregistrer
-            // des données statistiques trompeuses.
+            // Liste des champs obligatoires.
             $champsRequis = [
                 'commande_id',
                 'menu_id',
@@ -81,25 +95,34 @@ class MongoService
                 'statut'
             ];
 
+            // Vérification des données nécessaires.
             foreach ($champsRequis as $champ) {
                 if (!isset($data[$champ])) {
-                    throw new \InvalidArgumentException('Champ manquant : ' . $champ);
+                    throw new \InvalidArgumentException(
+                        'Champ manquant : ' . $champ
+                    );
                 }
             }
 
-            // La date de prestation est conservée au format BSON MongoDB.
+            // Conversion de la date de prestation.
             $timestamp = strtotime((string) $data['date']);
+
             if ($timestamp === false) {
-                throw new \InvalidArgumentException('Date de prestation invalide.');
+                throw new \InvalidArgumentException(
+                    'Date de prestation invalide.'
+                );
             }
 
-            // Vérifie que le statut n'est pas une chaîne vide.
+            // Vérification du statut.
             $statut = trim((string) $data['statut']);
+
             if ($statut === '') {
-                throw new \InvalidArgumentException('Statut de commande vide.');
+                throw new \InvalidArgumentException(
+                    'Statut de commande vide.'
+                );
             }
 
-            // Ces champs reflètent les valeurs officielles de MySQL.
+            // Préparation du document statistique.
             $document = [
                 'type' => 'commande',
                 'commande_id' => (int) $data['commande_id'],
@@ -108,11 +131,13 @@ class MongoService
                 'prix_total' => (float) $data['prix_total'],
                 'nb_personnes' => (int) $data['nb_personnes'],
                 'statut' => $statut,
-                'date' => new \MongoDB\BSON\UTCDateTime($timestamp * 1000)
+                'date' => new \MongoDB\BSON\UTCDateTime(
+                    $timestamp * 1000
+                )
             ];
 
-            // Met à jour le document existant ou l'insère s'il est absent.
-            // created_at reste inchangé pour les commandes déjà présentes.
+            // Mise à jour ou insertion du document.
+            // created_at est défini uniquement à la création.
             $this->db->statistiques->updateOne(
                 [
                     'type' => 'commande',
@@ -130,20 +155,20 @@ class MongoService
             return true;
 
         } catch (\Throwable $e) {
-            // Journalise l'erreur sans interrompre le traitement MySQL.
-            error_log('[MongoService] Synchronisation impossible : ' . $e->getMessage());
+            error_log(
+                '[MongoService] Synchronisation impossible : ' .
+                $e->getMessage()
+            );
+
             return false;
         }
     }
 
     /**
-     * Retourne le filtre commun aux statistiques de commandes actives.
+     * Filtre commun pour toutes les statistiques.
      *
-     * Une commande annulée reste enregistrée pour l'historique,
-     * mais n'entre pas dans les calculs.
-     *
-     * Les anciens documents sans statut sont exclus par précaution :
-     * ils devront être resynchronisés à partir de MySQL.
+     * Seules les commandes non annulées sont comptabilisées.
+     * Les anciens documents sans statut sont exclus.
      */
     private function filtreCommandesActives()
     {
@@ -157,8 +182,13 @@ class MongoService
     }
 
     /**
-     * Retourne les statistiques des commandes non annulées par menu.
-     * Le montant indiqué n'est pas nécessairement un paiement encaissé.
+     * Statistiques par menu.
+     *
+     * Retourne :
+     * - Le nom du menu.
+     * - Le nombre de commandes.
+     * - Le nombre total de personnes.
+     * - Le montant total des commandes.
      */
     public function getStatsByMenu()
     {
@@ -168,7 +198,12 @@ class MongoService
 
         try {
             $pipeline = [
-                ['$match' => $this->filtreCommandesActives()],
+                // Exclure les commandes annulées.
+                [
+                    '$match' => $this->filtreCommandesActives()
+                ],
+
+                // Regrouper les commandes par nom de menu.
                 [
                     '$group' => [
                         '_id' => '$menu_titre',
@@ -177,13 +212,23 @@ class MongoService
                         'nb_personnes' => ['$sum' => '$nb_personnes']
                     ]
                 ],
-                ['$sort' => ['ca_total' => -1]]
+
+                // Trier par montant décroissant.
+                [
+                    '$sort' => ['ca_total' => -1]
+                ]
             ];
 
-            return iterator_to_array($this->db->statistiques->aggregate($pipeline));
+            return iterator_to_array(
+                $this->db->statistiques->aggregate($pipeline)
+            );
 
         } catch (\Throwable $e) {
-            error_log('[MongoService] Statistiques par menu : ' . $e->getMessage());
+            error_log(
+                '[MongoService] Statistiques par menu : ' .
+                $e->getMessage()
+            );
+
             return [];
         }
     }
@@ -191,8 +236,11 @@ class MongoService
     /**
      * Calcule le montant total des commandes non annulées.
      *
-     * Le nom getCaTotal() est conservé pour ne pas casser le contrôleur
-     * et la vue existants. Ce montant ne prouve pas un encaissement.
+     * Le nom getCaTotal() est conservé pour assurer
+     * la compatibilité avec le contrôleur existant.
+     *
+     * Ce montant ne représente pas nécessairement
+     * des paiements réellement encaissés.
      */
     public function getCaTotal()
     {
@@ -202,7 +250,12 @@ class MongoService
 
         try {
             $pipeline = [
-                ['$match' => $this->filtreCommandesActives()],
+                // Conserver uniquement les commandes actives.
+                [
+                    '$match' => $this->filtreCommandesActives()
+                ],
+
+                // Additionner les montants.
                 [
                     '$group' => [
                         '_id' => null,
@@ -211,21 +264,166 @@ class MongoService
                 ]
             ];
 
-            $result = iterator_to_array($this->db->statistiques->aggregate($pipeline));
+            $result = iterator_to_array(
+                $this->db->statistiques->aggregate($pipeline)
+            );
+
             return $result[0]['total'] ?? 0;
 
         } catch (\Throwable $e) {
-            error_log('[MongoService] Calcul du total : ' . $e->getMessage());
+            error_log(
+                '[MongoService] Calcul du total : ' .
+                $e->getMessage()
+            );
+
             return 0;
         }
     }
 
     /**
-     * Retourne les statistiques mensuelles des commandes non annulées.
+     * NOUVEAU : statistiques par jour.
      *
-     * Le regroupement reste basé sur created_at (date de création du
-     * document statistique), conformément au comportement existant.
-     * Il ne correspond pas forcément au mois de la prestation.
+     * Regroupe les commandes selon created_at :
+     * - Jour
+     * - Mois
+     * - Année
+     *
+     * Le regroupement utilise UTC, comme les
+     * statistiques mensuelles existantes.
+     */
+    public function getStatsByJour()
+    {
+        if (!$this->connected) {
+            return [];
+        }
+
+        try {
+            $pipeline = [
+                // Conserver les commandes non annulées.
+                [
+                    '$match' => $this->filtreCommandesActives()
+                ],
+
+                // Regrouper par date d'enregistrement.
+                [
+                    '$group' => [
+                        '_id' => [
+                            'jour' => [
+                                '$dayOfMonth' => '$created_at'
+                            ],
+                            'mois' => [
+                                '$month' => '$created_at'
+                            ],
+                            'annee' => [
+                                '$year' => '$created_at'
+                            ]
+                        ],
+
+                        // Nombre de commandes du jour.
+                        'nb_commandes' => ['$sum' => 1],
+
+                        // Montant total des commandes du jour.
+                        'ca_total' => ['$sum' => '$prix_total']
+                    ]
+                ],
+
+                // Affichage chronologique.
+                [
+                    '$sort' => [
+                        '_id.annee' => 1,
+                        '_id.mois' => 1,
+                        '_id.jour' => 1
+                    ]
+                ]
+            ];
+
+            return iterator_to_array(
+                $this->db->statistiques->aggregate($pipeline)
+            );
+
+        } catch (\Throwable $e) {
+            error_log(
+                '[MongoService] Statistiques journalières : ' .
+                $e->getMessage()
+            );
+
+            return [];
+        }
+    }
+
+    /**
+     * NOUVEAU : statistiques par semaine.
+     *
+     * Utilise le calendrier ISO :
+     * - La semaine commence le lundi.
+     * - Les semaines sont numérotées de 1 à 53.
+     * - L'année ISO est utilisée pour éviter
+     *   les erreurs autour du Nouvel An.
+     */
+    public function getStatsBySemaine()
+    {
+        if (!$this->connected) {
+            return [];
+        }
+
+        try {
+            $pipeline = [
+                // Conserver uniquement les commandes actives.
+                [
+                    '$match' => $this->filtreCommandesActives()
+                ],
+
+                // Regrouper par semaine ISO et année ISO.
+                [
+                    '$group' => [
+                        '_id' => [
+                            'semaine' => [
+                                '$isoWeek' => '$created_at'
+                            ],
+                            'annee' => [
+                                '$isoWeekYear' => '$created_at'
+                            ]
+                        ],
+
+                        // Nombre de commandes de la semaine.
+                        'nb_commandes' => ['$sum' => 1],
+
+                        // Montant total de la semaine.
+                        'ca_total' => ['$sum' => '$prix_total']
+                    ]
+                ],
+
+                // Trier les semaines dans l'ordre.
+                [
+                    '$sort' => [
+                        '_id.annee' => 1,
+                        '_id.semaine' => 1
+                    ]
+                ]
+            ];
+
+            return iterator_to_array(
+                $this->db->statistiques->aggregate($pipeline)
+            );
+
+        } catch (\Throwable $e) {
+            error_log(
+                '[MongoService] Statistiques hebdomadaires : ' .
+                $e->getMessage()
+            );
+
+            return [];
+        }
+    }
+
+    /**
+     * Statistiques par mois.
+     *
+     * Cette méthode existait déjà.
+     * Elle reste compatible avec ton graphique actuel.
+     *
+     * Les regroupements utilisent created_at,
+     * et non la date de prestation.
      */
     public function getStatsByMois()
     {
@@ -235,17 +433,29 @@ class MongoService
 
         try {
             $pipeline = [
-                ['$match' => $this->filtreCommandesActives()],
+                // Conserver les commandes non annulées.
+                [
+                    '$match' => $this->filtreCommandesActives()
+                ],
+
+                // Regrouper par mois et par année.
                 [
                     '$group' => [
                         '_id' => [
-                            'mois' => ['$month' => '$created_at'],
-                            'annee' => ['$year' => '$created_at']
+                            'mois' => [
+                                '$month' => '$created_at'
+                            ],
+                            'annee' => [
+                                '$year' => '$created_at'
+                            ]
                         ],
+
                         'nb_commandes' => ['$sum' => 1],
                         'ca_total' => ['$sum' => '$prix_total']
                     ]
                 ],
+
+                // Trier les résultats chronologiquement.
                 [
                     '$sort' => [
                         '_id.annee' => 1,
@@ -254,10 +464,16 @@ class MongoService
                 ]
             ];
 
-            return iterator_to_array($this->db->statistiques->aggregate($pipeline));
+            return iterator_to_array(
+                $this->db->statistiques->aggregate($pipeline)
+            );
 
         } catch (\Throwable $e) {
-            error_log('[MongoService] Statistiques mensuelles : ' . $e->getMessage());
+            error_log(
+                '[MongoService] Statistiques mensuelles : ' .
+                $e->getMessage()
+            );
+
             return [];
         }
     }
