@@ -36,11 +36,13 @@
 <!-- Graphique CA par menu -->
 <div class="card p-4 mt-4">
     <h4 class="mb-3">💶 Chiffre d'affaires par menu</h4>
+    <div style="position: relative; height: 320px; max-width: 650px; margin: 0 auto;">
     <canvas id="graphCA" height="120"
         data-labels="<?= htmlspecialchars(json_encode(array_map(fn($s) => $s['_id'], $statsByMenu)), ENT_QUOTES, 'UTF-8') ?>"
         data-commandes="<?= htmlspecialchars(json_encode(array_map(fn($s) => $s['nb_commandes'], $statsByMenu)), ENT_QUOTES, 'UTF-8') ?>"
         data-ca="<?= htmlspecialchars(json_encode(array_map(fn($s) => $s['ca_total'], $statsByMenu)), ENT_QUOTES, 'UTF-8') ?>">
     </canvas>
+    </div>
 </div>
 
             <!-- Tableau par menu -->
@@ -69,6 +71,48 @@
             </div>
 
             <!-- Tableau par mois -->
+             
+<!-- Graphique : évolution mensuelle du chiffre d'affaires -->
+<div class="card p-4 mt-4">
+    <h4 class="mb-3">Évolution mensuelle du chiffre d'affaires</h4>
+    <!-- Filtre de période du graphique mensuel -->
+<div class="mb-3">
+    <label for="filtreMois" class="form-label">Période :</label>
+    <select id="filtreMois" class="form-select" style="max-width: 220px;">
+        <option value="3">3 derniers mois</option>
+        <option value="6">6 derniers mois</option>
+        <option value="12" selected>12 derniers mois</option>
+        <option value="all">Toute la période</option>
+    </select>
+</div>
+
+    <div style="position: relative; height: 300px;">
+        <canvas
+            id="graphMensuel"
+            data-mois="<?= htmlspecialchars(
+                json_encode(array_map(
+                    fn($stat) => sprintf(
+                        '%02d/%04d',
+                        $stat['_id']['mois'],
+                        $stat['_id']['annee']
+                    ),
+                    $statsByMois
+                )),
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
+            data-ca="<?= htmlspecialchars(
+                json_encode(array_map(
+                    fn($stat) => (float) $stat['ca_total'],
+                    $statsByMois
+                )),
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>">
+        </canvas>
+    </div>
+</div>
+
             <h4 class="mt-4">Par mois</h4>
             <div class="table-responsive">
                 <table class="table table-hover">
