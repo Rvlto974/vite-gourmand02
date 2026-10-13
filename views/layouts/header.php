@@ -1,138 +1,86 @@
-
 <?php
-/**
- * Fichier : views/layouts/header.php
- * Projet : Vite & Gourmand
- *
- * Rôle :
- * - Démarrer la session PHP
- * - Charger les styles du site
- * - Afficher les notifications temporaires
- * - Afficher la barre de navigation
- * - Adapter la navigation au rôle de l'utilisateur
- */
-
-// Démarre la session uniquement si elle n'est pas déjà active.
+// Démarre la session uniquement si elle n’est pas déjà active.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <!-- Encodage des caractères -->
+    <!-- Définit l’encodage et l’affichage adapté aux appareils mobiles. -->
     <meta charset="UTF-8">
-
-    <!-- Adaptation aux écrans mobiles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Titre de l'application -->
+    <!-- Titre affiché dans l’onglet du navigateur. -->
     <title>Vite & Gourmand</title>
 
-    <!-- Feuilles de style locales -->
+    <!-- Charge les feuilles de style locales. -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
 
-    <!-- Icône du site -->
+    <!-- Icône affichée dans l’onglet du navigateur. -->
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 
-    <!-- Animations et effets visuels -->
+    <!-- Styles pour les animations et les interactions visuelles. -->
     <style>
+    .animate-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
 
-        /* Animation d'apparition au défilement */
-        .animate-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
+    /* Rend visibles les éléments lorsque la classe est ajoutée. */
+    .animate-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-        /* Rend l'élément visible après activation */
-        .animate-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Ajoute une transition aux cartes de menu. */
+    .menu-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        overflow: hidden;
+    }
 
-        /* Transition des cartes de menu */
-        .menu-card {
-            transition: transform 0.3s ease,
-                        box-shadow 0.3s ease !important;
-            overflow: hidden;
-        }
+    /* Anime la carte lorsqu’on la survole. */
+    .menu-card:hover {
+        transform: translateY(-8px) scale(1.02) !important;
+        box-shadow: 0 12px 30px rgba(93,169,154,0.3) !important;
+    }
 
-        /* Effet au survol des cartes */
-        .menu-card:hover {
-            transform: translateY(-8px) scale(1.02) !important;
-            box-shadow: 0 12px 30px rgba(93, 169, 154, 0.3) !important;
-        }
+    /* Anime l’image d’une carte de menu au survol. */
+    .menu-card img {
+        transition: transform 0.4s ease !important;
+    }
 
-        /* Animation des images */
-        .menu-card img {
-            transition: transform 0.4s ease !important;
-        }
+    .menu-card:hover img {
+        transform: scale(1.08) !important;
+    }
 
-        /* Agrandissement des images au survol */
-        .menu-card:hover img {
-            transform: scale(1.08) !important;
-        }
+    /* Ajoute une légère animation aux boutons. */
+    .btn {
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
 
-        /* Transition des boutons */
-        .btn {
-            transition: transform 0.15s ease,
-                        box-shadow 0.15s ease !important;
-        }
+    .btn:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    }
 
-        /* Effet au survol des boutons */
-        .btn:hover {
-            transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-        }
+    /* Anime la couleur des liens de navigation. */
+    .nav-link {
+        transition: color 0.2s ease !important;
+    }
 
-        /* Transition des liens de navigation */
-        .nav-link {
-            transition: color 0.2s ease !important;
-        }
-
-        /* Animation des ombres des cartes */
-        .card {
-            transition: box-shadow 0.3s ease !important;
-        }
-
-        /*
-         * Notification temporaire :
-         * - Centrée horizontalement
-         * - Positionnée au niveau de la navbar
-         * - Toujours visible au-dessus du contenu
-         */
-        .flash-toast-container {
-            position: fixed;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-
-            width: max-content;
-            max-width: calc(100vw - 20px);
-        }
-
-        /* Permet à la notification de s'adapter au mobile */
-        .flash-toast-container .toast {
-            max-width: 100%;
-        }
-
+    /* Anime l’ombre des cartes. */
+    .card {
+        transition: box-shadow 0.3s ease !important;
+    }
     </style>
 </head>
-
 <body>
 
 <?php
-/**
- * Récupération du message temporaire.
- *
- * Le message est enregistré en session par les contrôleurs,
- * puis supprimé après sa récupération afin de ne l'afficher
- * qu'une seule fois.
- */
+// Récupère le message temporaire stocké en session, puis le supprime.
 if (isset($_SESSION['flash'])) {
     $flash = $_SESSION['flash'];
     unset($_SESSION['flash']);
@@ -140,81 +88,39 @@ if (isset($_SESSION['flash'])) {
 ?>
 
 <?php if (isset($flash)) : ?>
+<!-- Affiche le message temporaire de succès ou d’erreur. -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div class="toast show align-items-center text-white border-0
+        <?= $flash['type'] === 'success' ? 'bg-success' : 'bg-danger' ?>"
+        role="alert" id="flashToast">
+        <div class="d-flex">
+            <!-- Affiche le contenu du message en échappant les caractères HTML. -->
+            <div class="toast-body"><?= htmlspecialchars($flash['message']) ?></div>
 
-    <!-- ========================================= -->
-    <!-- NOTIFICATION TEMPORAIRE / MESSAGE FLASH  -->
-    <!-- ========================================= -->
-
-    <!-- Conteneur centré au niveau de la navbar -->
-    <div class="flash-toast-container">
-
-        <!--
-            Notification Bootstrap.
-            La couleur dépend du type de message :
-            - success : vert
-            - autres types : rouge
-        -->
-        <div
-            class="toast show align-items-center text-white border-0
-                <?= $flash['type'] === 'success' ? 'bg-success' : 'bg-danger' ?>"
-            role="alert"
-            aria-live="polite"
-            aria-atomic="true"
-            id="flashToast"
-        >
-
-            <div class="d-flex align-items-center">
-
-                <!-- Message échappé pour éviter l'injection HTML -->
-                <div class="toast-body">
-                    <?= htmlspecialchars(
-                        (string) $flash['message'],
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>
-                </div>
-
-                <!-- Bouton permettant de fermer la notification -->
-                <button
-                    type="button"
-                    class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast"
-                    aria-label="Fermer"
-                ></button>
-
-            </div>
-
+            <!-- Bouton permettant de fermer le message. -->
+            <button
+                type="button"
+                class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="Fermer">
+            </button>
         </div>
-
     </div>
+</div>
 
-    <!--
-        Script chargé de masquer automatiquement
-        la notification après un délai.
-    -->
-    <script src="/assets/js/flash-toast.js" defer></script>
-
+<!-- Charge le script qui masque automatiquement le message flash. -->
+<script src="/assets/js/flash-toast.js" defer></script>
 <?php endif; ?>
 
-
-<!-- ========================================= -->
-<!-- BARRE DE NAVIGATION PRINCIPALE            -->
-<!-- ========================================= -->
-
+<!-- Barre de navigation principale du site. -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-
     <div class="container">
-
-        <!-- Logo de l'application -->
-        <a
-            class="navbar-brand fw-bold"
-            href="/"
-            style="color: #2E6B5E;"
-        >
+        <!-- Logo et lien vers la page d’accueil. -->
+        <a class="navbar-brand fw-bold" href="/" style="color:#2E6B5E;">
             Vite & Gourmand
         </a>
 
-        <!-- Bouton du menu mobile -->
+        <!-- Bouton d’ouverture du menu sur les petits écrans. -->
         <button
             class="navbar-toggler"
             type="button"
@@ -222,150 +128,67 @@ if (isset($_SESSION['flash'])) {
             data-bs-target="#navbarNav"
             aria-controls="navbarNav"
             aria-expanded="false"
-            aria-label="Ouvrir le menu de navigation"
-        >
+            aria-label="Ouvrir le menu de navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Conteneur des liens de navigation -->
+        <!-- Liens de navigation, repliés sur les petits écrans. -->
         <div class="collapse navbar-collapse" id="navbarNav">
-
             <ul class="navbar-nav ms-auto align-items-center">
-
-                <!-- ========================================= -->
-                <!-- LIENS PUBLICS                             -->
-                <!-- ========================================= -->
-
-                <!-- Consultation des menus -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/menus">
-                        Nos Menus
-                    </a>
+                    <a class="nav-link" href="/menus">Nos Menus</a>
                 </li>
 
-                <!-- Formulaire de contact -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/contact">
-                        Contact
-                    </a>
+                    <a class="nav-link" href="/contact">Contact</a>
                 </li>
-
-
-                <!-- ========================================= -->
-                <!-- UTILISATEUR CONNECTÉ                     -->
-                <!-- ========================================= -->
 
                 <?php if (isset($_SESSION['user_id'])) : ?>
-
-                    <?php
-                    // Récupère le rôle de l'utilisateur connecté.
-                    $userRole = $_SESSION['user_role'] ?? '';
-                    ?>
-
-                    <!-- ========================================= -->
-                    <!-- NAVIGATION EMPLOYÉ                       -->
-                    <!-- ========================================= -->
-
-                    <?php if ($userRole === 'employe') : ?>
-
+                    <!-- Affiche les liens correspondant au rôle de l’utilisateur connecté. -->
+                    <?php if ($_SESSION['user_role'] === 'employe') : ?>
                         <li class="nav-item">
-                            <a
-                                class="nav-link"
-                                href="/employe/dashboard"
-                            >
+                            <a class="nav-link" href="/employe/dashboard">
                                 Espace employé
                             </a>
                         </li>
-
-
-                    <!-- ========================================= -->
-                    <!-- NAVIGATION ADMINISTRATEUR                -->
-                    <!-- ========================================= -->
-
-                    <?php elseif ($userRole === 'admin') : ?>
-
+                    <?php elseif ($_SESSION['user_role'] === 'admin') : ?>
                         <li class="nav-item">
-                            <a
-                                class="nav-link"
-                                href="/admin/dashboard"
-                            >
+                            <a class="nav-link" href="/admin/dashboard">
                                 Espace admin
                             </a>
                         </li>
-
-
-                    <!-- ========================================= -->
-                    <!-- NAVIGATION CLIENT                        -->
-                    <!-- ========================================= -->
-
                     <?php else : ?>
-
-                        <!-- Historique des commandes -->
+                        <!-- Liens réservés aux clients connectés. -->
                         <li class="nav-item">
-                            <a
-                                class="nav-link"
-                                href="/commandes/historique"
-                            >
+                            <a class="nav-link" href="/commandes/historique">
                                 Mes commandes
                             </a>
                         </li>
-
-                        <!-- Profil du client -->
                         <li class="nav-item">
-                            <a
-                                class="nav-link"
-                                href="/utilisateurs/profil"
-                            >
+                            <a class="nav-link" href="/utilisateurs/profil">
                                 Mon profil
                             </a>
                         </li>
-
                     <?php endif; ?>
 
-
-                    <!-- ========================================= -->
-                    <!-- DÉCONNEXION                              -->
-                    <!-- ========================================= -->
-
+                    <!-- Lien de déconnexion affiché aux utilisateurs connectés. -->
                     <li class="nav-item">
-                        <a
-                            class="btn btn-outline-secondary btn-sm ms-2"
-                            href="/auth/deconnexion"
-                        >
+                        <a class="btn btn-outline-secondary btn-sm ms-2" href="/auth/deconnexion">
                             Déconnexion
                         </a>
                     </li>
-
-
-                <!-- ========================================= -->
-                <!-- VISITEUR NON CONNECTÉ                     -->
-                <!-- ========================================= -->
-
                 <?php else : ?>
-
-                    <!-- Bouton de connexion -->
+                    <!-- Lien de connexion affiché aux visiteurs non connectés. -->
                     <li class="nav-item">
-                        <a
-                            class="btn btn-outline-secondary btn-sm ms-2"
-                            href="/auth/connexion"
-                        >
+                        <a class="btn btn-outline-secondary btn-sm ms-2" href="/auth/connexion">
                             Connexion
                         </a>
                     </li>
-
                 <?php endif; ?>
-
             </ul>
-
         </div>
-
     </div>
-
 </nav>
 
-
-<!-- ========================================= -->
-<!-- DÉBUT DU CONTENU PRINCIPAL                -->
-<!-- ========================================= -->
-
+<!-- Début du contenu principal de chaque page. -->
 <main>

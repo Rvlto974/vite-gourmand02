@@ -1,20 +1,5 @@
 <?php
 
-/**
- * Fichier : controllers/AuthController.php
- * Projet : Vite & Gourmand
- *
- * Ce contrôleur gère :
- * - L'inscription des nouveaux utilisateurs
- * - La validation des mots de passe
- * - La connexion des utilisateurs
- * - Les sessions PHP
- * - Les redirections selon les rôles
- * - La déconnexion
- * - Les messages temporaires (flash)
- */
-
-// Charge le modèle permettant de gérer les utilisateurs.
 require_once 'models/UtilisateurModel.php';
 
 class AuthController
@@ -22,17 +7,12 @@ class AuthController
     // Modèle utilisé pour lire et enregistrer les utilisateurs.
     private $utilisateurModel;
 
-    /**
-     * Initialise le contrôleur et son modèle utilisateur.
-     */
     public function __construct()
     {
         $this->utilisateurModel = new UtilisateurModel();
     }
 
     /**
-     * INSCRIPTION
-     *
      * Affiche le formulaire d'inscription et traite son envoi.
      */
     public function inscription()
@@ -42,10 +22,8 @@ class AuthController
             session_start();
         }
 
-        // Traite le formulaire lorsqu'il est envoyé en POST.
+        // Traite les données lorsque le formulaire est envoyé.
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            // Récupère les informations envoyées par l'utilisateur.
             $nom        = $_POST['nom'] ?? '';
             $prenom     = $_POST['prenom'] ?? '';
             $email      = trim($_POST['email'] ?? '');
@@ -53,31 +31,24 @@ class AuthController
             $adresse    = $_POST['adresse'] ?? '';
             $motDePasse = $_POST['mot_de_passe'] ?? '';
 
-            // Vérifie la complexité du mot de passe.
+            // Vérifie que le mot de passe respecte les critères demandés.
             if (!$this->validerMotDePasse($motDePasse)) {
-
-                // Prépare le message d'erreur.
                 $erreur = 'Le mot de passe doit contenir au moins 10 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.';
-
-                // Réaffiche le formulaire avec le message d'erreur.
                 require 'views/auth/inscription.php';
                 return;
             }
 
-            // Vérifie si un compte utilise déjà cette adresse email.
+            // Empêche la création de plusieurs comptes avec la même adresse email.
             if ($this->utilisateurModel->getByEmail($email)) {
-
                 $erreur = 'Un compte existe déjà avec cet email.';
-
                 require 'views/auth/inscription.php';
                 return;
             }
 
-            // Chiffre le mot de passe par hachage avant son stockage.
-            // Le mot de passe original n'est jamais enregistré en clair.
+            // Ne stocke jamais le mot de passe en clair dans la base de données.
             $hash = password_hash($motDePasse, PASSWORD_BCRYPT);
 
-            // Enregistre le nouvel utilisateur dans la base de données.
+            // Enregistre le nouvel utilisateur.
             $this->utilisateurModel->creer([
                 'nom'          => $nom,
                 'prenom'       => $prenom,
@@ -87,30 +58,22 @@ class AuthController
                 'mot_de_passe' => $hash,
             ]);
 
-            // Enregistre un message temporaire de confirmation.
+            // Affiche un message après la redirection vers la connexion.
             $_SESSION['flash'] = [
                 'type'    => 'success',
                 'message' => '🎉 Compte créé ! Vous pouvez vous connecter.',
             ];
 
-            // Redirige vers le formulaire de connexion.
             header('Location: /auth/connexion');
             exit;
         }
 
-        // Affiche le formulaire lors d'une visite normale (GET).
+        // Affiche le formulaire si la page est simplement consultée.
         require 'views/auth/inscription.php';
     }
 
     /**
-     * VALIDATION DU MOT DE PASSE
-     *
-     * Vérifie que le mot de passe contient :
-     * - Au moins 10 caractères
-     * - Une lettre minuscule
-     * - Une lettre majuscule
-     * - Un chiffre
-     * - Un caractère spécial
+     * Vérifie les critères de complexité du mot de passe.
      */
     private function validerMotDePasse($motDePasse)
     {
@@ -121,10 +84,7 @@ class AuthController
     }
 
     /**
-     * CONNEXION
-     *
-     * Affiche le formulaire de connexion et vérifie
-     * les identifiants envoyés par l'utilisateur.
+     * Affiche le formulaire de connexion et vérifie les identifiants.
      */
     public function connexion()
     {
@@ -133,110 +93,50 @@ class AuthController
             session_start();
         }
 
-        /**
-         * CORRECTION : UTILISATEUR DÉJÀ CONNECTÉ
-         *
-         * Empêche un utilisateur possédant déjà une session
-         * d'accéder à nouveau au formulaire de connexion.
-         *
-         * Il est redirigé selon son rôle.
-         */
-        if (isset($_SESSION['user_id'])) {
-
-            // Récupère le rôle enregistré dans la session.
-            $role = $_SESSION['user_role'] ?? '';
-
-            // Administrateur : tableau de bord administrateur.
-            if ($role === 'admin') {
-                header('Location: /admin/dashboard');
-
-            // Employé : tableau de bord employé.
-            } elseif ($role === 'employe') {
-                header('Location: /employe/dashboard');
-
-            // Client : page d'accueil.
-            } else {
-                header('Location: /');
-            }
-
-            // Arrête immédiatement l'exécution après la redirection.
-            exit;
-        }
-
-        /**
-         * TRAITEMENT DU FORMULAIRE
-         *
-         * Vérifie les identifiants lorsque l'utilisateur
-         * envoie le formulaire avec la méthode POST.
-         */
+        // Vérifie les identifiants à la réception du formulaire.
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            // Récupère l'adresse email et le mot de passe saisis.
             $email      = trim($_POST['email'] ?? '');
             $motDePasse = $_POST['mot_de_passe'] ?? '';
 
-            // Recherche l'utilisateur correspondant à l'adresse email.
+            // Recherche le compte correspondant à l'adresse email.
             $utilisateur = $this->utilisateurModel->getByEmail($email);
 
-            // Vérifie que l'utilisateur existe et que le mot de passe est correct.
+            // Compare le mot de passe saisi avec son empreinte enregistrée.
             if (
                 $utilisateur
                 && password_verify($motDePasse, $utilisateur['mot_de_passe'])
             ) {
-
-                /**
-                 * SÉCURISATION DE LA SESSION
-                 *
-                 * Renouvelle l'identifiant de session après une
-                 * authentification réussie pour limiter les risques
-                 * de fixation de session.
-                 */
+                // Renouvelle l'identifiant de session après la connexion.
                 session_regenerate_id(true);
 
-                // Enregistre les informations de l'utilisateur en session.
+                // Enregistre les informations utiles de l'utilisateur en session.
                 $_SESSION['user_id']     = $utilisateur['id'];
                 $_SESSION['user_role']   = $utilisateur['role'];
                 $_SESSION['user_nom']    = $utilisateur['nom'];
                 $_SESSION['user_prenom'] = $utilisateur['prenom'];
 
-                /**
-                 * MESSAGE DE BIENVENUE
-                 *
-                 * Ce message sera affiché par le fichier
-                 * views/layouts/header.php après la redirection.
-                 */
+                // Prépare le message de bienvenue affiché après la redirection.
                 $_SESSION['flash'] = [
                     'type'    => 'success',
                     'message' => '✅ Bienvenue ' . $utilisateur['prenom'] . ' !',
                 ];
 
-                // Redirige vers la page d'accueil après la connexion.
                 header('Location: /');
                 exit;
             }
 
-            /**
-             * IDENTIFIANTS INCORRECTS
-             *
-             * Affiche un message générique pour ne pas révéler
-             * si une adresse email existe dans la base de données.
-             */
+            // Affiche une erreur générique sans révéler si l'email existe.
             $erreur = 'Email ou mot de passe incorrect';
-
-            // Réaffiche le formulaire avec le message d'erreur.
             require 'views/auth/connexion.php';
             return;
         }
 
-        // Affiche le formulaire de connexion lors d'une visite GET.
+        // Affiche le formulaire lors d'une consultation normale de la page.
         require 'views/auth/connexion.php';
     }
 
     /**
-     * DÉCONNEXION
-     *
-     * Supprime la session de l'utilisateur,
-     * puis le redirige vers la page d'accueil.
+     * Déconnecte l'utilisateur et redirige vers l'accueil.
      */
     public function deconnexion()
     {
@@ -245,29 +145,13 @@ class AuthController
             session_start();
         }
 
-        /**
-         * SUPPRESSION DES DONNÉES DE SESSION
-         *
-         * Efface notamment :
-         * - L'identifiant de l'utilisateur
-         * - Son rôle
-         * - Son nom
-         * - Son prénom
-         */
+        // Supprime les données de session de l'utilisateur.
         $_SESSION = [];
 
-        /**
-         * SUPPRESSION DU COOKIE DE SESSION
-         *
-         * Si PHP utilise des cookies pour gérer les sessions,
-         * le cookie existant est rendu invalide.
-         */
+        // Supprime également le cookie de session du navigateur, s'il est utilisé.
         if (ini_get('session.use_cookies')) {
-
-            // Récupère les paramètres du cookie de session.
             $parametresCookie = session_get_cookie_params();
 
-            // Expire le cookie dans le navigateur.
             setcookie(
                 session_name(),
                 '',
@@ -279,24 +163,16 @@ class AuthController
             );
         }
 
-        // Détruit la session actuelle.
+        // Détruit l'ancienne session.
         session_destroy();
 
-        /**
-         * NOUVELLE SESSION
-         *
-         * Crée une nouvelle session uniquement pour afficher
-         * le message temporaire de déconnexion.
-         */
+        // Crée une nouvelle session pour conserver le message de déconnexion.
         session_start();
-
-        // Prépare le message de confirmation de déconnexion.
         $_SESSION['flash'] = [
             'type'    => 'secondary',
             'message' => '👋 À bientôt !',
         ];
 
-        // Redirige l'utilisateur vers la page d'accueil.
         header('Location: /');
         exit;
     }
