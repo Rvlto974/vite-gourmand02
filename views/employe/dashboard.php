@@ -1,7 +1,13 @@
 <?php
-// Charge l’en-tête commun du site.
+// Charge l'en-tête commun du site.
 require_once 'views/layouts/header.php';
+
+// Vérifie si l'utilisateur connecté est administrateur.
+// Un administrateur conserve son rôle dans l'espace employé.
+$isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
 ?>
+
+<style>
 
 <style>
 /* Mise en forme des cartes de statistiques. */
