@@ -1,4 +1,3 @@
-
 <?php
 
 // Chargement des dépendances MongoDB installées avec Composer.
