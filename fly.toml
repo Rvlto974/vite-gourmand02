@@ -17,7 +17,7 @@ primary_region = "cdg"
   force_https = true
 
   # Arrête automatiquement les machines lorsqu’elles ne sont pas utilisées
-  auto_stop_machines = "stop"
+  auto_stop_machines = "off"
 
   # Redémarre une machine lorsqu’une requête arrive
   auto_start_machines = true
