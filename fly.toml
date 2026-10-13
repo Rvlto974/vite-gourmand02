@@ -24,7 +24,7 @@ primary_region = "cdg"
 
   # Nombre minimal de machines à garder en fonctionnement
   # 0 signifie qu’elles peuvent toutes s’arrêter en l’absence de trafic
-  min_machines_running = 0
+  min_machines_running = 1
 
   # Processus qui reçoit le trafic HTTP
   processes = ["app"]

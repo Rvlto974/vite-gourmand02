@@ -89,7 +89,10 @@ if (isset($_SESSION['flash'])) {
 
 <?php if (isset($flash)) : ?>
 <!-- Affiche le message temporaire de succès ou d’erreur. -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+ 
+<!-- Centre le pop-up horizontalement et verticalement dans la fenêtre. -->
+<div class="position-fixed top-50 start-50 translate-middle p-3"
+     style="z-index: 9999; width: max-content; max-width: 100%;">
     <div class="toast show align-items-center text-white border-0
         <?= $flash['type'] === 'success' ? 'bg-success' : 'bg-danger' ?>"
         role="alert" id="flashToast">
