@@ -1,0 +1,267 @@
+/* ==========================================================
+   VITE & GOURMAND — STATISTIQUES ADMINISTRATEUR
+   Feuille complète pour views/admin/stats.php
+   Organisation : structure, navigation, en-tête, cartes,
+   graphiques, filtres, tableaux, typographie et responsive.
+   ========================================================== */
+
+/* 01. VARIABLES — Palette et dimensions communes */
+.stats-premium {
+    --stats-ink: #30343B;
+    --stats-green: #235844;
+    --stats-green-soft: #e9f3ec;
+    --stats-border: #e0e9e2;
+    --stats-surface: #ffffff;
+    --stats-background: #f5f8f5;
+    --stats-shadow: 0 8px 28px rgba(26, 65, 47, 0.07);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--stats-ink);
+}
+
+/* 02. STRUCTURE — Espacement du tableau de bord */
+.stats-premium,
+.stats-premium * { box-sizing: border-box; }
+.stats-premium main,
+.stats-premium aside { min-width: 0; }
+.stats-premium main { padding-bottom: 1rem; }
+
+/* 03. NAVIGATION — Panneau administrateur */
+.stats-premium .stats-sidebar {
+    background: var(--stats-surface);
+    border: 1px solid var(--stats-border);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: var(--stats-shadow);
+}
+.stats-premium .stats-sidebar h5 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--stats-green);
+}
+.stats-premium .stats-sidebar .nav-link {
+    display: block;
+    padding: 0.75rem 0.9rem;
+    border-radius: 10px;
+    color: var(--stats-ink);
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease;
+}
+.stats-premium .stats-sidebar .nav-link:hover,
+.stats-premium .stats-sidebar .nav-link:focus-visible {
+    background: var(--stats-green-soft);
+    color: var(--stats-green);
+}
+.stats-premium .stats-sidebar .nav-link.active {
+    background: var(--stats-green);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* 04. EN-TÊTE — Présentation de la page */
+.stats-premium .stats-hero {
+    margin-bottom: 1.5rem;
+    padding: 1.7rem 1.9rem;
+    background: linear-gradient(120deg, #e8f3eb 0%, #f7faf7 100%);
+    border: 1px solid var(--stats-border);
+    border-radius: 20px;
+    box-shadow: var(--stats-shadow);
+}
+.stats-premium .stats-hero h1 {
+    margin-top: 0;
+    font-family: inherit;
+    font-size: clamp(1.9rem, 3vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: normal;
+    line-height: 1.2;
+    color: var(--stats-ink);
+}
+/* Les paragraphes du héros ont des couleurs inline dans stats.php.
+   Cette règle les remplace pour garantir une bonne lisibilité. */
+.stats-premium .stats-hero p,
+.stats-premium .stats-hero p span {
+    color: var(--stats-ink) !important;
+    opacity: 1 !important;
+    line-height: 1.6;
+}
+/* L'emoji 📊 reste centré dans son encadré. */
+.stats-premium .stats-hero [aria-hidden="true"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* 05. CARTES — Fonds, bordures et espacements */
+.stats-premium .stats-card {
+    min-width: 0;
+    padding: 1.5rem;
+    background: var(--stats-surface);
+    border: 1px solid var(--stats-border);
+    border-radius: 18px;
+    box-shadow: var(--stats-shadow);
+    color: var(--stats-ink);
+}
+.stats-premium .stats-card h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-family: inherit;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--stats-ink);
+}
+.stats-premium .stats-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--stats-ink) !important;
+    opacity: 1 !important;
+}
+
+/* 06. INDICATEURS — Titres, chiffres et descriptions */
+.stats-premium .stats-kpi-label {
+    min-width: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--stats-ink);
+}
+.stats-premium .stats-kpi-value {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    color: var(--stats-ink);
+}
+/* Le titre et l'emoji sont dans le premier div.d-flex de chaque
+   carte KPI, conformément au HTML actuel de stats.php. */
+.stats-premium .stats-card > .d-flex:first-child:has(.stats-kpi-label) {
+    display: flex;
+    align-items: center !important;
+    justify-content: space-between;
+    gap: 12px;
+}
+.stats-premium .stats-card > .d-flex:first-child .stats-kpi-label {
+    flex: 1 1 auto;
+}
+.stats-premium .stats-card > .d-flex:first-child:has(.stats-kpi-label) > span[aria-hidden="true"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    font-size: 1.6rem;
+    line-height: 1;
+    text-align: center;
+    border-radius: 12px;
+    background: var(--stats-green-soft);
+}
+
+/* 07. GRAPHIQUES — Prévenir les débordements */
+.stats-premium .stats-card canvas {
+    display: block;
+    max-width: 100%;
+}
+.stats-premium .stats-card > div[style*="height: 320px"] {
+    max-width: 100%;
+}
+
+/* 08. FILTRES — Listes de sélection Chart.js */
+.stats-premium .form-label {
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    color: var(--stats-ink);
+}
+.stats-premium .form-select {
+    min-width: 145px;
+    border: 1px solid #cbd9cf;
+    border-radius: 10px;
+    background-color: #fff;
+    color: var(--stats-ink);
+}
+.stats-premium .form-select:focus {
+    border-color: var(--stats-green);
+    box-shadow: 0 0 0 .2rem rgba(35, 88, 68, .14);
+}
+
+/* 09. CLASSEMENT — Barres de progression */
+.stats-premium .progress {
+    overflow: hidden;
+    border-radius: 20px;
+}
+.stats-premium .progress-bar {
+    border-radius: inherit;
+    transition: width .3s ease;
+}
+
+/* 10. TABLEAUX — Détails par menu et par mois */
+.stats-premium .stats-table {
+    width: 100%;
+    border: 1px solid var(--stats-border);
+    border-radius: 12px;
+    overflow-x: auto;
+}
+.stats-premium .stats-table .table {
+    margin-bottom: 0;
+    color: var(--stats-ink);
+    vertical-align: middle;
+}
+.stats-premium .stats-table thead th {
+    background: var(--stats-green-soft);
+    color: var(--stats-green);
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom-color: var(--stats-border);
+}
+.stats-premium .stats-table th,
+.stats-premium .stats-table td {
+    padding: .85rem 1rem;
+}
+.stats-premium .stats-table tbody td {
+    border-color: #e9eeea;
+}
+
+/* 11. ACCESSIBILITÉ — Focus visible au clavier */
+.stats-premium a:focus-visible,
+.stats-premium select:focus-visible {
+    outline: 2px solid var(--stats-green);
+    outline-offset: 3px;
+}
+
+/* 12. HARMONISATION — Textes secondaires */
+.stats-premium .stat-label,
+.stats-premium .stat-description,
+.stats-premium .stats-kpi-subtitle,
+.stats-premium .text-muted,
+.stats-premium .text-secondary {
+    color: var(--stats-ink) !important;
+    opacity: 1 !important;
+}
+
+/* 13. TABLETTES — Espacements adaptés */
+@media (max-width: 991.98px) {
+    .stats-premium .stats-sidebar { padding: 1.15rem; }
+    .stats-premium .stats-hero { padding: 1.4rem; }
+    .stats-premium .stats-card { padding: 1.25rem; }
+}
+
+/* 14. MOBILES — Icônes et titres plus compacts */
+@media (max-width: 575.98px) {
+    .stats-premium .stats-hero { padding: 1.15rem; }
+    .stats-premium .stats-card { padding: 1.1rem; }
+    .stats-premium .stats-card h4 { font-size: 1.2rem; }
+    .stats-premium .stats-kpi-value { font-size: 1.6rem; }
+    .stats-premium .stats-card > .d-flex:first-child:has(.stats-kpi-label) > span[aria-hidden="true"] {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+        font-size: 1.4rem;
+    }
+    .stats-premium .form-select { min-width: 130px; }
+    .stats-premium .stats-table th,
+    .stats-premium .stats-table td { padding: .7rem .8rem; }
+}
